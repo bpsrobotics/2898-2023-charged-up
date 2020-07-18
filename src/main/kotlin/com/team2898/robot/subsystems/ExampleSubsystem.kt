@@ -9,7 +9,7 @@ package com.team2898.robot.subsystems
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 
-class ExampleSubsystem : SubsystemBase() {
+object ExampleSubsystem : SubsystemBase() {
   /**
    * Creates a new ExampleSubsystem.
    */

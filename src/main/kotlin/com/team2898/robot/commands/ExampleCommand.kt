@@ -7,18 +7,12 @@
 
 package com.team2898.robot.commands
 
-import com.team2898.robot.subsystems.ExampleSubsystem
 import edu.wpi.first.wpilibj2.command.CommandBase
 
-class ExampleCommand(val m_subsystem: ExampleSubsystem) : CommandBase() {
+class ExampleCommand() : CommandBase() {
   /**
    * Creates a new ExampleCommand.
-   *
-   * @param m_subsystem The subsystem used by this command.
    */
-  init {
-    addRequirements(m_subsystem)
-  }
 
   // Called when the command is initially scheduled.
   override fun initialize() {
