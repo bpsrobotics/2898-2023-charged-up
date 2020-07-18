@@ -15,9 +15,4 @@ package com.team2898.robot
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
-class Constants {
-  companion object {
-    // Put Constants inside the companion object to make them globally accessible.
-    // ex. val motorPort: Int = 0
-  }
-}
+object Constants {}
