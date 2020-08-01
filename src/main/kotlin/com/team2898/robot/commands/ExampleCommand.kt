@@ -9,12 +9,13 @@ package com.team2898.robot.commands
 
 import edu.wpi.first.wpilibj2.command.CommandBase
 
-class ExampleCommand() : CommandBase() {
+class ExampleCommand : CommandBase() {
   /**
    * Creates a new ExampleCommand.
    */
+  init {}
 
-  // Called when the command is initially scheduled.
+  // Called when the command is started.
   override fun initialize() {
   }
 
