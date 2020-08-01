@@ -5,9 +5,9 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package com.team2898.robot
+package com.teamXXXX.robot
 
-import com.team2898.robot.commands.ExampleCommand
+import com.teamXXXX.robot.commands.ExampleCommand
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
