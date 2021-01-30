@@ -1,11 +1,11 @@
 # BPS Template Project
-**You are on the template branch.  To switch to the example,
+**You are on the master branch. To switch to the example,
 run `git checkout example`.**
 
 This is the BPS Robotics template project.<br>
 It has the project structure we use and runs kotlin.
 
-### Before using
+### To Use This To Start Your Robot Code
 1. Make a copy of the project
 2. In Intellij, open up the src/main/kotlin folder
 3. Select `com.teamXXXX.robot`
