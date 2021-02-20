@@ -5,15 +5,15 @@ import kotlin.math.PI
 /**
  * Sugar is an object where we are adding convenience functions
  */
+object Sugar {
 
-object Sugar{
     /**
      * Converts the value from radians to degrees
      *
      * @return the value in radians as a double
      */
-    fun Double.radiansToDegrees():Double{
-        return times(180/PI)
+    fun Double.radiansToDegrees(): Double {
+        return times(180 / PI)
     }
 
     /**
@@ -21,17 +21,16 @@ object Sugar{
      *
      * @return the value in degrees as a double
      */
-    fun Double.degreesToRadians():Double{
-        return times(PI/180)
+    fun Double.degreesToRadians(): Double {
+        return times(PI / 180)
     }
-
 
     /**
      * Converts the value from radians to degrees
      *
      * @return the value in radians as a double
      */
-    fun Int.radiansToDegrees():Double{
+    fun Int.radiansToDegrees(): Double {
         return toDouble().radiansToDegrees()
     }
 
