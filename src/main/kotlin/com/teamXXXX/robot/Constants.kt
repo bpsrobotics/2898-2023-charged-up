@@ -15,4 +15,9 @@ package com.teamXXXX.robot
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
-object Constants {}
+object Constants {
+    const val GRABBER_PISTON_ONE_FORWARD = 1
+    const val GRABBER_PISTON_ONE_REVERSE = 2
+    const val GRABBER_PISTON_TWO_FORWARD = 3
+    const val GRABBER_PISTON_TWO_REVERSE = 4
+}
