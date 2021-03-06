@@ -18,25 +18,43 @@ object ExampleGripper:SubsystemBase (){
             Constants.GRABBER_PISTON_TWO_FORWARD,
             Constants.GRABBER_PISTON_TWO_REVERSE)
 
+    /**
+     * This enum defines all of the possible gripper states
+     */
     enum class GripperState{
         INIT, GRABBING, RELEASING, STOP
     }
 
+    /**
+     * Gripper state reflects the current gripper state.
+     * Set to INIT at start up. See periodic below.
+     */
     var gripperState = GripperState.INIT
 
-
+    /**
+     * Grab will close the gripper by opening the two solenoid valves.
+     * This also sets the gripper state variable to GRABBING.
+     */
     fun grab(){
         solenoidOne.set(DoubleSolenoid.Value.kForward)
         solenoidTwo.set(DoubleSolenoid.Value.kReverse)
         gripperState = GripperState.GRABBING
     }
 
+    /**
+     * Release will open the gripper by opening the two solenoid valves.
+     * This also sets the gripper state variable to RELEASING.
+     */
     fun release(){
         solenoidOne.set(DoubleSolenoid.Value.kReverse)
         solenoidTwo.set(DoubleSolenoid.Value.kForward)
         gripperState = GripperState.RELEASING
     }
 
+    /**
+     * Stop will stop the gripper by closing the two solenoid valves.
+     * This also sets the gripper state variable to STOP.
+     */
     fun stop(){
         solenoidOne.set(DoubleSolenoid.Value.kOff)
         solenoidTwo.set(DoubleSolenoid.Value.kOff)
