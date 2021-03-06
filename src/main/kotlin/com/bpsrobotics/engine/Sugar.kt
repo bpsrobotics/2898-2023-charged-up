@@ -2,6 +2,9 @@ package com.bpsrobotics.engine
 
 import kotlin.math.PI
 
+// Don't show warnings if these functions are unused or could be private
+@Suppress("unused", "MemberVisibilityCanBePrivate")
+
 /**
  * Sugar is an object where we are adding convenience functions
  */
