@@ -13,8 +13,20 @@ package com.teamXXXX.robot
  * declared globally (i.e. public static).  Do not put anything functional in this class.
  */
 object Constants {
+    // Pneumatics ports
     const val GRABBER_PISTON_ONE_FORWARD = 1
     const val GRABBER_PISTON_ONE_REVERSE = 2
     const val GRABBER_PISTON_TWO_FORWARD = 3
     const val GRABBER_PISTON_TWO_REVERSE = 4
+
+    // Motor IDs
+    const val DRIVETRAIN_LEFT_MAIN = 1
+    const val DRIVETRAIN_LEFT_SECONDARY = 2
+    const val DRIVETRAIN_RIGHT_MAIN = 3
+    const val DRIVETRAIN_RIGHT_SECONDARY = 4
+
+    // Drivetrain limits
+    const val DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT = 30
+    const val DRIVETRAIN_PEAK_CURRENT_LIMIT = 50
+    const val DRIVETRAIN_PEAK_CURRENT_LIMIT_DURATION = 50
 }
