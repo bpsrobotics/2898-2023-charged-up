@@ -5,23 +5,24 @@ import edu.wpi.first.wpilibj.DoubleSolenoid
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 
 /**
- * This is an example pneumatic gripper, designed to show you how to make a subsystem
- * Has 2 pistons, that are actuated by 2 valves. The pistons are double action (can push & pull)
+ * This is an example pneumatic gripper, designed to show you how to make a subsystem.
+ * Has 2 pistons, actuated by 2 valves. The pistons are double action (can push & pull).
  */
-
-object ExampleGripper:SubsystemBase (){
-    val solenoidOne = DoubleSolenoid(
+object ExampleGripper : SubsystemBase() {
+    private val solenoidOne = DoubleSolenoid(
             Constants.GRABBER_PISTON_ONE_FORWARD,
-            Constants.GRABBER_PISTON_ONE_REVERSE)
+            Constants.GRABBER_PISTON_ONE_REVERSE
+    )
 
-    val solenoidTwo = DoubleSolenoid(
+    private val solenoidTwo = DoubleSolenoid(
             Constants.GRABBER_PISTON_TWO_FORWARD,
-            Constants.GRABBER_PISTON_TWO_REVERSE)
+            Constants.GRABBER_PISTON_TWO_REVERSE
+    )
 
     /**
      * This enum defines all of the possible gripper states
      */
-    enum class GripperState{
+    enum class GripperState {
         INIT, GRABBING, RELEASING, STOP
     }
 
@@ -29,13 +30,13 @@ object ExampleGripper:SubsystemBase (){
      * Gripper state reflects the current gripper state.
      * Set to INIT at start up. See periodic below.
      */
-    var gripperState = GripperState.INIT
+    private var gripperState = GripperState.INIT
 
     /**
      * Grab will close the gripper by opening the two solenoid valves.
      * This also sets the gripper state variable to GRABBING.
      */
-    fun grab(){
+    fun grab() {
         solenoidOne.set(DoubleSolenoid.Value.kForward)
         solenoidTwo.set(DoubleSolenoid.Value.kReverse)
         gripperState = GripperState.GRABBING
@@ -45,7 +46,7 @@ object ExampleGripper:SubsystemBase (){
      * Release will open the gripper by opening the two solenoid valves.
      * This also sets the gripper state variable to RELEASING.
      */
-    fun release(){
+    fun release() {
         solenoidOne.set(DoubleSolenoid.Value.kReverse)
         solenoidTwo.set(DoubleSolenoid.Value.kForward)
         gripperState = GripperState.RELEASING
@@ -55,7 +56,7 @@ object ExampleGripper:SubsystemBase (){
      * Stop will stop the gripper by closing the two solenoid valves.
      * This also sets the gripper state variable to STOP.
      */
-    fun stop(){
+    fun stop() {
         solenoidOne.set(DoubleSolenoid.Value.kOff)
         solenoidTwo.set(DoubleSolenoid.Value.kOff)
         gripperState = GripperState.STOP
@@ -69,5 +70,4 @@ object ExampleGripper:SubsystemBase (){
             stop()
         }
     }
-
 }

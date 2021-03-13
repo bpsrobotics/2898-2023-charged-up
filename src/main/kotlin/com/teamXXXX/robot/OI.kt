@@ -14,7 +14,7 @@ object OI {
      * Threshold below which [process] will return 0.
      * 0.1 historically used, but optimal value unknown.
      */
-    const val DEADBAND_THRESHOLD = 0.1
+    private const val DEADZONE_THRESHOLD = 0.1
 
     /**
      * Utility function for controller axis, optional deadzone and square/cube for extra fine-grain control
@@ -26,7 +26,7 @@ object OI {
         var output = 0.0
 
         if (deadzone) {
-            output = if (abs(input) < DEADBAND_THRESHOLD) {
+            output = if (abs(input) < DEADZONE_THRESHOLD) {
                 0.0
             } else {
                 input
@@ -46,12 +46,12 @@ object OI {
         return output
     }
 
-    private val driverController = XboxController(0);
+    private val driverController = XboxController(0)
 
     // Right joystick y axis, probably.  Controller mapping can be tricky, the best way is to use the driver station to see what buttons and axis are being pressed.
     // This value is deadzoned and squared, like a drivetrain-controlling axis might be
     val exampleJoystickAxis get() = process(driverController.getRawAxis(5), deadzone = true, square = true)
 
-    // Right switch (the one next to the trigger), probably
+    // Right shoulder switch (the one next to the trigger), probably
     val exampleButton get() = driverController.getRawButton(6)
 }
