@@ -48,10 +48,12 @@ object OI {
 
     private val driverController = XboxController(0)
 
-    // Right joystick y axis, probably.  Controller mapping can be tricky, the best way is to use the driver station to see what buttons and axis are being pressed.
-    // This value is deadzoned and squared, like a drivetrain-controlling axis might be
-    val exampleJoystickAxis get() = process(driverController.getRawAxis(5), deadzone = true, square = true)
+    // Left and right shoulder switches (the ones next to the trigger) for quickturn
+    val quickTurnRight get() = driverController.getRawButton(6)
+    val quickTurnLeft get() = driverController.getRawButton(5)
 
-    // Right shoulder switch (the one next to the trigger), probably
-    val exampleButton get() = driverController.getRawButton(6)
+    // Right joystick y axis, probably.  Controller mapping can be tricky, the best way is to use the driver station to see what buttons and axis are being pressed.
+    // Squared for better control
+    val throttle get() = process(driverController.getRawAxis(5), deadzone = true, square = true)
+    val turn get() = process(driverController.getRawAxis(1), deadzone = true, square = true)
 }
