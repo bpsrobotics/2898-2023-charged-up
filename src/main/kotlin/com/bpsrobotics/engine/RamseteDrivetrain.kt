@@ -83,7 +83,7 @@ class RamseteDrivetrain(
     }
 
     fun update(currentPose: Pose2d, wheelVelocities: DifferentialDriveWheelSpeeds): WheelVoltages {
-        val trajectoryNotNull = trajectory ?: return WheelVoltages(0.0.toVolts(), 0.0.toVolts())
+        val trajectoryNotNull = trajectory ?: return WheelVoltages(Volts(0.0), Volts(0.0))
 
         val time = timer.get()
         val delta = time - previousTime
@@ -109,6 +109,6 @@ class RamseteDrivetrain(
         val leftOutput = leftPid.calculate(wheelVelocities.leftMetersPerSecond) + leftFeedForward
         val rightOutput = rightPid.calculate(wheelVelocities.rightMetersPerSecond) + rightFeedForward
 
-        return WheelVoltages(leftOutput.toVolts(), rightOutput.toVolts())
+        return WheelVoltages(Volts(leftOutput), Volts(rightOutput))
     }
 }
