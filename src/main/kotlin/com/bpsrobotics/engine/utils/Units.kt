@@ -6,7 +6,7 @@
  * Note: if you specify an argument type as one of the interfaces declared in this file, it will box
  * the type, leading to a performance hit.  _This is likely fine_, because computers are fast.
  */
-package com.bpsrobotics.engine
+package com.bpsrobotics.engine.utils
 
 import kotlin.math.PI
 
@@ -16,19 +16,21 @@ interface Unit {
 
 // Distance
 interface DistanceUnit : Unit {
-    fun toMeters(): Double
+    fun meterValue(): Double
+
+    fun toMeters() = Meters(meterValue())
 }
 
 inline class Meters(override val value: Double) : DistanceUnit {
-    override fun toMeters() = value
+    override fun meterValue() = value
 }
 
 inline class Feet(override val value: Double) : DistanceUnit {
-    override fun toMeters() = value * 0.3048
+    override fun meterValue() = value * 0.3048
 }
 
 inline class Inches(override val value: Double) : DistanceUnit {
-    override fun toMeters() = value * 0.0254
+    override fun meterValue() = value * 0.0254
 }
 
 // Velocity
