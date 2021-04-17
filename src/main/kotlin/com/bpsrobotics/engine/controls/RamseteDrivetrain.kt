@@ -1,5 +1,9 @@
-package com.bpsrobotics.engine
+package com.bpsrobotics.engine.controls
 
+import com.bpsrobotics.engine.utils.Meters
+import com.bpsrobotics.engine.utils.MetersPerSecond
+import com.bpsrobotics.engine.utils.MetersPerSecondSquared
+import com.bpsrobotics.engine.utils.Volts
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.controller.PIDController
 import edu.wpi.first.wpilibj.controller.RamseteController
@@ -27,7 +31,7 @@ data class AutoConstraints(val maxVelocity: MetersPerSecond, val maxAcceleration
 /**
  * Contains the parameters for a ramsete controller (see [RamseteController]).
  */
-data class RamseteParameters(val b: Double = 2.0, val z: Double = 0.0)
+data class RamseteParameters(val b: Double, val z: Double)
 
 /**
  * Represents the left and right motor voltages.
