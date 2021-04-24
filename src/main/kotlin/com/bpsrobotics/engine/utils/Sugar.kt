@@ -1,5 +1,6 @@
 package com.bpsrobotics.engine.utils
 
+import com.kauailabs.navx.frc.AHRS
 import kotlin.math.PI
 
 // Don't show warnings if these functions are unused or could be private
@@ -45,4 +46,7 @@ object Sugar {
     fun Int.degreesToRadians():Double{
         return toDouble().degreesToRadians()
     }
+
 }
+
+typealias NAVX = AHRS
