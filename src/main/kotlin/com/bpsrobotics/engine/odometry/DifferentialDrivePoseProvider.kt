@@ -6,15 +6,19 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d
 import edu.wpi.first.wpilibj.interfaces.Gyro
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry
 
-class DifferentialDrivePoseProvider(val gyro: Gyro, val leftEncoder: Encoder, val rightEncoder: Encoder) : PoseProvider {
-    private val odometry = DifferentialDriveOdometry(Rotation2d(0.0))
+/** Implements the PoseProvider interface with differential drive odometry and a gyro to get a pose  */
+class DifferentialDrivePoseProvider(private val gyro: Gyro, private val leftEncoder: Encoder, private val rightEncoder: Encoder) : PoseProvider {
+
+    /** The differential drive odometry provides the position part of the pose, but not the angle*/
+    private val odometry = DifferentialDriveOdometry(gyro.rotation2d)
 
     override var pose: Pose2d = Pose2d()
-        private set
+        private set // Makes pose read only
 
+    /** Uses the gyro angle and encoder distances to update the pose */
     override fun update() {
         pose = odometry.update(
-            Rotation2d.fromDegrees(-gyro.angle),
+            gyro.rotation2d,
             leftEncoder.distance,
             rightEncoder.distance
         )
