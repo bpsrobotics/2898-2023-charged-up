@@ -100,6 +100,19 @@ inline class Pounds(override val value: Double) : WeightUnit {
     override fun toKilogramsWeight() = value * 0.453592
 }
 
+// Time
+interface TimeUnit : Unit {
+    fun toSeconds(): Double
+}
+
+inline class Seconds(override val value: Double) : TimeUnit {
+    override fun toSeconds() = value
+}
+
+inline class Milliseconds(override val value: Double) : TimeUnit {
+    override fun toSeconds() = value / 1000
+}
+
 // Electrical (no interface because there is only one set of electrical units)
 inline class Volts(override val value: Double) : Unit
 
@@ -118,3 +131,5 @@ typealias Fps = FeetPerSecond
 typealias Kg = Kilograms
 
 typealias Lb = Pounds
+
+typealias Millis = Milliseconds

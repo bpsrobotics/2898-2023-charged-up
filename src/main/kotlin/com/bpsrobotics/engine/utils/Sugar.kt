@@ -47,6 +47,10 @@ object Sugar {
         return toDouble().degreesToRadians()
     }
 
+    /**
+     * Clamps this double to be within the range [min]..[max], inclusive.
+     */
+    fun Double.clamp(min: Double = 0.0, max: Double = 1.0) = this.coerceIn(min, max)
 }
 
 typealias NAVX = AHRS
