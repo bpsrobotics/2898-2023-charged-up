@@ -2,6 +2,8 @@ package com.teamXXXX.robot.subsystems
 
 import com.teamXXXX.robot.Constants
 import edu.wpi.first.wpilibj.DoubleSolenoid
+import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 
 /**
@@ -26,6 +28,12 @@ object ExampleGripper : SubsystemBase() {
         INIT, GRABBING, RELEASING, STOP
     }
 
+    /** Initializes the gripper state to send to the SmartDashboard */
+    override fun initSendable(builder: SendableBuilder?) {
+        super.initSendable(builder)
+        builder?.addStringProperty("gripper-state", { gripperState.name }, null)
+    }
+
     /**
      * Gripper state reflects the current gripper state.
      * Set to INIT at start up. See periodic below.
@@ -40,6 +48,7 @@ object ExampleGripper : SubsystemBase() {
         solenoidOne.set(DoubleSolenoid.Value.kForward)
         solenoidTwo.set(DoubleSolenoid.Value.kReverse)
         gripperState = GripperState.GRABBING
+
     }
 
     /**
