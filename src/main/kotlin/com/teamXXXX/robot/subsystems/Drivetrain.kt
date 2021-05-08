@@ -23,7 +23,9 @@ import com.teamXXXX.robot.Constants.DRIVETRAIN_RIGHT_MAIN
 import com.teamXXXX.robot.Constants.DRIVETRAIN_RIGHT_SECONDARY
 import com.teamXXXX.robot.Constants.DRIVETRAIN_TRACK_WIDTH
 import edu.wpi.first.wpilibj.Encoder
+import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj.geometry.Rotation2d
+import edu.wpi.first.wpilibj.geometry.Translation2d
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds
 
@@ -43,6 +45,11 @@ object Drivetrain : SubsystemBase() {
         DRIVETRAIN_CONSTRAINTS,
         DRIVETRAIN_RAMSETE
     )
+
+    /** Calls createTrajectory from the [RamseteDrivetrain] */
+    fun createTrajectory(startingPose: Pose2d, vararg points: Translation2d, endingPose: Pose2d) {
+        ramsete.createTrajectory(startingPose, *points, endingPose = endingPose)
+    }
 
     private var mode = Mode.DISABLED
 
