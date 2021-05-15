@@ -10,9 +10,7 @@
 
 package com.teamXXXX.robot
 
-import com.bpsrobotics.engine.controls.AutoConstraints
-import com.bpsrobotics.engine.controls.DrivetrainCharacterization
-import com.bpsrobotics.engine.controls.RamseteParameters
+import com.bpsrobotics.engine.controls.RamseteDrivetrain.*
 import com.bpsrobotics.engine.utils.Ft
 import com.bpsrobotics.engine.utils.MetersPerSecondSquared
 import com.bpsrobotics.engine.utils.Volts

@@ -7,6 +7,7 @@
 
 package com.teamXXXX.robot
 
+import com.teamXXXX.robot.subsystems.Odometry
 import edu.wpi.first.wpilibj.TimedRobot
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
@@ -49,6 +50,7 @@ class Robot : TimedRobot() {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run()
+    Odometry.update()
   }
 
   /**

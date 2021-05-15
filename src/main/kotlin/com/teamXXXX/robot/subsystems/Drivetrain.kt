@@ -1,8 +1,7 @@
 package com.teamXXXX.robot.subsystems
 
 import com.bpsrobotics.engine.controls.RamseteDrivetrain
-import com.bpsrobotics.engine.controls.WheelVoltages
-import com.bpsrobotics.engine.odometry.DifferentialDrivePoseProvider
+import com.bpsrobotics.engine.controls.RamseteDrivetrain.WheelVoltages
 import com.bpsrobotics.engine.utils.Meters
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX
 import com.teamXXXX.robot.Constants.DRIVETRAIN_CHARACTERIZATION
@@ -10,8 +9,6 @@ import com.teamXXXX.robot.Constants.DRIVETRAIN_CONSTRAINTS
 import com.teamXXXX.robot.Constants.DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT
 import com.teamXXXX.robot.Constants.DRIVETRAIN_LEFT_ENCODER_A
 import com.teamXXXX.robot.Constants.DRIVETRAIN_LEFT_ENCODER_B
-import edu.wpi.first.wpilibj.drive.DifferentialDrive
-import edu.wpi.first.wpilibj2.command.SubsystemBase
 import com.teamXXXX.robot.Constants.DRIVETRAIN_LEFT_MAIN
 import com.teamXXXX.robot.Constants.DRIVETRAIN_LEFT_SECONDARY
 import com.teamXXXX.robot.Constants.DRIVETRAIN_PEAK_CURRENT_LIMIT
@@ -23,11 +20,11 @@ import com.teamXXXX.robot.Constants.DRIVETRAIN_RIGHT_MAIN
 import com.teamXXXX.robot.Constants.DRIVETRAIN_RIGHT_SECONDARY
 import com.teamXXXX.robot.Constants.DRIVETRAIN_TRACK_WIDTH
 import edu.wpi.first.wpilibj.Encoder
+import edu.wpi.first.wpilibj.drive.DifferentialDrive
 import edu.wpi.first.wpilibj.geometry.Pose2d
-import edu.wpi.first.wpilibj.geometry.Rotation2d
 import edu.wpi.first.wpilibj.geometry.Translation2d
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds
+import edu.wpi.first.wpilibj2.command.SubsystemBase
 
 object Drivetrain : SubsystemBase() {
 
@@ -79,6 +76,7 @@ object Drivetrain : SubsystemBase() {
         differentialDrive.tankDrive(left, right)
     }
 
+    /** Same as [rawDrive], but using the wrapper class. */
     fun rawDrive(voltages: WheelVoltages) {
         rawDrive(voltages.left.value, voltages.right.value)
     }

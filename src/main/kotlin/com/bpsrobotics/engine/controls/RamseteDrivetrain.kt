@@ -18,28 +18,6 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint
 
 /**
- *  Represents the results from the characterization tool.
- * See [https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-characterization/index.html]
- */
-data class DrivetrainCharacterization(val ks: Volts, val kv: Double, val ka: Double, val kp: Double, val kd: Double)
-
-/**
- * Represents the limits how fast the robot is allowed to go, how fast it can accelerate, and the maximum motor voltage.
- */
-data class AutoConstraints(val maxVelocity: MetersPerSecond, val maxAcceleration: MetersPerSecondSquared, val maxVoltage: Volts)
-
-/**
- * Contains the parameters for a ramsete controller (see [RamseteController]).
- */
-data class RamseteParameters(val b: Double, val z: Double)
-
-/**
- * Represents the left and right motor voltages.
- */
-data class WheelVoltages(val left: Volts, val right: Volts)
-
-
-/**
  * A representation of a ramsete-controlled drivetrain for following trajectories.  Call [update] once
  * per tick, and supply the outputs to the motors.
  * For more information on how it works, see [https://docs.wpilib.org/en/stable/docs/software/examples-tutorials/trajectory-tutorial/index.html]
@@ -48,8 +26,7 @@ class RamseteDrivetrain(
     trackWidth: Meters,
     characterization: DrivetrainCharacterization,
     limits: AutoConstraints,
-    ramseteParameters: RamseteParameters
-    ) {
+    ramseteParameters: RamseteParameters) {
 
     private val kinematics = DifferentialDriveKinematics(trackWidth.value)
 
@@ -115,4 +92,25 @@ class RamseteDrivetrain(
 
         return WheelVoltages(Volts(leftOutput), Volts(rightOutput))
     }
+
+    /**
+     *  Represents the results from the characterization tool.
+     * See [https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-characterization/index.html]
+     */
+    data class DrivetrainCharacterization(val ks: Volts, val kv: Double, val ka: Double, val kp: Double, val kd: Double)
+
+    /**
+     * Represents the limits how fast the robot is allowed to go, how fast it can accelerate, and the maximum motor voltage.
+     */
+    data class AutoConstraints(val maxVelocity: MetersPerSecond, val maxAcceleration: MetersPerSecondSquared, val maxVoltage: Volts)
+
+    /**
+     * Contains the parameters for a ramsete controller (see [RamseteController]).
+     */
+    data class RamseteParameters(val b: Double, val z: Double)
+
+    /**
+     * Represents the left and right motor voltages.
+     */
+    data class WheelVoltages(val left: Volts, val right: Volts)
 }

@@ -16,7 +16,7 @@ object AsyncLooper {
      * Uses [Timer.getFPGATimestamp] to make sure it runs at exactly the right pace (unless [lambda] takes too long).
      */
     fun loop(delay: Millis, lambda: suspend () -> Unit): Job {
-        return GlobalScope.launch {
+        return GlobalScope.launch {  // Launch a coroutine (like a lighter weight thread)
             while (true) {
                 val start = Timer.getFPGATimestamp()
                 lambda()
