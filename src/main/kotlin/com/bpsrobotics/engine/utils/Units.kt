@@ -1,8 +1,9 @@
 @file:Suppress("unused", "MemberVisibilityCanBePrivate")  // Not all of these classes are used
 
 /**
- * A set of inline classes that represent a value with a unit.  These inline classes are represented
+ * A set of value classes that represent a value with a unit.  These value classes are represented
  * at runtime as java primitive doubles, so they don't require heap ram allocation and are performant.
+ *
  * Note: if you specify an argument type as one of the interfaces declared in this file, it will box
  * the type, leading to a performance hit.  _This is likely fine_, because computers are fast.
  */
@@ -17,106 +18,126 @@ interface Unit {
 // Distance
 interface DistanceUnit : Unit {
     fun meterValue(): Double
-
-    fun toMeters() = Meters(meterValue())
 }
 
-inline class Meters(override val value: Double) : DistanceUnit {
+@JvmInline
+value class Meters(override val value: Double) : DistanceUnit {
     override fun meterValue() = value
 }
 
-inline class Feet(override val value: Double) : DistanceUnit {
+@JvmInline
+value class Feet(override val value: Double) : DistanceUnit {
     override fun meterValue() = value * 0.3048
 }
 
-inline class Inches(override val value: Double) : DistanceUnit {
+@JvmInline
+value class Inches(override val value: Double) : DistanceUnit {
     override fun meterValue() = value * 0.0254
 }
 
 // Velocity
 interface VelocityUnit : Unit {
-    fun toMetersPerSecond(): Double
+    fun metersPerSecondValue(): Double
 }
 
-inline class MetersPerSecond(override val value: Double) : VelocityUnit {
-    override fun toMetersPerSecond() = value
+@JvmInline
+value class MetersPerSecond(override val value: Double) : VelocityUnit {
+    override fun metersPerSecondValue() = value
 }
 
-inline class FeetPerSecond(override val value: Double) : VelocityUnit {
-    override fun toMetersPerSecond() = value * 0.3084
+@JvmInline
+value class FeetPerSecond(override val value: Double) : VelocityUnit {
+    override fun metersPerSecondValue() = value * 0.3084
 }
 
-inline class KilometersPerHour(override val value: Double) : VelocityUnit {
-    override fun toMetersPerSecond() = value / 3.6
+@JvmInline
+value class KilometersPerHour(override val value: Double) : VelocityUnit {
+    override fun metersPerSecondValue() = value / 3.6
 }
 
-inline class MilesPerHour(override val value: Double) : VelocityUnit {
-    override fun toMetersPerSecond() = value * 0.44704
+@JvmInline
+value class MilesPerHour(override val value: Double) : VelocityUnit {
+    override fun metersPerSecondValue() = value * 0.44704
 }
 
 // Acceleration
 interface AccelerationUnit : Unit {
-    fun toMetersPerSecondSquared(): Double
+    fun metersPerSecondSquaredValue(): Double
 }
 
-inline class MetersPerSecondSquared(override val value: Double) : AccelerationUnit {
-    override fun toMetersPerSecondSquared() = value
+@JvmInline
+value class MetersPerSecondSquared(override val value: Double) : AccelerationUnit {
+    override fun metersPerSecondSquaredValue() = value
 }
 
 // Angles
 interface AngleUnit : Unit {
-    fun toRadians(): Double
+    fun radiansValue(): Double
 }
 
-inline class Radians(override val value: Double) : AngleUnit {
-    override fun toRadians() = value
+@JvmInline
+value class Radians(override val value: Double) : AngleUnit {
+    override fun radiansValue() = value
 }
 
-inline class Degrees(override val value: Double) : AngleUnit {
+@JvmInline
+value class Degrees(override val value: Double) : AngleUnit {
     companion object {
         const val DEGREES_TO_RADS = (2 * PI) / 360
     }
 
-    override fun toRadians() = value * DEGREES_TO_RADS
+    override fun radiansValue() = value * DEGREES_TO_RADS
 }
 
 // Mass
 interface MassUnit : Unit {
-    fun toKilograms(): Double
+    fun kilogramsValue(): Double
 }
 
-inline class Kilograms(override val value: Double) : MassUnit, WeightUnit {  // special case, both mass and weight
-    override fun toKilograms() = value
+@JvmInline
+value class Kilograms(override val value: Double) : MassUnit, WeightUnit {  // special case, both mass and weight
+    override fun kilogramsValue() = value
 
-    override fun toKilogramsWeight() = value
+    override fun kilogramsWeightValue() = value
 }
 
 // Weight
 interface WeightUnit : Unit {
-    fun toKilogramsWeight(): Double
+    fun kilogramsWeightValue(): Double
 }
 
-inline class Pounds(override val value: Double) : WeightUnit {
-    override fun toKilogramsWeight() = value * 0.453592
+@JvmInline
+value class Pounds(override val value: Double) : WeightUnit {
+    override fun kilogramsWeightValue() = value * 0.453592
 }
 
 // Time
 interface TimeUnit : Unit {
-    fun toSeconds(): Double
+    fun secondsValue(): Double
 }
 
-inline class Seconds(override val value: Double) : TimeUnit {
-    override fun toSeconds() = value
+@JvmInline
+value class Seconds(override val value: Double) : TimeUnit {
+    override fun secondsValue() = value
 }
 
-inline class Milliseconds(override val value: Double) : TimeUnit {
-    override fun toSeconds() = value / 1000
+@JvmInline
+value class Milliseconds(override val value: Double) : TimeUnit {
+    /**
+     * Creates a new [Milliseconds], but with a long input instead.  It's converted to a double,
+     * this is purely so you don't have to specify 10.0 milliseconds, which would be weird.
+     */
+    constructor(count: Long) : this(count.toDouble())
+
+    override fun secondsValue() = value / 1000
 }
 
 // Electrical (no interface because there is only one set of electrical units)
-inline class Volts(override val value: Double) : Unit
+@JvmInline
+value class Volts(override val value: Double) : Unit
 
-inline class Amps(override val value: Double) : Unit
+@JvmInline
+value class Amps(override val value: Double) : Unit
 
 // Typealiases for ease of use
 typealias M = Meters
@@ -133,3 +154,10 @@ typealias Kg = Kilograms
 typealias Lb = Pounds
 
 typealias Millis = Milliseconds
+
+
+// Conversion functions
+fun DistanceUnit.toMeters() = Meters(meterValue())
+
+fun VelocityUnit.toMetersPerSecond() = `M/s`(metersPerSecondValue())
+// TODO: more
