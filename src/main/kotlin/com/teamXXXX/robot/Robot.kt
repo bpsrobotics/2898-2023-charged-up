@@ -7,6 +7,7 @@
 
 package com.teamXXXX.robot
 
+import com.teamXXXX.robot.commands.TeleOp
 import com.teamXXXX.robot.subsystems.Odometry
 import edu.wpi.first.wpilibj.TimedRobot
 import edu.wpi.first.wpilibj2.command.Command
@@ -84,6 +85,7 @@ class Robot : TimedRobot() {
     // continue until interrupted by another command, remove
     // this line or comment it out.
     autoCommand.let{ autoCommand.cancel() }
+    TeleOp().schedule()
   }
 
   /**

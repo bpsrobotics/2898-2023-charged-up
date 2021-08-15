@@ -4,6 +4,9 @@ import com.bpsrobotics.engine.controls.RamseteDrivetrain
 import com.bpsrobotics.engine.controls.RamseteDrivetrain.WheelVoltages
 import com.bpsrobotics.engine.utils.Meters
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX
+import com.revrobotics.CANSparkMax
+import com.revrobotics.CANSparkMaxLowLevel
+import com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless
 import com.teamXXXX.robot.Constants.DRIVETRAIN_CHARACTERIZATION
 import com.teamXXXX.robot.Constants.DRIVETRAIN_CONSTRAINTS
 import com.teamXXXX.robot.Constants.DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT
@@ -20,6 +23,8 @@ import com.teamXXXX.robot.Constants.DRIVETRAIN_RIGHT_MAIN
 import com.teamXXXX.robot.Constants.DRIVETRAIN_RIGHT_SECONDARY
 import com.teamXXXX.robot.Constants.DRIVETRAIN_TRACK_WIDTH
 import edu.wpi.first.wpilibj.Encoder
+import edu.wpi.first.wpilibj.SpeedController
+import edu.wpi.first.wpilibj.SpeedControllerGroup
 import edu.wpi.first.wpilibj.drive.DifferentialDrive
 import edu.wpi.first.wpilibj.geometry.Pose2d
 import edu.wpi.first.wpilibj.geometry.Translation2d
@@ -28,12 +33,15 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase
 
 object Drivetrain : SubsystemBase() {
 
-    private val leftMain = WPI_TalonSRX(DRIVETRAIN_LEFT_MAIN)
-    private val leftSecondary = WPI_TalonSRX(DRIVETRAIN_LEFT_SECONDARY)
-    private val rightMain = WPI_TalonSRX(DRIVETRAIN_RIGHT_MAIN)
-    private val rightSecondary = WPI_TalonSRX(DRIVETRAIN_RIGHT_SECONDARY)
+    private val leftMain: SpeedController = CANSparkMax(DRIVETRAIN_LEFT_MAIN, kBrushless)
+    private val leftSecondary: SpeedController = CANSparkMax(DRIVETRAIN_LEFT_SECONDARY, kBrushless)
+    private val rightMain: SpeedController = CANSparkMax(DRIVETRAIN_RIGHT_MAIN, kBrushless)
+    private val rightSecondary: SpeedController = CANSparkMax(DRIVETRAIN_RIGHT_SECONDARY, kBrushless)
 
-    val leftEncoder = Encoder(DRIVETRAIN_LEFT_ENCODER_A, DRIVETRAIN_LEFT_ENCODER_B)
+    private val left  = SpeedControllerGroup(leftMain,  leftSecondary)
+    private val right = SpeedControllerGroup(rightMain, rightSecondary)
+
+    val leftEncoder  = Encoder(DRIVETRAIN_LEFT_ENCODER_A, DRIVETRAIN_LEFT_ENCODER_B)
     val rightEncoder = Encoder(DRIVETRAIN_RIGHT_ENCODER_A, DRIVETRAIN_RIGHT_ENCODER_B)
 
     private val ramsete: RamseteDrivetrain = RamseteDrivetrain(
@@ -55,20 +63,23 @@ object Drivetrain : SubsystemBase() {
     }
 
     /** Computes left and right throttle from driver controller turn and throttle inputs. */
-    private val differentialDrive = DifferentialDrive(leftMain, rightMain)
+    private val differentialDrive = DifferentialDrive(left, right)
 
     /** Initializes motor configurations. */
     init {
         applyToMotors {
-            configFactoryDefault()
-            // Configure current limits to prevent motors stalling and overheating/breaking something or browning out the robot
-            configContinuousCurrentLimit(DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT)
-            // Have a higher peak current limit for accelerating and starting, but it's only allowed for a short amount of time
-            configPeakCurrentLimit(DRIVETRAIN_PEAK_CURRENT_LIMIT, DRIVETRAIN_PEAK_CURRENT_LIMIT_DURATION)
+            if (this is WPI_TalonSRX) {
+                configFactoryDefault()
+                // Configure current limits to prevent motors stalling and overheating/breaking something or browning out the robot
+                configContinuousCurrentLimit(DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT)
+                // Have a higher peak current limit for accelerating and starting, but it's only allowed for a short amount of time
+                configPeakCurrentLimit(DRIVETRAIN_PEAK_CURRENT_LIMIT, DRIVETRAIN_PEAK_CURRENT_LIMIT_DURATION)
+            } else if (this is CANSparkMax) {
+                restoreFactoryDefaults()
+                setSmartCurrentLimit(DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT)
+                idleMode = CANSparkMax.IdleMode.kBrake  // TODO: figure out if this is right
+            }
         }
-
-        leftSecondary.follow(leftMain)
-        rightSecondary.follow(rightMain)
     }
 
     /** Outputs [left] to the left motor, and [right] to the right motor. */
@@ -92,7 +103,7 @@ object Drivetrain : SubsystemBase() {
     }
 
     /** Runs the provided [block] of code on each motor. */
-    private fun applyToMotors(block: WPI_TalonSRX.() -> Unit) {
+    private fun applyToMotors(block: SpeedController.() -> Unit) {
         for (motor in listOf(leftMain, leftSecondary, rightMain, rightSecondary)) {
             motor.apply(block)
         }
