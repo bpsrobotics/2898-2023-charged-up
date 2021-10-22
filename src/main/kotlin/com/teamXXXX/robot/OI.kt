@@ -52,8 +52,8 @@ object OI {
     val quickTurnRight get() = process(driverController.getRawAxis(3), deadzone = true, square = true)
     val quickTurnLeft get() = process(driverController.getRawAxis(2), deadzone = true, square = true)
 
-    // Right joystick y axis, probably.  Controller mapping can be tricky, the best way is to use the driver station to see what buttons and axis are being pressed.
-    // Squared for better control
+    // Right joystick y-axis.  Controller mapping can be tricky, the best way is to use the driver station to see what buttons and axis are being pressed.
+    // Squared for better control on turn, cubed on throttle
     val throttle get() = process(driverController.getRawAxis(5), deadzone = true, cube = true)
     val turn get() = process(driverController.getRawAxis(0), deadzone = true, square = true)
 }

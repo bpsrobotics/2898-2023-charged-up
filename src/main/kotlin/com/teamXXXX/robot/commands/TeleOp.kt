@@ -18,8 +18,7 @@ class TeleOp : CommandBase() {
   override fun execute() {
     when {
       // Quickturn buttons means turn in place
-      OI.quickTurnRight != 0.0 -> Drivetrain.cheesyDrive(OI.quickTurnRight, OI.throttle, true)
-      OI.quickTurnLeft != 0.0 -> Drivetrain.cheesyDrive(-OI.quickTurnLeft, OI.throttle, true)
+      OI.quickTurnRight - OI.quickTurnLeft != 0.0 -> Drivetrain.cheesyDrive(OI.quickTurnRight - OI.quickTurnLeft, OI.throttle, true)
 
       // Otherwise, drive and turn normally
       else -> Drivetrain.cheesyDrive(OI.turn, OI.throttle, false)
