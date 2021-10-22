@@ -4,25 +4,20 @@ import com.bpsrobotics.engine.controls.RamseteDrivetrain
 import com.bpsrobotics.engine.controls.RamseteDrivetrain.WheelVoltages
 import com.bpsrobotics.engine.utils.Meters
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX
+import com.revrobotics.CANEncoder
 import com.revrobotics.CANSparkMax
-import com.revrobotics.CANSparkMaxLowLevel
-import com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless
+import com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushed
 import com.teamXXXX.robot.Constants.DRIVETRAIN_CHARACTERIZATION
 import com.teamXXXX.robot.Constants.DRIVETRAIN_CONSTRAINTS
 import com.teamXXXX.robot.Constants.DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT
-import com.teamXXXX.robot.Constants.DRIVETRAIN_LEFT_ENCODER_A
-import com.teamXXXX.robot.Constants.DRIVETRAIN_LEFT_ENCODER_B
 import com.teamXXXX.robot.Constants.DRIVETRAIN_LEFT_MAIN
 import com.teamXXXX.robot.Constants.DRIVETRAIN_LEFT_SECONDARY
 import com.teamXXXX.robot.Constants.DRIVETRAIN_PEAK_CURRENT_LIMIT
 import com.teamXXXX.robot.Constants.DRIVETRAIN_PEAK_CURRENT_LIMIT_DURATION
 import com.teamXXXX.robot.Constants.DRIVETRAIN_RAMSETE
-import com.teamXXXX.robot.Constants.DRIVETRAIN_RIGHT_ENCODER_A
-import com.teamXXXX.robot.Constants.DRIVETRAIN_RIGHT_ENCODER_B
 import com.teamXXXX.robot.Constants.DRIVETRAIN_RIGHT_MAIN
 import com.teamXXXX.robot.Constants.DRIVETRAIN_RIGHT_SECONDARY
 import com.teamXXXX.robot.Constants.DRIVETRAIN_TRACK_WIDTH
-import edu.wpi.first.wpilibj.Encoder
 import edu.wpi.first.wpilibj.SpeedController
 import edu.wpi.first.wpilibj.SpeedControllerGroup
 import edu.wpi.first.wpilibj.drive.DifferentialDrive
@@ -33,16 +28,16 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase
 
 object Drivetrain : SubsystemBase() {
 
-    private val leftMain: SpeedController = CANSparkMax(DRIVETRAIN_LEFT_MAIN, kBrushless)
-    private val leftSecondary: SpeedController = CANSparkMax(DRIVETRAIN_LEFT_SECONDARY, kBrushless)
-    private val rightMain: SpeedController = CANSparkMax(DRIVETRAIN_RIGHT_MAIN, kBrushless)
-    private val rightSecondary: SpeedController = CANSparkMax(DRIVETRAIN_RIGHT_SECONDARY, kBrushless)
+    private val leftMain: SpeedController = CANSparkMax(DRIVETRAIN_LEFT_MAIN, kBrushed)
+    private val leftSecondary: SpeedController = CANSparkMax(DRIVETRAIN_LEFT_SECONDARY, kBrushed)
+    private val rightMain: SpeedController = CANSparkMax(DRIVETRAIN_RIGHT_MAIN, kBrushed)
+    private val rightSecondary: SpeedController = CANSparkMax(DRIVETRAIN_RIGHT_SECONDARY, kBrushed)
 
     private val left  = SpeedControllerGroup(leftMain,  leftSecondary)
     private val right = SpeedControllerGroup(rightMain, rightSecondary)
 
-    val leftEncoder  = Encoder(DRIVETRAIN_LEFT_ENCODER_A, DRIVETRAIN_LEFT_ENCODER_B)
-    val rightEncoder = Encoder(DRIVETRAIN_RIGHT_ENCODER_A, DRIVETRAIN_RIGHT_ENCODER_B)
+    val leftEncoder: CANEncoder = (leftMain as CANSparkMax).encoder
+    val rightEncoder = (rightMain as CANSparkMax).encoder
 
     private val ramsete: RamseteDrivetrain = RamseteDrivetrain(
         Meters(DRIVETRAIN_TRACK_WIDTH.meterValue()),
@@ -116,7 +111,7 @@ object Drivetrain : SubsystemBase() {
             Mode.CLOSED_LOOP -> {
                 rawDrive(ramsete.update(
                         Odometry.pose(),
-                        DifferentialDriveWheelSpeeds(leftEncoder.rate, rightEncoder.rate)
+                        DifferentialDriveWheelSpeeds(leftEncoder.velocity, rightEncoder.velocity)
                     )
                 )
             }

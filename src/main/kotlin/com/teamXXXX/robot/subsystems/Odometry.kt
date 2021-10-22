@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder
 
 object Odometry : Sendable {
     private val gyro = NAVX()
-    private val odometry: PoseProvider = DifferentialDrivePoseProvider(gyro, Drivetrain.leftEncoder, Drivetrain.rightEncoder)
+    private val odometry: PoseProvider = DifferentialDrivePoseProvider(gyro, null, null)
 
     /** Call once per tick.  Updates the internal [PoseProvider]. */
     fun update() {
