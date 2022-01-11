@@ -8,7 +8,7 @@
 // Some constants aren't used outside of this file, but they may be later
 @file:Suppress("MemberVisibilityCanBePrivate")
 
-package com.teamXXXX.robot
+package com.team2898.robot
 
 import com.bpsrobotics.engine.utils.Ft
 import com.bpsrobotics.engine.utils.MetersPerSecondSquared

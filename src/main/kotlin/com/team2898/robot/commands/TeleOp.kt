@@ -1,7 +1,7 @@
-package com.teamXXXX.robot.commands
+package com.team2898.robot.commands
 
-import com.teamXXXX.robot.OI
-import com.teamXXXX.robot.subsystems.Drivetrain
+import com.team2898.robot.OI
+import com.team2898.robot.subsystems.Drivetrain
 import edu.wpi.first.wpilibj2.command.CommandBase
 
 class TeleOp : CommandBase() {

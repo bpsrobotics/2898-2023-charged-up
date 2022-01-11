@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package com.teamXXXX.robot
+package com.team2898.robot
 
 import com.teamXXXX.robot.commands.ExampleCommand
 import edu.wpi.first.wpilibj2.command.Command

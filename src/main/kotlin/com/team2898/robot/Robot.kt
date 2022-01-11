@@ -5,10 +5,10 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package com.teamXXXX.robot
+package com.team2898.robot
 
-import com.teamXXXX.robot.commands.TeleOp
-import com.teamXXXX.robot.subsystems.Odometry
+import com.team2898.robot.commands.TeleOp
+import com.team2898.robot.subsystems.Odometry
 import edu.wpi.first.wpilibj.TimedRobot
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler

@@ -1,4 +1,4 @@
-package com.teamXXXX.robot.subsystems
+package com.team2898.robot.subsystems
 
 import com.bpsrobotics.engine.controls.Controller
 import com.bpsrobotics.engine.controls.Ramsete
@@ -9,25 +9,25 @@ import com.bpsrobotics.engine.utils.toMeters
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX
 import com.revrobotics.CANSparkMax
 import com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushed
-import com.teamXXXX.robot.Constants.DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT
-import com.teamXXXX.robot.Constants.DRIVETRAIN_KA
-import com.teamXXXX.robot.Constants.DRIVETRAIN_KD
-import com.teamXXXX.robot.Constants.DRIVETRAIN_KP
-import com.teamXXXX.robot.Constants.DRIVETRAIN_KS
-import com.teamXXXX.robot.Constants.DRIVETRAIN_KV
-import com.teamXXXX.robot.Constants.DRIVETRAIN_LEFT_ENCODER_A
-import com.teamXXXX.robot.Constants.DRIVETRAIN_LEFT_ENCODER_B
-import com.teamXXXX.robot.Constants.DRIVETRAIN_LEFT_MAIN
-import com.teamXXXX.robot.Constants.DRIVETRAIN_LEFT_SECONDARY
-import com.teamXXXX.robot.Constants.DRIVETRAIN_MAX_ACCELERATION
-import com.teamXXXX.robot.Constants.DRIVETRAIN_MAX_VELOCITY
-import com.teamXXXX.robot.Constants.DRIVETRAIN_PEAK_CURRENT_LIMIT
-import com.teamXXXX.robot.Constants.DRIVETRAIN_PEAK_CURRENT_LIMIT_DURATION
-import com.teamXXXX.robot.Constants.DRIVETRAIN_RIGHT_ENCODER_A
-import com.teamXXXX.robot.Constants.DRIVETRAIN_RIGHT_ENCODER_B
-import com.teamXXXX.robot.Constants.DRIVETRAIN_RIGHT_MAIN
-import com.teamXXXX.robot.Constants.DRIVETRAIN_RIGHT_SECONDARY
-import com.teamXXXX.robot.Constants.DRIVETRAIN_TRACK_WIDTH
+import com.team2898.robot.Constants.DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT
+import com.team2898.robot.Constants.DRIVETRAIN_KA
+import com.team2898.robot.Constants.DRIVETRAIN_KD
+import com.team2898.robot.Constants.DRIVETRAIN_KP
+import com.team2898.robot.Constants.DRIVETRAIN_KS
+import com.team2898.robot.Constants.DRIVETRAIN_KV
+import com.team2898.robot.Constants.DRIVETRAIN_LEFT_ENCODER_A
+import com.team2898.robot.Constants.DRIVETRAIN_LEFT_ENCODER_B
+import com.team2898.robot.Constants.DRIVETRAIN_LEFT_MAIN
+import com.team2898.robot.Constants.DRIVETRAIN_LEFT_SECONDARY
+import com.team2898.robot.Constants.DRIVETRAIN_MAX_ACCELERATION
+import com.team2898.robot.Constants.DRIVETRAIN_MAX_VELOCITY
+import com.team2898.robot.Constants.DRIVETRAIN_PEAK_CURRENT_LIMIT
+import com.team2898.robot.Constants.DRIVETRAIN_PEAK_CURRENT_LIMIT_DURATION
+import com.team2898.robot.Constants.DRIVETRAIN_RIGHT_ENCODER_A
+import com.team2898.robot.Constants.DRIVETRAIN_RIGHT_ENCODER_B
+import com.team2898.robot.Constants.DRIVETRAIN_RIGHT_MAIN
+import com.team2898.robot.Constants.DRIVETRAIN_RIGHT_SECONDARY
+import com.team2898.robot.Constants.DRIVETRAIN_TRACK_WIDTH
 import edu.wpi.first.wpilibj.Encoder
 import edu.wpi.first.wpilibj.SpeedController
 import edu.wpi.first.wpilibj.SpeedControllerGroup
@@ -128,7 +128,8 @@ object Drivetrain : SubsystemBase() {
             Mode.DISABLED -> differentialDrive.tankDrive(0.0, 0.0)
             Mode.OPEN_LOOP -> {}  // Nothing to do in the loop because it's handled by [Robot]
             Mode.CLOSED_LOOP -> {
-                rawDrive(ramsete.voltages(
+                rawDrive(
+                    ramsete.voltages(
                     trajectory ?: run { mode = Mode.DISABLED; /* TODO: is this the right thing to do? */ return },
                     Timer.getFPGATimestamp().seconds - startTime,
                     Odometry.vels

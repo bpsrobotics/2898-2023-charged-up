@@ -1,4 +1,4 @@
-package com.teamXXXX.robot.subsystems
+package com.team2898.robot.subsystems
 
 import com.bpsrobotics.engine.odometry.DifferentialDrivePoseProvider
 import com.bpsrobotics.engine.odometry.PoseProvider
@@ -10,7 +10,10 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry
 
-object Odometry : Sendable, PoseProvider by DifferentialDrivePoseProvider(NAVX(), Drivetrain.leftEncoder, Drivetrain.rightEncoder) {
+object Odometry : Sendable, PoseProvider by DifferentialDrivePoseProvider(NAVX(),
+    Drivetrain.leftEncoder,
+    Drivetrain.rightEncoder
+) {
 
     val leftVel get() =  MetersPerSecond(Drivetrain.leftEncoder.rate)
     val rightVel get() = MetersPerSecond(Drivetrain.rightEncoder.rate)
