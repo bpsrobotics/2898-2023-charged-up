@@ -1,29 +1,40 @@
 package com.teamXXXX.robot.subsystems
 
-import com.bpsrobotics.engine.controls.RamseteDrivetrain
-import com.bpsrobotics.engine.controls.RamseteDrivetrain.WheelVoltages
-import com.bpsrobotics.engine.utils.Meters
+import com.bpsrobotics.engine.controls.Controller
+import com.bpsrobotics.engine.controls.Ramsete
+import com.bpsrobotics.engine.controls.TrajectoryMaker
+import com.bpsrobotics.engine.utils.minus
+import com.bpsrobotics.engine.utils.seconds
+import com.bpsrobotics.engine.utils.toMeters
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX
-import com.revrobotics.CANEncoder
 import com.revrobotics.CANSparkMax
 import com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushed
-import com.teamXXXX.robot.Constants.DRIVETRAIN_CHARACTERIZATION
-import com.teamXXXX.robot.Constants.DRIVETRAIN_CONSTRAINTS
 import com.teamXXXX.robot.Constants.DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT
+import com.teamXXXX.robot.Constants.DRIVETRAIN_KA
+import com.teamXXXX.robot.Constants.DRIVETRAIN_KD
+import com.teamXXXX.robot.Constants.DRIVETRAIN_KP
+import com.teamXXXX.robot.Constants.DRIVETRAIN_KS
+import com.teamXXXX.robot.Constants.DRIVETRAIN_KV
+import com.teamXXXX.robot.Constants.DRIVETRAIN_LEFT_ENCODER_A
+import com.teamXXXX.robot.Constants.DRIVETRAIN_LEFT_ENCODER_B
 import com.teamXXXX.robot.Constants.DRIVETRAIN_LEFT_MAIN
 import com.teamXXXX.robot.Constants.DRIVETRAIN_LEFT_SECONDARY
+import com.teamXXXX.robot.Constants.DRIVETRAIN_MAX_ACCELERATION
+import com.teamXXXX.robot.Constants.DRIVETRAIN_MAX_VELOCITY
 import com.teamXXXX.robot.Constants.DRIVETRAIN_PEAK_CURRENT_LIMIT
 import com.teamXXXX.robot.Constants.DRIVETRAIN_PEAK_CURRENT_LIMIT_DURATION
-import com.teamXXXX.robot.Constants.DRIVETRAIN_RAMSETE
+import com.teamXXXX.robot.Constants.DRIVETRAIN_RIGHT_ENCODER_A
+import com.teamXXXX.robot.Constants.DRIVETRAIN_RIGHT_ENCODER_B
 import com.teamXXXX.robot.Constants.DRIVETRAIN_RIGHT_MAIN
 import com.teamXXXX.robot.Constants.DRIVETRAIN_RIGHT_SECONDARY
 import com.teamXXXX.robot.Constants.DRIVETRAIN_TRACK_WIDTH
+import edu.wpi.first.wpilibj.Encoder
 import edu.wpi.first.wpilibj.SpeedController
 import edu.wpi.first.wpilibj.SpeedControllerGroup
+import edu.wpi.first.wpilibj.Timer
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward
 import edu.wpi.first.wpilibj.drive.DifferentialDrive
-import edu.wpi.first.wpilibj.geometry.Pose2d
-import edu.wpi.first.wpilibj.geometry.Translation2d
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds
+import edu.wpi.first.wpilibj.trajectory.Trajectory
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 
 object Drivetrain : SubsystemBase() {
@@ -36,20 +47,22 @@ object Drivetrain : SubsystemBase() {
     private val left  = SpeedControllerGroup(leftMain,  leftSecondary)
     private val right = SpeedControllerGroup(rightMain, rightSecondary)
 
-    val leftEncoder: CANEncoder = (leftMain as CANSparkMax).encoder
-    val rightEncoder = (rightMain as CANSparkMax).encoder
+    val leftEncoder  = Encoder(DRIVETRAIN_LEFT_ENCODER_A,  DRIVETRAIN_LEFT_ENCODER_B)
+    val rightEncoder = Encoder(DRIVETRAIN_RIGHT_ENCODER_A, DRIVETRAIN_RIGHT_ENCODER_B)
 
-    private val ramsete: RamseteDrivetrain = RamseteDrivetrain(
-        Meters(DRIVETRAIN_TRACK_WIDTH.meterValue()),
-        DRIVETRAIN_CHARACTERIZATION,
-        DRIVETRAIN_CONSTRAINTS,
-        DRIVETRAIN_RAMSETE
+    val trajectoryMaker = TrajectoryMaker(DRIVETRAIN_MAX_VELOCITY, DRIVETRAIN_MAX_ACCELERATION)
+
+    private val ramsete: Ramsete = Ramsete(
+        DRIVETRAIN_TRACK_WIDTH.toMeters(),
+        Odometry,
+        Controller.PID(DRIVETRAIN_KP, DRIVETRAIN_KD),
+        Controller.PID(DRIVETRAIN_KP, DRIVETRAIN_KD),
+        SimpleMotorFeedforward(DRIVETRAIN_KS.value, DRIVETRAIN_KV, DRIVETRAIN_KA),
+        SimpleMotorFeedforward(DRIVETRAIN_KS.value, DRIVETRAIN_KV, DRIVETRAIN_KA)
     )
 
-    /** Calls createTrajectory from the [RamseteDrivetrain] */
-    fun createTrajectory(startingPose: Pose2d, vararg points: Translation2d, endingPose: Pose2d) {
-        ramsete.createTrajectory(startingPose, *points, endingPose = endingPose)
-    }
+    private var trajectory: Trajectory? = null
+    private var startTime = 0.seconds
 
     private var mode = Mode.DISABLED
 
@@ -83,7 +96,7 @@ object Drivetrain : SubsystemBase() {
     }
 
     /** Same as [rawDrive], but using the wrapper class. */
-    fun rawDrive(voltages: WheelVoltages) {
+    fun rawDrive(voltages: Ramsete.WheelVoltages) {
         rawDrive(voltages.left.value, voltages.right.value)
     }
 
@@ -109,11 +122,11 @@ object Drivetrain : SubsystemBase() {
             Mode.DISABLED -> differentialDrive.tankDrive(0.0, 0.0)
             Mode.OPEN_LOOP -> {}  // Nothing to do in the loop because it's handled by [Robot]
             Mode.CLOSED_LOOP -> {
-                rawDrive(ramsete.update(
-                        Odometry.pose(),
-                        DifferentialDriveWheelSpeeds(leftEncoder.velocity, rightEncoder.velocity)
-                    )
-                )
+                rawDrive(ramsete.voltages(
+                    trajectory ?: run { mode = Mode.DISABLED; return },
+                    Timer.getFPGATimestamp().seconds - startTime,
+                    Odometry.vels
+                ))
             }
         }
     }

@@ -1,4 +1,4 @@
-@file:Suppress("unused", "MemberVisibilityCanBePrivate")  // Not all of these classes are used
+@file:Suppress("unused", "MemberVisibilityCanBePrivate", "NOTHING_TO_INLINE")  // Not all of these classes are used
 
 /**
  * A set of value classes that represent a value with a unit.  These value classes are represented
@@ -161,3 +161,11 @@ fun DistanceUnit.toMeters() = Meters(meterValue())
 
 fun VelocityUnit.toMetersPerSecond() = `M/s`(metersPerSecondValue())
 // TODO: more
+
+inline val Double.volts get() = Volts(this)
+inline val Double.seconds get() = Seconds(this)
+inline val Int.seconds get() = Seconds(toDouble())
+
+inline operator fun Seconds.minus(other: Seconds) = (value - other.value).seconds
+
+inline operator fun Volts.plus(other: Volts) = (value + other.value).volts

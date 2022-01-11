@@ -10,7 +10,6 @@
 
 package com.teamXXXX.robot
 
-import com.bpsrobotics.engine.controls.RamseteDrivetrain.*
 import com.bpsrobotics.engine.utils.Ft
 import com.bpsrobotics.engine.utils.MetersPerSecondSquared
 import com.bpsrobotics.engine.utils.Volts
@@ -23,10 +22,6 @@ import com.bpsrobotics.engine.utils.`M/s`
  */
 object Constants {
     // Pneumatics ports
-    const val GRABBER_PISTON_ONE_FORWARD = 1
-    const val GRABBER_PISTON_ONE_REVERSE = 2
-    const val GRABBER_PISTON_TWO_FORWARD = 3
-    const val GRABBER_PISTON_TWO_REVERSE = 4
 
     // Motor IDs
     const val DRIVETRAIN_LEFT_MAIN = 1
@@ -44,20 +39,13 @@ object Constants {
     const val DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT = 30
     const val DRIVETRAIN_PEAK_CURRENT_LIMIT = 50
     const val DRIVETRAIN_PEAK_CURRENT_LIMIT_DURATION = 50
-    const val DRIVETRAIN_MAX_VOLTAGE = 8.0  // Sometimes up to 10 or so
 
     // Can't be const because it's an expression
-    val DRIVETRAIN_MAX_VELOCITY = `M/s`(2.0)  // Placeholder value
-    val DRIVETRAIN_MAX_ACCELERATION = MetersPerSecondSquared(1.0)  // Placeholder value
+    val DRIVETRAIN_MAX_VELOCITY = `M/s`(5.0)
+    val DRIVETRAIN_MAX_ACCELERATION = MetersPerSecondSquared(10.0)  // placeholder
 
     // Horizontal distance between the centers of the wheels on each side of the drivetrain
     val DRIVETRAIN_TRACK_WIDTH = Ft(2.5)  // Placeholder value
-
-    val DRIVETRAIN_CONSTRAINTS = AutoConstraints(
-        DRIVETRAIN_MAX_VELOCITY,
-        DRIVETRAIN_MAX_ACCELERATION,
-        Volts(DRIVETRAIN_MAX_VOLTAGE)
-    )
 
     // Drivetrain characterization parameters, see [https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-characterization/index.html]
     // These do not carry from robot to robot, even if they're the same design! Characterize each drivetrain.
@@ -67,13 +55,7 @@ object Constants {
     const val DRIVETRAIN_KP = 0.0  // Proportional PID component
     const val DRIVETRAIN_KD = 0.0  // Derivative PID component (note: no I term is used because it can lead to runaway)
 
-    val DRIVETRAIN_CHARACTERIZATION = DrivetrainCharacterization(
-        DRIVETRAIN_KS, DRIVETRAIN_KV, DRIVETRAIN_KA, DRIVETRAIN_KP, DRIVETRAIN_KD
-    )
-
     // Ramsete parameters, see [https://file.tavsys.net/control/controls-engineering-in-frc.pdf] page 81
-    const val DRIVETRAIN_RAMSETE_B = 0.0  // Higher values make it more aggressively stick to the trajectory. 0 < B
-    const val DRIVETRAIN_RAMSETE_Z = 0.0  // Higher values give it more dampening. 0 < Z < 1
-
-    val DRIVETRAIN_RAMSETE = RamseteParameters(DRIVETRAIN_RAMSETE_B, DRIVETRAIN_RAMSETE_Z)
+    const val DRIVETRAIN_RAMSETE_B = 2.0  // Higher values make it more aggressively stick to the trajectory. 0 < B
+    const val DRIVETRAIN_RAMSETE_Z = 0.7  // Higher values give it more dampening. 0 < Z < 1
 }

@@ -2,30 +2,25 @@ package com.teamXXXX.robot.subsystems
 
 import com.bpsrobotics.engine.odometry.DifferentialDrivePoseProvider
 import com.bpsrobotics.engine.odometry.PoseProvider
+import com.bpsrobotics.engine.utils.MetersPerSecond
 import com.bpsrobotics.engine.utils.NAVX
 import edu.wpi.first.wpilibj.Sendable
 import edu.wpi.first.wpilibj.geometry.Pose2d
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder
+import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry
 
-object Odometry : Sendable {
-    private val gyro = NAVX()
-    private val odometry: PoseProvider = DifferentialDrivePoseProvider(gyro, null, null)
+object Odometry : Sendable, PoseProvider by DifferentialDrivePoseProvider(NAVX(), Drivetrain.leftEncoder, Drivetrain.rightEncoder) {
 
-    /** Call once per tick.  Updates the internal [PoseProvider]. */
-    fun update() {
-        odometry.update()
-    }
-
-    /** Gets the current robot pose.  Avoid calling repeatedly, may be expensive. */
-    fun pose(): Pose2d {
-        return odometry.pose
-    }
+    val leftVel get() =  MetersPerSecond(Drivetrain.leftEncoder.rate)
+    val rightVel get() = MetersPerSecond(Drivetrain.rightEncoder.rate)
+    val vels get() = DifferentialDriveWheelSpeeds(leftVel.metersPerSecondValue(), rightVel.metersPerSecondValue())
 
     /** Initializes the pose to send to the SmartDashboard */
     override fun initSendable(builder: SendableBuilder?) {
-        builder?.addDoubleArrayProperty("pose-2d", {
-            val pose = pose()  // Only get once
-            return@addDoubleArrayProperty doubleArrayOf(pose.x, pose.y, pose.rotation.degrees)
-        }, null)
+        SendableRegistry.setName(this, "odometry")
+        builder?.addDoubleProperty("x", { pose.x }, null)
+        builder?.addDoubleProperty("y", { pose.y }, null)
+        builder?.addDoubleProperty("degrees", { pose.rotation.degrees }, null)
     }
 }
