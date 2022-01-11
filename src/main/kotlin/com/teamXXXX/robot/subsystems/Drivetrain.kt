@@ -90,6 +90,12 @@ object Drivetrain : SubsystemBase() {
         }
     }
 
+    fun follow(path: Trajectory) {
+        trajectory = path
+        startTime = Timer.getFPGATimestamp().seconds
+        mode = Mode.CLOSED_LOOP
+    }
+
     /** Outputs [left] to the left motor, and [right] to the right motor. */
     fun rawDrive(left: Double, right: Double) {
         differentialDrive.tankDrive(left, right)
@@ -123,7 +129,7 @@ object Drivetrain : SubsystemBase() {
             Mode.OPEN_LOOP -> {}  // Nothing to do in the loop because it's handled by [Robot]
             Mode.CLOSED_LOOP -> {
                 rawDrive(ramsete.voltages(
-                    trajectory ?: run { mode = Mode.DISABLED; return },
+                    trajectory ?: run { mode = Mode.DISABLED; /* TODO: is this the right thing to do? */ return },
                     Timer.getFPGATimestamp().seconds - startTime,
                     Odometry.vels
                 ))
