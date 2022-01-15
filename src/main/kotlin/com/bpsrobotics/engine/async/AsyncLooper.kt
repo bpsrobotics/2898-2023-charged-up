@@ -16,6 +16,7 @@ object AsyncLooper : Iterable<Pair<String, Job>> {
      * Uses [Timer.getFPGATimestamp] to make sure it runs at exactly the right pace (unless [lambda] takes too long).
      */
     fun loop(delay: Millis, name: String, lambda: suspend () -> Unit): Job {
+        val secs = delay.secondsValue()
         val job = scope.launch { // Launch a coroutine (like a lighter weight thread)
             while (true) {
                 val start = Timer.getFPGATimestamp()
@@ -26,7 +27,7 @@ object AsyncLooper : Iterable<Pair<String, Job>> {
                     e.printStackTrace()
                 }
                 val timeTaken = Timer.getFPGATimestamp() - start
-                val delayTime = delay.value - (timeTaken / 1000)
+                val delayTime = (secs - timeTaken) * 1000
                 if (delayTime < 0.0) {
                     println("Can't keep up with async loop '$name'!  Took $timeTaken ms, loop is trying to go every $delay ms")
                 }

@@ -1,9 +1,14 @@
 package com.team2898.robot
 
+import com.bpsrobotics.engine.async.AsyncLooper
+import com.bpsrobotics.engine.utils.Millis
+import com.bpsrobotics.engine.utils.Sugar.clamp
 import edu.wpi.first.wpilibj.XboxController
 import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sign
+import kotlin.reflect.KProperty
+
 /**
  * The Operator Interface object.
  * This is where you put all of the joystick, button, or keyboard inputs.
@@ -44,6 +49,52 @@ object OI {
         }
 
         return output
+    }
+
+    /**
+     * do not question the r a m p
+     *
+     * A way of ramping a given value to produce an output value that doesn't change by more than a
+     * specified amount per second.  Use [ramp].
+     */
+    object Ramp {
+        private var values = doubleArrayOf()
+        private var lambdas = arrayOf<(() -> Double)?>()
+        private var rates = doubleArrayOf()
+
+        init {
+            AsyncLooper.loop(Millis(1000L / 50), "ramper") {
+                synchronized(Ramp) {
+                    for (index in values.indices) {
+                        val goal = lambdas[index]!!.invoke()
+                        val rate = rates[index]
+                        values[index] += (goal - values[index]).clamp(-rate, rate)
+                    }
+                }
+            }
+        }
+
+        class Delegator internal constructor(lambda: () -> Double, rate: Double) {
+            private val id: Int
+            init {
+                synchronized(Ramp) {
+                    id = values.size
+                    values = values.copyOf(values.size + 1)
+                    rates = rates.copyOf(rates.size + 1)
+                    rates[rates.size - 1] = rate
+                    lambdas = lambdas.copyOf(lambdas.size + 1)
+                    lambdas[lambdas.size - 1] = lambda
+                }
+            }
+
+            operator fun getValue(thisRef: Any?, property: KProperty<*>): Double {
+                synchronized(Ramp) {
+                    return values[id]
+                }
+            }
+        }
+
+        fun ramp(perSecond: Double = 10.0, lambda: () -> Double) = Delegator(lambda, perSecond / 50)
     }
 
     private val driverController = XboxController(0)

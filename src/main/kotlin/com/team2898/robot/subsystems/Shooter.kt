@@ -3,6 +3,7 @@ package com.team2898.robot.subsystems
 import com.revrobotics.CANSparkMax
 import com.revrobotics.CANSparkMaxLowLevel
 import com.revrobotics.ControlType
+import com.team2898.robot.OI
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import kotlin.math.absoluteValue
 import kotlin.math.max
@@ -12,7 +13,7 @@ object Shooter : SubsystemBase() {
     private val controllerA = CANSparkMax(1, CANSparkMaxLowLevel.MotorType.kBrushless)
     private val controllerB = CANSparkMax(2, CANSparkMaxLowLevel.MotorType.kBrushless)
     private var goal = 0.0
-    private val actual = Ramp.ramp
+    private val actual by OI.Ramp.ramp(60.0) { goal }
 
     init {
         // apply 5 volts if it's off by 15 rev/sec
@@ -25,7 +26,7 @@ object Shooter : SubsystemBase() {
 //            it.pidController.i = 0.000001
             it.pidController.d = kD
             it.pidController.ff = 0.00021
-            it.pidController.setOutputRange(-0.3, 0.3)
+//            it.pidController.setOutputRange(-0.3, 0.3)
         }
     }
 
@@ -38,14 +39,24 @@ object Shooter : SubsystemBase() {
 
     private var isDisabled = false
 
+    fun disable() {
+        isDisabled = true
+        controllerA.disable()
+        controllerB.disable()
+    }
+
     override fun periodic() {
         val vel = max(controllerA.encoder.velocity.absoluteValue, controllerB.encoder.velocity.absoluteValue)
         if (!isDisabled) {
-            if (vel > (20.0 * 60)) {
-                isDisabled = true
-                controllerA.disable()
-                controllerB.disable()
+            controllerA.pidController.setReference(actual, ControlType.kVelocity)
+            controllerB.pidController.setReference(-actual, ControlType.kVelocity)
+            if (vel > (40.0 * 60)) {
                 println("RPM is $vel, over threshold, stopping")
+                disable()
+                return
+            } else if (max(controllerA.motorTemperature, controllerB.motorTemperature) > 40.0) {
+                println("Max motor temperature reached (${max(controllerA.motorTemperature, controllerB.motorTemperature)}), stopping")
+                disable()
                 return
             }
             println(vel)
