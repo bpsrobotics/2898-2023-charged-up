@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
  */
 class RobotContainer {
     // The robot's subsystems and commands are defined here...
+
     private val autoCommand: Auto = Auto()
 
     // A chooser for which command to use for auto, i.e. one for right, middle, left, red, blue, etc

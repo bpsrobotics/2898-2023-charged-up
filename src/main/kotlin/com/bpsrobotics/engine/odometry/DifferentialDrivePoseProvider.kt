@@ -1,10 +1,11 @@
 package com.bpsrobotics.engine.odometry
 
+import edu.wpi.first.math.geometry.Pose2d
+import edu.wpi.first.math.geometry.Rotation2d
+import edu.wpi.first.math.geometry.Translation2d
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry
 import edu.wpi.first.wpilibj.Encoder
-import edu.wpi.first.wpilibj.geometry.Pose2d
-import edu.wpi.first.wpilibj.geometry.Rotation2d
 import edu.wpi.first.wpilibj.interfaces.Gyro
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry
 
 /** Implements the PoseProvider interface with differential drive odometry and a gyro to get a pose  */
 class DifferentialDrivePoseProvider(private val gyro: Gyro, private val leftEncoder: Encoder?, private val rightEncoder: Encoder?) : PoseProvider {
@@ -24,5 +25,12 @@ class DifferentialDrivePoseProvider(private val gyro: Gyro, private val leftEnco
             leftEncoder.distance,
             rightEncoder.distance
         )
+    }
+
+    override fun reset() {
+        gyro.reset()
+        leftEncoder?.reset()
+        rightEncoder?.reset()
+        odometry.resetPosition(Pose2d(Translation2d(0.0, 0.0), Rotation2d(0.0)), Rotation2d(0.0))
     }
 }

@@ -2,11 +2,11 @@ package com.bpsrobotics.engine.controls
 
 import com.bpsrobotics.engine.odometry.PoseProvider
 import com.bpsrobotics.engine.utils.*
-import edu.wpi.first.wpilibj.controller.RamseteController
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds
-import edu.wpi.first.wpilibj.trajectory.Trajectory
+import edu.wpi.first.math.controller.RamseteController
+import edu.wpi.first.math.controller.SimpleMotorFeedforward
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds
+import edu.wpi.first.math.trajectory.Trajectory
 
 /**
  * @param trackWidth The width of the drivetrain, wheel-to-wheel
@@ -42,12 +42,12 @@ class Ramsete(
     fun voltages(trajectory: Trajectory, time: Seconds, wheelVelocities: DifferentialDriveWheelSpeeds): WheelVoltages {
         val velocities = velocities(trajectory, time)
 
-        val leftFeedforward = leftFF.calculate(wheelVelocities.leftMetersPerSecond).volts
-        val rightFeedforward = rightFF.calculate(wheelVelocities.rightMetersPerSecond).volts
+        val leftFeedforward = leftFF.calculate(velocities.leftMetersPerSecond).volts
+        val rightFeedforward = rightFF.calculate(velocities.rightMetersPerSecond).volts
 
         return WheelVoltages(
-            leftController.calculate(velocities.leftMetersPerSecond).volts + leftFeedforward,
-            rightController.calculate(velocities.rightMetersPerSecond).volts + rightFeedforward
+            leftController.calculate(wheelVelocities.leftMetersPerSecond, velocities.leftMetersPerSecond).volts + leftFeedforward,
+            rightController.calculate(wheelVelocities.rightMetersPerSecond, velocities.rightMetersPerSecond).volts + rightFeedforward
         )
     }
 }
