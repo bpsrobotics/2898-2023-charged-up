@@ -72,6 +72,15 @@ object Drivetrain : SubsystemBase() {
     private val leftFF = SimpleMotorFeedforward(DRIVETRAIN_KS.value, DRIVETRAIN_KV, DRIVETRAIN_KA)
     private val rightFF = SimpleMotorFeedforward(DRIVETRAIN_KS.value, DRIVETRAIN_KV, DRIVETRAIN_KA)
 
+    init {
+        CSVLogger("drivetrain",50.0,
+            "leftVelocity" to { leftEncoder.rate },
+            "rightVelocity" to { rightEncoder.rate },
+            "leftSet" to { leftPid.setpoint},
+            "rightSet" to { rightPid.setpoint}
+            )
+    }
+
     private val ramsete: Ramsete = Ramsete(
         DRIVETRAIN_TRACK_WIDTH.toMeters(),
         Odometry,
@@ -84,7 +93,7 @@ object Drivetrain : SubsystemBase() {
     private var trajectory: Trajectory? = null
     private var startTime = 0.seconds
 
-    var mode = Mode.OPEN_LOOP
+    var mode = Mode.DISABLED
 
     enum class Mode {
         OPEN_LOOP, CLOSED_LOOP, DISABLED, STUPID

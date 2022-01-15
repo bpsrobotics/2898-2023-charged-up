@@ -1,14 +1,9 @@
 package com.team2898.robot
 
-import com.bpsrobotics.engine.async.AsyncLooper
-import com.bpsrobotics.engine.utils.Millis
-import com.bpsrobotics.engine.utils.Sugar.clamp
-import com.team2898.robot.OI.Ramp.ramp
 import edu.wpi.first.wpilibj.XboxController
 import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sign
-import kotlin.reflect.KProperty
 
 /**
  * The Operator Interface object.
