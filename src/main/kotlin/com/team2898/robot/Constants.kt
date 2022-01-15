@@ -25,8 +25,8 @@ object Constants {
 
     // Motor IDs
     const val DRIVETRAIN_LEFT_MAIN = 1
-    const val DRIVETRAIN_LEFT_SECONDARY = 2
-    const val DRIVETRAIN_RIGHT_MAIN = 3
+    const val DRIVETRAIN_LEFT_SECONDARY = 3
+    const val DRIVETRAIN_RIGHT_MAIN = 2
     const val DRIVETRAIN_RIGHT_SECONDARY = 4
 
     // GPIO
