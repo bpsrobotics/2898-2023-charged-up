@@ -17,11 +17,12 @@ class Auto : CommandBase() {
         Odometry.reset()
         val t = Drivetrain.trajectoryMaker.builder()
             .start(Pose2d())
-            .point(1.m, 1.m)
-            .point(0.m, 2.m)
-            .point((-1).m, 1.m)
-            .point((-0.5).m, (0.5).m)
-            .end(Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)))
+            .point(1.m,   0.m)
+            .point(1.5.m, 0.m)
+            .point(1.m,   1.m)
+            .point(0.5.m, 0.m)
+            .point(0.m,   0.m)
+            .end(Pose2d(-0.1, 0.0, Rotation2d.fromDegrees(180.0)))
             .build()
 
         Drivetrain.follow(t)
@@ -29,7 +30,7 @@ class Auto : CommandBase() {
 
     override fun execute() {
 //        Drivetrain.stupidDrive(MetersPerSecond(-1.0), MetersPerSecond(-1.0))
-//        Drivetrain.rawDrive(DRIVETRAIN_KS.value + DRIVETRAIN_KV, DRIVETRAIN_KS.value + DRIVETRAIN_KV)
+//        Drivetrain.rawDrive(DRIVETRAIN_KS.value, DRIVETRAIN_KS.value)
         if (max(Drivetrain.leftEncoder.rate.absoluteValue, Drivetrain.rightEncoder.rate.absoluteValue) > 3.0) {
             Drivetrain.mode = Drivetrain.Mode.OPEN_LOOP
             println("STOPPING")

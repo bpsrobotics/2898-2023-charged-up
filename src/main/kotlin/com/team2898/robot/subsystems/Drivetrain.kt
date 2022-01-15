@@ -50,6 +50,12 @@ object Drivetrain : SubsystemBase() {
     val leftEncoder  = Encoder(DRIVETRAIN_LEFT_ENCODER_A,  DRIVETRAIN_LEFT_ENCODER_B)
     val rightEncoder = Encoder(DRIVETRAIN_RIGHT_ENCODER_A, DRIVETRAIN_RIGHT_ENCODER_B)
 
+    init {
+        listOf(leftEncoder, rightEncoder).map {
+            it.distancePerPulse = (In(6.0).meterValue() * PI) / 2048
+        }
+    }
+
     val file = File("/home/lvuser/dt-data.csv").outputStream().bufferedWriter()
 
     init {
@@ -180,21 +186,11 @@ object Drivetrain : SubsystemBase() {
                 val lf = leftFF.calculate(leftPid.setpoint)
                 val rf = rightFF.calculate(rightPid.setpoint)
 
-                file.write(
-                            "," + leftPid.setpoint
-                            + "," + rightPid.setpoint
-                            + "," + l
-                            + "," + r
-                            + "," + lf
-                            + "," + rf
-                            + "\n"
-                )
+                SmartDashboard.putNumber("left output", l)
+                SmartDashboard.putNumber("right output", r)
 
-//                SmartDashboard.putNumber("left pid", l)
-//                SmartDashboard.putNumber("right pid", r)
-//
-//                SmartDashboard.putNumber("left ff", lf)
-//                SmartDashboard.putNumber("right ff", rf)
+                SmartDashboard.putNumber("left ff", lf)
+                SmartDashboard.putNumber("right ff", rf)
                 rawDrive(l + lf, r + rf)
             }
         }

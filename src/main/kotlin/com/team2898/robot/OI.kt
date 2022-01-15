@@ -4,7 +4,6 @@ import com.bpsrobotics.engine.async.AsyncLooper
 import com.bpsrobotics.engine.utils.Millis
 import com.bpsrobotics.engine.utils.Sugar.clamp
 import com.team2898.robot.OI.Ramp.ramp
-import edu.wpi.first.wpilibj.GenericHID
 import edu.wpi.first.wpilibj.XboxController
 import kotlin.math.abs
 import kotlin.math.pow
@@ -53,8 +52,6 @@ object OI {
         return output
     }
 
-    private val driverController = XboxController(0)
-
     /**
      * do not question the r a m p
      *
@@ -100,6 +97,8 @@ object OI {
 
         fun ramp(perSecond: Double = 10.0, lambda: () -> Double) = Delegator(lambda, perSecond / 50)
     }
+
+    private val driverController = XboxController(0)
 
     // Left and right shoulder switches (the ones next to the trigger) for quickturn
     val quickTurnRight by ramp { process(driverController.getRawAxis(3), deadzone = true, square = true) }

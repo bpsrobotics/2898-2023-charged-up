@@ -26,7 +26,7 @@ class TeleOp : CommandBase() {
       // Otherwise, drive and turn normally
       else -> Drivetrain.cheesyDrive(OI.turn, OI.throttle, false)
     }*/
-    Shooter.setRPM(PI)
+    Shooter.setRPM(60.0 * 15)
   }
 
   // Called once the command ends or is interrupted.
