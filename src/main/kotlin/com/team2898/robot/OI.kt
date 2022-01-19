@@ -4,6 +4,7 @@ import com.bpsrobotics.engine.async.AsyncLooper
 import com.bpsrobotics.engine.utils.Millis
 import com.bpsrobotics.engine.utils.Sugar.clamp
 import com.team2898.robot.OI.Ramp.ramp
+import edu.wpi.first.wpilibj.GenericHID
 import edu.wpi.first.wpilibj.XboxController
 import kotlin.math.abs
 import kotlin.math.pow
@@ -106,6 +107,6 @@ object OI {
 
     // Right joystick y-axis.  Controller mapping can be tricky, the best way is to use the driver station to see what buttons and axis are being pressed.
     // Squared for better control on turn, cubed on throttle
-    val throttle by ramp { process(driverController.getRawAxis(5), deadzone = true, cube = true) }
-    val turn by ramp { process(driverController.getRawAxis(0), deadzone = true, square = true) }
+    val throttle by ramp { process(driverController.getY(GenericHID.Hand.kLeft), deadzone = true, cube = true) }
+    val turn by ramp { process(driverController.getX(GenericHID.Hand.kRight), deadzone = true, square = true) }
 }

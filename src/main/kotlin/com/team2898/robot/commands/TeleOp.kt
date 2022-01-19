@@ -12,6 +12,7 @@ class TeleOp : CommandBase() {
 
   // Called when the command is started.
   override fun initialize() {
+    Drivetrain.mode = Drivetrain.Mode.OPEN_LOOP
   }
 
   // Called every time the scheduler runs while the command is scheduled.

@@ -3,12 +3,14 @@ package com.team2898.robot.subsystems
 import com.bpsrobotics.engine.controls.Controller
 import com.bpsrobotics.engine.controls.Ramsete
 import com.bpsrobotics.engine.controls.TrajectoryMaker
+import com.bpsrobotics.engine.utils.In
 import com.bpsrobotics.engine.utils.minus
 import com.bpsrobotics.engine.utils.seconds
 import com.bpsrobotics.engine.utils.toMeters
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX
 import com.revrobotics.CANSparkMax
 import com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushed
+import com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless
 import com.team2898.robot.Constants.DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT
 import com.team2898.robot.Constants.DRIVETRAIN_KA
 import com.team2898.robot.Constants.DRIVETRAIN_KD
@@ -34,21 +36,29 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward
 import edu.wpi.first.wpilibj.drive.DifferentialDrive
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj.trajectory.Trajectory
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import kotlin.math.PI
 
 object Drivetrain : SubsystemBase() {
 
-    private val leftMain: SpeedController = CANSparkMax(DRIVETRAIN_LEFT_MAIN, kBrushed)
-    private val leftSecondary: SpeedController = CANSparkMax(DRIVETRAIN_LEFT_SECONDARY, kBrushed)
-    private val rightMain: SpeedController = CANSparkMax(DRIVETRAIN_RIGHT_MAIN, kBrushed)
-    private val rightSecondary: SpeedController = CANSparkMax(DRIVETRAIN_RIGHT_SECONDARY, kBrushed)
+    private val leftMain: SpeedController = CANSparkMax(DRIVETRAIN_LEFT_MAIN, kBrushless)
+    private val leftSecondary: SpeedController = CANSparkMax(DRIVETRAIN_LEFT_SECONDARY, kBrushless)
+    private val rightMain: SpeedController = CANSparkMax(DRIVETRAIN_RIGHT_MAIN, kBrushless)
+    private val rightSecondary: SpeedController = CANSparkMax(DRIVETRAIN_RIGHT_SECONDARY, kBrushless)
 
     private val left  = SpeedControllerGroup(leftMain,  leftSecondary)
     private val right = SpeedControllerGroup(rightMain, rightSecondary)
 
     val leftEncoder  = Encoder(DRIVETRAIN_LEFT_ENCODER_A,  DRIVETRAIN_LEFT_ENCODER_B)
     val rightEncoder = Encoder(DRIVETRAIN_RIGHT_ENCODER_A, DRIVETRAIN_RIGHT_ENCODER_B)
+
+    init {
+        listOf(leftEncoder, rightEncoder).map {
+            it.distancePerPulse = (In(6.0).meterValue() * PI) / 2048
+        }
+    }
 
     val trajectoryMaker = TrajectoryMaker(DRIVETRAIN_MAX_VELOCITY, DRIVETRAIN_MAX_ACCELERATION)
 
@@ -64,7 +74,7 @@ object Drivetrain : SubsystemBase() {
     private var trajectory: Trajectory? = null
     private var startTime = 0.seconds
 
-    private var mode = Mode.DISABLED
+    var mode = Mode.DISABLED
 
     enum class Mode {
         OPEN_LOOP, CLOSED_LOOP, DISABLED
@@ -85,9 +95,12 @@ object Drivetrain : SubsystemBase() {
             } else if (this is CANSparkMax) {
                 restoreFactoryDefaults()
                 setSmartCurrentLimit(DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT)
-                idleMode = CANSparkMax.IdleMode.kBrake  // TODO: figure out if this is right
+                idleMode = CANSparkMax.IdleMode.kCoast
             }
         }
+
+//        leftMain.inverted = true
+//        rightMain.inverted = true
     }
 
     fun follow(path: Trajectory) {
@@ -124,6 +137,9 @@ object Drivetrain : SubsystemBase() {
     }
 
     override fun periodic() {
+        SmartDashboard.putNumber("left encoder", leftEncoder.distance)
+        SmartDashboard.putNumber("right encoder", rightEncoder.distance)
+
         when (mode) {
             Mode.DISABLED -> differentialDrive.tankDrive(0.0, 0.0)
             Mode.OPEN_LOOP -> {}  // Nothing to do in the loop because it's handled by [Robot]

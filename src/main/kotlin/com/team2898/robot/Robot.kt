@@ -8,6 +8,7 @@
 package com.team2898.robot
 
 import com.team2898.robot.commands.TeleOp
+import com.team2898.robot.subsystems.Drivetrain
 import com.team2898.robot.subsystems.Odometry
 import edu.wpi.first.wpilibj.TimedRobot
 import edu.wpi.first.wpilibj2.command.Command
@@ -36,6 +37,7 @@ class Robot : TimedRobot() {
     robotContainer = RobotContainer()
     // Automatically grab auto command to ensure m_autonomousCommand is defined before teleopInit is run
     autoCommand = robotContainer.getAutonomousCommand()
+    Drivetrain
   }
 
   /**

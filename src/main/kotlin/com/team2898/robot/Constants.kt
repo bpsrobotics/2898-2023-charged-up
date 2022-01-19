@@ -10,10 +10,7 @@
 
 package com.team2898.robot
 
-import com.bpsrobotics.engine.utils.Ft
-import com.bpsrobotics.engine.utils.MetersPerSecondSquared
-import com.bpsrobotics.engine.utils.Volts
-import com.bpsrobotics.engine.utils.`M/s`
+import com.bpsrobotics.engine.utils.*
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -36,7 +33,7 @@ object Constants {
     const val DRIVETRAIN_RIGHT_ENCODER_B = 3
 
     // Drivetrain info
-    const val DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT = 30
+    const val DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT = 10
     const val DRIVETRAIN_PEAK_CURRENT_LIMIT = 50
     const val DRIVETRAIN_PEAK_CURRENT_LIMIT_DURATION = 50
 
@@ -45,13 +42,13 @@ object Constants {
     val DRIVETRAIN_MAX_ACCELERATION = MetersPerSecondSquared(10.0)  // placeholder
 
     // Horizontal distance between the centers of the wheels on each side of the drivetrain
-    val DRIVETRAIN_TRACK_WIDTH = Ft(2.5)  // Placeholder value
+    val DRIVETRAIN_TRACK_WIDTH = Meters(0.6452570276382648)
 
     // Drivetrain characterization parameters, see [https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-characterization/index.html]
     // These do not carry from robot to robot, even if they're the same design! Characterize each drivetrain.
-          val DRIVETRAIN_KS = Volts(0.0)  // Voltage to make the motor start turning
-    const val DRIVETRAIN_KV = 0.0  // Coefficient describing the friction proportional to rotation speed
-    const val DRIVETRAIN_KA = 0.0  // Describes how much voltage is required for a given amount of acceleration
+          val DRIVETRAIN_KS = Volts(0.219)  // Voltage to make the motor start turning
+    const val DRIVETRAIN_KV = 2.73  // Coefficient describing the friction proportional to rotation speed
+    const val DRIVETRAIN_KA = 0.000236  // Describes how much voltage is required for a given amount of acceleration
     const val DRIVETRAIN_KP = 0.0  // Proportional PID component
     const val DRIVETRAIN_KD = 0.0  // Derivative PID component (note: no I term is used because it can lead to runaway)
 
