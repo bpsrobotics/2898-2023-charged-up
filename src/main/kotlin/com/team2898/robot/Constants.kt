@@ -38,19 +38,19 @@ object Constants {
     const val DRIVETRAIN_PEAK_CURRENT_LIMIT_DURATION = 50
 
     // Can't be const because it's an expression
-    val DRIVETRAIN_MAX_VELOCITY = `M/s`(5.0)
-    val DRIVETRAIN_MAX_ACCELERATION = MetersPerSecondSquared(10.0)  // placeholder
+    val DRIVETRAIN_MAX_VELOCITY = `M/s`(1.0)
+    val DRIVETRAIN_MAX_ACCELERATION = MetersPerSecondSquared(0.5)  // placeholder
 
     // Horizontal distance between the centers of the wheels on each side of the drivetrain
-    val DRIVETRAIN_TRACK_WIDTH = Meters(0.6452570276382648)
+    val DRIVETRAIN_TRACK_WIDTH = In(22.0).toMeters()
 
     // Drivetrain characterization parameters, see [https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-characterization/index.html]
     // These do not carry from robot to robot, even if they're the same design! Characterize each drivetrain.
-          val DRIVETRAIN_KS = Volts(0.219)  // Voltage to make the motor start turning
-    const val DRIVETRAIN_KV = 2.73  // Coefficient describing the friction proportional to rotation speed
-    const val DRIVETRAIN_KA = 0.000236  // Describes how much voltage is required for a given amount of acceleration
-    const val DRIVETRAIN_KP = 0.0  // Proportional PID component
-    const val DRIVETRAIN_KD = 0.0  // Derivative PID component (note: no I term is used because it can lead to runaway)
+          val DRIVETRAIN_KS = Volts(0.13068)  // Voltage to make the motor start turning
+    const val DRIVETRAIN_KV = 4.0 / 12  // Coefficient describing the friction proportional to rotation speed
+    const val DRIVETRAIN_KA = 0.13546 // Describes how much voltage is required for a given amount of acceleration
+    const val DRIVETRAIN_KP = 0.36442 // Proportional PID component
+    const val DRIVETRAIN_KD = 0.0     // Derivative PID component (note: no I term is used because it can lead to runaway)
 
     // Ramsete parameters, see [https://file.tavsys.net/control/controls-engineering-in-frc.pdf] page 81
     const val DRIVETRAIN_RAMSETE_B = 2.0  // Higher values make it more aggressively stick to the trajectory. 0 < B

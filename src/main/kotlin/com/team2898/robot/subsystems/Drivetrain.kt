@@ -3,13 +3,9 @@ package com.team2898.robot.subsystems
 import com.bpsrobotics.engine.controls.Controller
 import com.bpsrobotics.engine.controls.Ramsete
 import com.bpsrobotics.engine.controls.TrajectoryMaker
-import com.bpsrobotics.engine.utils.In
-import com.bpsrobotics.engine.utils.minus
-import com.bpsrobotics.engine.utils.seconds
-import com.bpsrobotics.engine.utils.toMeters
+import com.bpsrobotics.engine.utils.*
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX
 import com.revrobotics.CANSparkMax
-import com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushed
 import com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless
 import com.team2898.robot.Constants.DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT
 import com.team2898.robot.Constants.DRIVETRAIN_KA
@@ -23,33 +19,32 @@ import com.team2898.robot.Constants.DRIVETRAIN_LEFT_MAIN
 import com.team2898.robot.Constants.DRIVETRAIN_LEFT_SECONDARY
 import com.team2898.robot.Constants.DRIVETRAIN_MAX_ACCELERATION
 import com.team2898.robot.Constants.DRIVETRAIN_MAX_VELOCITY
-import com.team2898.robot.Constants.DRIVETRAIN_PEAK_CURRENT_LIMIT
-import com.team2898.robot.Constants.DRIVETRAIN_PEAK_CURRENT_LIMIT_DURATION
 import com.team2898.robot.Constants.DRIVETRAIN_RIGHT_ENCODER_A
 import com.team2898.robot.Constants.DRIVETRAIN_RIGHT_ENCODER_B
 import com.team2898.robot.Constants.DRIVETRAIN_RIGHT_MAIN
 import com.team2898.robot.Constants.DRIVETRAIN_RIGHT_SECONDARY
 import com.team2898.robot.Constants.DRIVETRAIN_TRACK_WIDTH
+import edu.wpi.first.math.controller.SimpleMotorFeedforward
+import edu.wpi.first.math.trajectory.Trajectory
 import edu.wpi.first.wpilibj.Encoder
 import edu.wpi.first.wpilibj.SpeedController
-import edu.wpi.first.wpilibj.SpeedControllerGroup
 import edu.wpi.first.wpilibj.Timer
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward
 import edu.wpi.first.wpilibj.drive.DifferentialDrive
+import edu.wpi.first.wpilibj.motorcontrol.MotorController
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
-import edu.wpi.first.wpilibj.trajectory.Trajectory
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import kotlin.math.PI
 
 object Drivetrain : SubsystemBase() {
 
-    private val leftMain: SpeedController = CANSparkMax(DRIVETRAIN_LEFT_MAIN, kBrushless)
-    private val leftSecondary: SpeedController = CANSparkMax(DRIVETRAIN_LEFT_SECONDARY, kBrushless)
-    private val rightMain: SpeedController = CANSparkMax(DRIVETRAIN_RIGHT_MAIN, kBrushless)
-    private val rightSecondary: SpeedController = CANSparkMax(DRIVETRAIN_RIGHT_SECONDARY, kBrushless)
+    private val leftMain: MotorController = CANSparkMax(DRIVETRAIN_LEFT_MAIN, kBrushless)
+    private val leftSecondary: MotorController = CANSparkMax(DRIVETRAIN_LEFT_SECONDARY, kBrushless)
+    private val rightMain: MotorController = CANSparkMax(DRIVETRAIN_RIGHT_MAIN, kBrushless)
+    private val rightSecondary: MotorController = CANSparkMax(DRIVETRAIN_RIGHT_SECONDARY, kBrushless)
 
-    private val left  = SpeedControllerGroup(leftMain,  leftSecondary)
-    private val right = SpeedControllerGroup(rightMain, rightSecondary)
+    private val left  = MotorControllerGroup(leftMain,  leftSecondary)
+    private val right = MotorControllerGroup(rightMain, rightSecondary)
 
     val leftEncoder  = Encoder(DRIVETRAIN_LEFT_ENCODER_A,  DRIVETRAIN_LEFT_ENCODER_B)
     val rightEncoder = Encoder(DRIVETRAIN_RIGHT_ENCODER_A, DRIVETRAIN_RIGHT_ENCODER_B)
@@ -62,13 +57,18 @@ object Drivetrain : SubsystemBase() {
 
     val trajectoryMaker = TrajectoryMaker(DRIVETRAIN_MAX_VELOCITY, DRIVETRAIN_MAX_ACCELERATION)
 
+    private val leftPid = Controller.PID(DRIVETRAIN_KP, DRIVETRAIN_KD)
+    private val rightPid = Controller.PID(DRIVETRAIN_KP, DRIVETRAIN_KD)
+    private val leftFF = SimpleMotorFeedforward(DRIVETRAIN_KS.value, DRIVETRAIN_KV, DRIVETRAIN_KA)
+    private val rightFF = SimpleMotorFeedforward(DRIVETRAIN_KS.value, DRIVETRAIN_KV, DRIVETRAIN_KA)
+
     private val ramsete: Ramsete = Ramsete(
         DRIVETRAIN_TRACK_WIDTH.toMeters(),
         Odometry,
-        Controller.PID(DRIVETRAIN_KP, DRIVETRAIN_KD),
-        Controller.PID(DRIVETRAIN_KP, DRIVETRAIN_KD),
-        SimpleMotorFeedforward(DRIVETRAIN_KS.value, DRIVETRAIN_KV, DRIVETRAIN_KA),
-        SimpleMotorFeedforward(DRIVETRAIN_KS.value, DRIVETRAIN_KV, DRIVETRAIN_KA)
+        leftPid,
+        rightPid,
+        leftFF,
+        rightFF
     )
 
     private var trajectory: Trajectory? = null
@@ -77,7 +77,7 @@ object Drivetrain : SubsystemBase() {
     var mode = Mode.DISABLED
 
     enum class Mode {
-        OPEN_LOOP, CLOSED_LOOP, DISABLED
+        OPEN_LOOP, CLOSED_LOOP, DISABLED, STUPID
     }
 
     /** Computes left and right throttle from driver controller turn and throttle inputs. */
@@ -87,11 +87,11 @@ object Drivetrain : SubsystemBase() {
     init {
         applyToMotors {
             if (this is WPI_TalonSRX) {
-                configFactoryDefault()
-                // Configure current limits to prevent motors stalling and overheating/breaking something or browning out the robot
-                configContinuousCurrentLimit(DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT)
-                // Have a higher peak current limit for accelerating and starting, but it's only allowed for a short amount of time
-                configPeakCurrentLimit(DRIVETRAIN_PEAK_CURRENT_LIMIT, DRIVETRAIN_PEAK_CURRENT_LIMIT_DURATION)
+//                configFactoryDefault()
+//                // Configure current limits to prevent motors stalling and overheating/breaking something or browning out the robot
+//                configContinuousCurrentLimit(DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT)
+//                // Have a higher peak current limit for accelerating and starting, but it's only allowed for a short amount of time
+//                configPeakCurrentLimit(DRIVETRAIN_PEAK_CURRENT_LIMIT, DRIVETRAIN_PEAK_CURRENT_LIMIT_DURATION)
             } else if (this is CANSparkMax) {
                 restoreFactoryDefaults()
                 setSmartCurrentLimit(DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT)
@@ -100,13 +100,20 @@ object Drivetrain : SubsystemBase() {
         }
 
 //        leftMain.inverted = true
-//        rightMain.inverted = true
+        rightMain.inverted = true
+        rightSecondary.inverted = true
     }
 
     fun follow(path: Trajectory) {
         trajectory = path
         startTime = Timer.getFPGATimestamp().seconds
         mode = Mode.CLOSED_LOOP
+    }
+
+    fun stupidDrive(left: `M/s`, right: `M/s`) {
+        mode = Mode.STUPID
+        leftPid.setpoint = left.value
+        rightPid.setpoint = right.value
     }
 
     /** Outputs [left] to the left motor, and [right] to the right motor. */
@@ -140,6 +147,9 @@ object Drivetrain : SubsystemBase() {
         SmartDashboard.putNumber("left encoder", leftEncoder.distance)
         SmartDashboard.putNumber("right encoder", rightEncoder.distance)
 
+        SmartDashboard.putNumber("left encoder rate", leftEncoder.rate)
+        SmartDashboard.putNumber("right encoder rate", rightEncoder.rate)
+
         when (mode) {
             Mode.DISABLED -> differentialDrive.tankDrive(0.0, 0.0)
             Mode.OPEN_LOOP -> {}  // Nothing to do in the loop because it's handled by [Robot]
@@ -150,6 +160,20 @@ object Drivetrain : SubsystemBase() {
                     Timer.getFPGATimestamp().seconds - startTime,
                     Odometry.vels
                 ))
+            }
+            Mode.STUPID -> {
+                val l = leftPid.calculate(leftEncoder.rate)
+                val r = rightPid.calculate(rightEncoder.rate)
+
+                val lf = leftFF.calculate(leftPid.setpoint)
+                val rf = rightFF.calculate(rightPid.setpoint)
+
+                SmartDashboard.putNumber("left output", l)
+                SmartDashboard.putNumber("right output", r)
+
+                SmartDashboard.putNumber("left ff", lf)
+                SmartDashboard.putNumber("right ff", rf)
+                rawDrive(l + lf, r + rf)
             }
         }
     }

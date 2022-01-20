@@ -107,6 +107,6 @@ object OI {
 
     // Right joystick y-axis.  Controller mapping can be tricky, the best way is to use the driver station to see what buttons and axis are being pressed.
     // Squared for better control on turn, cubed on throttle
-    val throttle by ramp { process(driverController.getY(GenericHID.Hand.kLeft), deadzone = true, cube = true) }
-    val turn by ramp { process(driverController.getX(GenericHID.Hand.kRight), deadzone = true, square = true) }
+    val throttle by ramp { process(driverController.leftY, deadzone = true, cube = true) }
+    val turn by ramp { process(driverController.rightX, deadzone = true, square = true) }
 }
