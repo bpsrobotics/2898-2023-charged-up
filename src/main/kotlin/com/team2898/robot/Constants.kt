@@ -10,10 +10,14 @@
 
 package com.team2898.robot
 
+import com.bpsrobotics.engine.controls.Controller
 import com.bpsrobotics.engine.utils.Ft
 import com.bpsrobotics.engine.utils.MetersPerSecondSquared
 import com.bpsrobotics.engine.utils.Volts
 import com.bpsrobotics.engine.utils.`M/s`
+import com.team2898.robot.subsystems.Climb
+import edu.wpi.first.wpilibj.controller.ElevatorFeedforward
+import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -58,4 +62,28 @@ object Constants {
     // Ramsete parameters, see [https://file.tavsys.net/control/controls-engineering-in-frc.pdf] page 81
     const val DRIVETRAIN_RAMSETE_B = 2.0  // Higher values make it more aggressively stick to the trajectory. 0 < B
     const val DRIVETRAIN_RAMSETE_Z = 0.7  // Higher values give it more dampening. 0 < Z < 1
+
+    val CLIMBER_1_LOADED = Climb.ProfileManager(
+        Controller.PID(0.0, 0.0),
+        ElevatorFeedforward(0.0, 0.0, 0.0, 0.0),
+        TrapezoidProfile.Constraints(0.0, 0.0)
+    )
+
+    val CLIMBER_1_UNLOADED = Climb.ProfileManager(
+        Controller.PID(0.0, 0.0),
+        ElevatorFeedforward(0.0, 0.0, 0.0, 0.0),
+        TrapezoidProfile.Constraints(0.0, 0.0)
+    )
+
+    val CLIMBER_2_LOADED = Climb.ProfileManager(
+        Controller.PID(0.0, 0.0),
+        ElevatorFeedforward(0.0, 0.0, 0.0, 0.0),
+        TrapezoidProfile.Constraints(0.0, 0.0)
+    )
+
+    val CLIMBER_2_UNLOADED = Climb.ProfileManager(
+        Controller.PID(0.0, 0.0),
+        ElevatorFeedforward(0.0, 0.0, 0.0, 0.0),
+        TrapezoidProfile.Constraints(0.0, 0.0)
+    )
 }
