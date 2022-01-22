@@ -1,6 +1,7 @@
 package com.team2898.robot.subsystems
 
 import com.bpsrobotics.engine.utils.MetersPerSecond
+import com.bpsrobotics.engine.utils.m
 import com.team2898.robot.Constants
 import com.team2898.robot.Constants.DRIVETRAIN_KS
 import edu.wpi.first.math.geometry.Pose2d
@@ -15,11 +16,11 @@ class Auto : CommandBase() {
         Odometry.reset()
         val t = Drivetrain.trajectoryMaker.builder()
             .start(Pose2d())
-            .point(Translation2d(1.0, 0.0))
-            .point(Translation2d(1.5, 0.5))
-            .point(Translation2d(1.0, 1.0))
-            .point(Translation2d(0.5, 0.0))
-            .point(Translation2d(0.0, 0.0))
+            .point(1.m,   0.m)
+            .point(1.5.m, 0.m)
+            .point(1.m,   1.m)
+            .point(0.5.m, 0.m)
+            .point(0.m,   0.m)
             .end(Pose2d(-0.1, 0.0, Rotation2d.fromDegrees(180.0)))
             .build()
 

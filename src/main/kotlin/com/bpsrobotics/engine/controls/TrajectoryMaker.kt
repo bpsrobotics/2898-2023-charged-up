@@ -1,5 +1,6 @@
 package com.bpsrobotics.engine.controls
 
+import com.bpsrobotics.engine.utils.Meters
 import com.bpsrobotics.engine.utils.MetersPerSecond
 import com.bpsrobotics.engine.utils.MetersPerSecondSquared
 import edu.wpi.first.math.geometry.Pose2d
@@ -19,6 +20,7 @@ class TrajectoryMaker(maxVel: MetersPerSecond, maxAccel: MetersPerSecondSquared)
     inner class TrajectoryBuilder internal constructor(private val startPose: Pose2d?, private val splinePoints: Array<Translation2d>, private val endPose: Pose2d?) {
         fun start(pose: Pose2d) = TrajectoryBuilder(pose, splinePoints, endPose)
 
+        fun point(x: Meters, y: Meters) = TrajectoryBuilder(startPose, splinePoints + Translation2d(x.value, y.value), endPose)
         fun point(point: Translation2d) = TrajectoryBuilder(startPose, splinePoints + point, endPose)
         fun points(vararg points: Translation2d) = TrajectoryBuilder(startPose, splinePoints + points, endPose)
         fun points(points: Iterable<Translation2d>) = TrajectoryBuilder(startPose, splinePoints + points.toList(), endPose)

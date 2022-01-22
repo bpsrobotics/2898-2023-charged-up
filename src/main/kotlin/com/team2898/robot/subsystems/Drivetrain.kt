@@ -74,7 +74,7 @@ object Drivetrain : SubsystemBase() {
     private var trajectory: Trajectory? = null
     private var startTime = 0.seconds
 
-    var mode = Mode.DISABLED
+    var mode = Mode.OPEN_LOOP
 
     enum class Mode {
         OPEN_LOOP, CLOSED_LOOP, DISABLED, STUPID
