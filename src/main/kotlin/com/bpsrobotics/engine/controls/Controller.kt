@@ -1,6 +1,6 @@
 package com.bpsrobotics.engine.controls
 
-import edu.wpi.first.wpilibj.controller.PIDController
+import edu.wpi.first.math.controller.PIDController
 
 /**
  * A closed-loop controller controlling a one-dimensional output,

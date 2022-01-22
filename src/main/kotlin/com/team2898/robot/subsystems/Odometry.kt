@@ -4,11 +4,10 @@ import com.bpsrobotics.engine.odometry.DifferentialDrivePoseProvider
 import com.bpsrobotics.engine.odometry.PoseProvider
 import com.bpsrobotics.engine.utils.MetersPerSecond
 import com.bpsrobotics.engine.utils.NAVX
-import edu.wpi.first.wpilibj.Sendable
-import edu.wpi.first.wpilibj.geometry.Pose2d
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds
-import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder
-import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds
+import edu.wpi.first.util.sendable.Sendable
+import edu.wpi.first.util.sendable.SendableBuilder
+import edu.wpi.first.util.sendable.SendableRegistry
 
 object Odometry : Sendable, PoseProvider by DifferentialDrivePoseProvider(NAVX(),
     Drivetrain.leftEncoder,
