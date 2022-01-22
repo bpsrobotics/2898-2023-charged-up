@@ -3,6 +3,8 @@ package com.team2898.robot
 import com.bpsrobotics.engine.async.AsyncLooper
 import com.bpsrobotics.engine.utils.Millis
 import com.bpsrobotics.engine.utils.Sugar.clamp
+import com.team2898.robot.Constants.INTAKE_BUTTON
+import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.XboxController
 import kotlin.math.abs
 import kotlin.math.pow
@@ -98,6 +100,7 @@ object OI {
     }
 
     private val driverController = XboxController(0)
+    private val operatorController = Joystick(1)
 
     // Left and right shoulder switches (the ones next to the trigger) for quickturn
     val quickTurnRight get() = process(driverController.getRawAxis(3), deadzone = true, square = true)
@@ -107,4 +110,6 @@ object OI {
     // Squared for better control on turn, cubed on throttle
     val throttle get() = process(driverController.getRawAxis(5), deadzone = true, cube = true)
     val turn get() = process(driverController.getRawAxis(0), deadzone = true, square = true)
+
+    val intake get() = if(operatorController.getRawButton(INTAKE_BUTTON)) 0.5 else 0.0
 }

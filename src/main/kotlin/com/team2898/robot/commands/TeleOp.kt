@@ -1,6 +1,7 @@
 package com.team2898.robot.commands
 
 import com.team2898.robot.OI
+import com.team2898.robot.subsystems.Intake
 //import com.team2898.robot.subsystems.Drivetrain
 import com.team2898.robot.subsystems.Shooter
 import edu.wpi.first.wpilibj2.command.CommandBase
@@ -26,6 +27,7 @@ class TeleOp : CommandBase() {
       else -> Drivetrain.cheesyDrive(OI.turn, OI.throttle, false)
     }*/
     Shooter.setRPM(60.0 * 15)
+    Intake.setSpeed(OI.intake)
   }
 
   // Called once the command ends or is interrupted.
