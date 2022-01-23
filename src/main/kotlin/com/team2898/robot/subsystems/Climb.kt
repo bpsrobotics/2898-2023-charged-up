@@ -1,40 +1,32 @@
 package com.team2898.robot.subsystems
 
 import com.bpsrobotics.engine.controls.Controller
-import com.bpsrobotics.engine.controls.Controller.PID
 import com.bpsrobotics.engine.utils.Meters
 import com.bpsrobotics.engine.utils.minus
 import com.bpsrobotics.engine.utils.seconds
-import com.team2898.robot.Constants
 import com.team2898.robot.Constants.CLIMBER_1_LOADED
 import com.team2898.robot.Constants.CLIMBER_1_UNLOADED
 import com.team2898.robot.Constants.CLIMBER_2_LOADED
 import com.team2898.robot.Constants.CLIMBER_2_UNLOADED
+import edu.wpi.first.math.controller.ElevatorFeedforward
+import edu.wpi.first.math.trajectory.TrapezoidProfile
 import edu.wpi.first.wpilibj.DoubleSolenoid
 import edu.wpi.first.wpilibj.Encoder
-import edu.wpi.first.wpilibj.SpeedControllerGroup
+import edu.wpi.first.wpilibj.PneumaticsModuleType
 import edu.wpi.first.wpilibj.Timer
-import edu.wpi.first.wpilibj.controller.ElevatorFeedforward
-import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 
-class Climb : SubsystemBase() {
-    private val arm1 = Arm(
-        SpeedControllerGroup(arrayOf()),
+object Climb : SubsystemBase() {
+    val elevator = Arm(
+        MotorControllerGroup(arrayOf()),
         Encoder(4, 5),
-        DoubleSolenoid(0, 1),
+        DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1),
         CLIMBER_1_LOADED, CLIMBER_1_UNLOADED
     )
 
-    private val arm2 = Arm(
-        SpeedControllerGroup(arrayOf()),
-        Encoder(4, 5),
-        DoubleSolenoid(2, 3),
-        CLIMBER_2_LOADED, CLIMBER_2_UNLOADED
-    )
-
-    private val piston1 = DoubleSolenoid(4, 5)
-    private val piston2 = DoubleSolenoid(6, 7)
+    private val piston1 = DoubleSolenoid(PneumaticsModuleType.CTREPCM, 4, 5)
+    private val piston2 = DoubleSolenoid(PneumaticsModuleType.CTREPCM, 6, 7)
 
     fun pistons(value: DoubleSolenoid.Value) {
         piston1.set(value)
@@ -44,9 +36,9 @@ class Climb : SubsystemBase() {
     // TODO: move controller out of this class so I can keep it in Constants.kt without regrets
     data class ProfileManager(val controller: Controller, val feedforward: ElevatorFeedforward, val constraints: TrapezoidProfile.Constraints)
 
-    private class Arm(
-        private val motors: SpeedControllerGroup,
-        private val encoder: Encoder,
+    class Arm(
+        private val motors: MotorControllerGroup,
+        val encoder: Encoder,
         private val brake: DoubleSolenoid,
         private val loaded: ProfileManager,
         private val unloaded: ProfileManager
@@ -62,6 +54,10 @@ class Climb : SubsystemBase() {
                 TrapezoidProfile(unloaded.constraints, TrapezoidProfile.State(destination.value, 0.0))
             }
             startTime = Timer.getFPGATimestamp().seconds
+        }
+
+        fun isFinished() : Boolean {
+            return profile == null
         }
 
         fun update() {
