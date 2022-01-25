@@ -46,10 +46,10 @@ object Constants {
 
     // Drivetrain characterization parameters, see [https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-characterization/index.html]
     // These do not carry from robot to robot, even if they're the same design! Characterize each drivetrain.
-          val DRIVETRAIN_KS = Volts(0.13068)  // Voltage to make the motor start turning
-    const val DRIVETRAIN_KV = 4.0 / 12  // Coefficient describing the friction proportional to rotation speed
-    const val DRIVETRAIN_KA = 0.13546 // Describes how much voltage is required for a given amount of acceleration
-    const val DRIVETRAIN_KP = 0.36442 // Proportional PID component
+          val DRIVETRAIN_KS = Volts(0.10259)  // Voltage to make the motor start turning
+    const val DRIVETRAIN_KV = 4.8 / 12  // Coefficient describing the friction proportional to rotation speed
+    const val DRIVETRAIN_KA = 0.11235 / 12 // Describes how much voltage is required for a given amount of acceleration
+    const val DRIVETRAIN_KP = 0.18636 // Proportional PID component
     const val DRIVETRAIN_KD = 0.0     // Derivative PID component (note: no I term is used because it can lead to runaway)
 
     // Ramsete parameters, see [https://file.tavsys.net/control/controls-engineering-in-frc.pdf] page 81

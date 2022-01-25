@@ -34,6 +34,7 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorController
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import java.io.File
 import kotlin.math.PI
 
 object Drivetrain : SubsystemBase() {
@@ -49,10 +50,13 @@ object Drivetrain : SubsystemBase() {
     val leftEncoder  = Encoder(DRIVETRAIN_LEFT_ENCODER_A,  DRIVETRAIN_LEFT_ENCODER_B)
     val rightEncoder = Encoder(DRIVETRAIN_RIGHT_ENCODER_A, DRIVETRAIN_RIGHT_ENCODER_B)
 
+    val file = File("/home/lvuser/dt-data.csv").outputStream().bufferedWriter()
+
     init {
         listOf(leftEncoder, rightEncoder).map {
             it.distancePerPulse = (In(6.0).meterValue() * PI) / 2048
         }
+        file.write("time,leftvel,rightvel,leftgoal,rightgoal,leftpid,rightpid,leftff,rightff\n")
     }
 
     val trajectoryMaker = TrajectoryMaker(DRIVETRAIN_MAX_VELOCITY, DRIVETRAIN_MAX_ACCELERATION)
@@ -118,6 +122,7 @@ object Drivetrain : SubsystemBase() {
 
     /** Outputs [left] to the left motor, and [right] to the right motor. */
     fun rawDrive(left: Double, right: Double) {
+//        Drivetrain.mode = Mode.OPEN_LOOP
         differentialDrive.tankDrive(left, right)
     }
 
@@ -137,7 +142,7 @@ object Drivetrain : SubsystemBase() {
     }
 
     /** Runs the provided [block] of code on each motor. */
-    private fun applyToMotors(block: SpeedController.() -> Unit) {
+    private fun applyToMotors(block: MotorController.() -> Unit) {
         for (motor in listOf(leftMain, leftSecondary, rightMain, rightSecondary)) {
             motor.apply(block)
         }
@@ -149,6 +154,13 @@ object Drivetrain : SubsystemBase() {
 
         SmartDashboard.putNumber("left encoder rate", leftEncoder.rate)
         SmartDashboard.putNumber("right encoder rate", rightEncoder.rate)
+
+        file.write(
+            Timer.getFPGATimestamp().toString()
+            + "," + leftEncoder.rate
+            + "," + rightEncoder.rate
+            + if (mode == Mode.DISABLED || mode == Mode.OPEN_LOOP) "\n" else ""
+        )
 
         when (mode) {
             Mode.DISABLED -> differentialDrive.tankDrive(0.0, 0.0)
@@ -168,11 +180,21 @@ object Drivetrain : SubsystemBase() {
                 val lf = leftFF.calculate(leftPid.setpoint)
                 val rf = rightFF.calculate(rightPid.setpoint)
 
-                SmartDashboard.putNumber("left output", l)
-                SmartDashboard.putNumber("right output", r)
+                file.write(
+                            "," + leftPid.setpoint
+                            + "," + rightPid.setpoint
+                            + "," + l
+                            + "," + r
+                            + "," + lf
+                            + "," + rf
+                            + "\n"
+                )
 
-                SmartDashboard.putNumber("left ff", lf)
-                SmartDashboard.putNumber("right ff", rf)
+//                SmartDashboard.putNumber("left pid", l)
+//                SmartDashboard.putNumber("right pid", r)
+//
+//                SmartDashboard.putNumber("left ff", lf)
+//                SmartDashboard.putNumber("right ff", rf)
                 rawDrive(l + lf, r + rf)
             }
         }

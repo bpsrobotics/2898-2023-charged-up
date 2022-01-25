@@ -20,7 +20,7 @@ interface Controller {
             set(value) { wpiPID.setpoint = value }
 
         override fun calculate(current: Double, setpoint: Double): Double {
-            return wpiPID.calculate(current)
+            return wpiPID.calculate(current, setpoint)
         }
     }
 }
