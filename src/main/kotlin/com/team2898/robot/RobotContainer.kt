@@ -7,7 +7,7 @@
 
 package com.team2898.robot
 
-import com.team2898.robot.subsystems.Auto
+import com.team2898.robot.commands.Auto
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
@@ -20,8 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
  */
 class RobotContainer {
     // The robot's subsystems and commands are defined here...
-
-    private val autoCommand: Auto = Auto()
+    private val autoCommand: Command = Auto()
 
     // A chooser for which command to use for auto, i.e. one for right, middle, left, red, blue, etc
     private var autoCommandChooser: SendableChooser<Command> = SendableChooser()

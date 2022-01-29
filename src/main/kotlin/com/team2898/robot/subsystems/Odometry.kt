@@ -9,10 +9,14 @@ import edu.wpi.first.util.sendable.Sendable
 import edu.wpi.first.util.sendable.SendableBuilder
 import edu.wpi.first.util.sendable.SendableRegistry
 
-object Odometry : Sendable, PoseProvider by DifferentialDrivePoseProvider(NAVX(),
+object Odometry : Sendable, PoseProvider by DifferentialDrivePoseProvider(
+    Blah.gyro,
     Drivetrain.leftEncoder,
-    Drivetrain.rightEncoder
-) {
+    Drivetrain.rightEncoder) {
+
+    private object Blah {
+        val gyro = NAVX()
+    }
 
     val leftVel get() =  MetersPerSecond(Drivetrain.leftEncoder.rate)
     val rightVel get() = MetersPerSecond(Drivetrain.rightEncoder.rate)

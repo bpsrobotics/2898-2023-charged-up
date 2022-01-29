@@ -52,6 +52,8 @@ object OI {
         return output
     }
 
+    private val driverController = XboxController(0)
+
     /**
      * do not question the r a m p
      *
@@ -97,8 +99,6 @@ object OI {
 
         fun ramp(perSecond: Double = 10.0, lambda: () -> Double) = Delegator(lambda, perSecond / 50)
     }
-
-    private val driverController = XboxController(0)
 
     // Left and right shoulder switches (the ones next to the trigger) for quickturn
     val quickTurnRight by ramp { process(driverController.getRawAxis(3), deadzone = true, square = true) }

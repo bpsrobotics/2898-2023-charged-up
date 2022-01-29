@@ -20,6 +20,8 @@ import com.team2898.robot.Constants.DRIVETRAIN_LEFT_MAIN
 import com.team2898.robot.Constants.DRIVETRAIN_LEFT_SECONDARY
 import com.team2898.robot.Constants.DRIVETRAIN_MAX_ACCELERATION
 import com.team2898.robot.Constants.DRIVETRAIN_MAX_VELOCITY
+import com.team2898.robot.Constants.DRIVETRAIN_PEAK_CURRENT_LIMIT
+import com.team2898.robot.Constants.DRIVETRAIN_PEAK_CURRENT_LIMIT_DURATION
 import com.team2898.robot.Constants.DRIVETRAIN_RIGHT_ENCODER_A
 import com.team2898.robot.Constants.DRIVETRAIN_RIGHT_ENCODER_B
 import com.team2898.robot.Constants.DRIVETRAIN_RIGHT_MAIN
@@ -93,10 +95,10 @@ object Drivetrain : SubsystemBase() {
     private var trajectory: Trajectory? = null
     private var startTime = 0.seconds
 
-    var mode = Mode.DISABLED
+    var mode = Mode.OPEN_LOOP
 
     enum class Mode {
-        OPEN_LOOP, CLOSED_LOOP, DISABLED, STUPID
+        OPEN_LOOP, CLOSED_LOOP, STUPID
     }
 
     /** Computes left and right throttle from driver controller turn and throttle inputs. */
@@ -106,19 +108,18 @@ object Drivetrain : SubsystemBase() {
     init {
         applyToMotors {
             if (this is WPI_TalonSRX) {
-//                configFactoryDefault()
-//                // Configure current limits to prevent motors stalling and overheating/breaking something or browning out the robot
-//                configContinuousCurrentLimit(DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT)
-//                // Have a higher peak current limit for accelerating and starting, but it's only allowed for a short amount of time
-//                configPeakCurrentLimit(DRIVETRAIN_PEAK_CURRENT_LIMIT, DRIVETRAIN_PEAK_CURRENT_LIMIT_DURATION)
+                configFactoryDefault()
+                // Configure current limits to prevent motors stalling and overheating/breaking something or browning out the robot
+                configContinuousCurrentLimit(DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT)
+                // Have a higher peak current limit for accelerating and starting, but it's only allowed for a short amount of time
+                configPeakCurrentLimit(DRIVETRAIN_PEAK_CURRENT_LIMIT, DRIVETRAIN_PEAK_CURRENT_LIMIT_DURATION)
             } else if (this is CANSparkMax) {
                 restoreFactoryDefaults()
                 setSmartCurrentLimit(DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT)
-                idleMode = CANSparkMax.IdleMode.kCoast
-            }
+                idleMode = CANSparkMax.IdleMode.kBrake  // for auto
+           }
         }
 
-//        leftMain.inverted = true
         rightMain.inverted = true
         rightSecondary.inverted = true
     }
@@ -164,26 +165,12 @@ object Drivetrain : SubsystemBase() {
     }
 
     override fun periodic() {
-        SmartDashboard.putNumber("left encoder", leftEncoder.distance)
-        SmartDashboard.putNumber("right encoder", rightEncoder.distance)
-
-        SmartDashboard.putNumber("left encoder rate", leftEncoder.rate)
-        SmartDashboard.putNumber("right encoder rate", rightEncoder.rate)
-
-        file.write(
-            Timer.getFPGATimestamp().toString()
-            + "," + leftEncoder.rate
-            + "," + rightEncoder.rate
-            + if (mode == Mode.DISABLED || mode == Mode.OPEN_LOOP) "\n" else ""
-        )
-
         when (mode) {
-            Mode.DISABLED -> differentialDrive.tankDrive(0.0, 0.0)
             Mode.OPEN_LOOP -> {}  // Nothing to do in the loop because it's handled by [Robot]
             Mode.CLOSED_LOOP -> {
                 rawDrive(
                     ramsete.voltages(
-                    trajectory ?: run { mode = Mode.DISABLED; /* TODO: is this the right thing to do? */ return },
+                    trajectory ?: run { mode = Mode.OPEN_LOOP; return },
                     Timer.getFPGATimestamp().seconds - startTime,
                     Odometry.vels
                 ))
@@ -195,12 +182,7 @@ object Drivetrain : SubsystemBase() {
                 val lf = leftFF.calculate(leftPid.setpoint)
                 val rf = rightFF.calculate(rightPid.setpoint)
 
-                SmartDashboard.putNumber("left output", l)
-                SmartDashboard.putNumber("right output", r)
-
-                SmartDashboard.putNumber("left ff", lf)
-                SmartDashboard.putNumber("right ff", rf)
-                rawDrive(l + lf, r + rf)
+                rawDrive(/*l + */lf, /*r + */rf)
             }
         }
     }

@@ -21,6 +21,7 @@ class TrajectoryMaker(maxVel: MetersPerSecond, maxAccel: MetersPerSecondSquared)
         fun start(pose: Pose2d) = TrajectoryBuilder(pose, splinePoints, endPose)
 
         fun point(x: Meters, y: Meters) = TrajectoryBuilder(startPose, splinePoints + Translation2d(x.value, y.value), endPose)
+        fun point(x: Double, y: Double) = TrajectoryBuilder(startPose, splinePoints + Translation2d(x, y), endPose)
         fun point(point: Translation2d) = TrajectoryBuilder(startPose, splinePoints + point, endPose)
         fun points(vararg points: Translation2d) = TrajectoryBuilder(startPose, splinePoints + points, endPose)
         fun points(points: Iterable<Translation2d>) = TrajectoryBuilder(startPose, splinePoints + points.toList(), endPose)

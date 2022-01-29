@@ -11,7 +11,6 @@
 package com.team2898.robot
 
 import com.bpsrobotics.engine.controls.Controller
-import com.bpsrobotics.engine.utils.Ft
 import com.bpsrobotics.engine.utils.MetersPerSecondSquared
 import com.bpsrobotics.engine.utils.Volts
 import com.bpsrobotics.engine.utils.`M/s`
@@ -30,8 +29,8 @@ object Constants {
 
     // Motor IDs
     const val DRIVETRAIN_LEFT_MAIN = 1
-    const val DRIVETRAIN_LEFT_SECONDARY = 2
-    const val DRIVETRAIN_RIGHT_MAIN = 3
+    const val DRIVETRAIN_LEFT_SECONDARY = 3
+    const val DRIVETRAIN_RIGHT_MAIN = 2
     const val DRIVETRAIN_RIGHT_SECONDARY = 4
 
     // GPIO
@@ -41,13 +40,13 @@ object Constants {
     const val DRIVETRAIN_RIGHT_ENCODER_B = 3
 
     // Drivetrain info
-    const val DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT = 30
+    const val DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT = 10
     const val DRIVETRAIN_PEAK_CURRENT_LIMIT = 50
     const val DRIVETRAIN_PEAK_CURRENT_LIMIT_DURATION = 50
 
     // Can't be const because it's an expression
-    val DRIVETRAIN_MAX_VELOCITY = `M/s`(5.0)
-    val DRIVETRAIN_MAX_ACCELERATION = MetersPerSecondSquared(10.0)  // placeholder
+    val DRIVETRAIN_MAX_VELOCITY = `M/s`(2.0)
+    val DRIVETRAIN_MAX_ACCELERATION = MetersPerSecondSquared(0.5)  // placeholder
 
     // Horizontal distance between the centers of the wheels on each side of the drivetrain
     val DRIVETRAIN_TRACK_WIDTH = In(22.0).toMeters()
