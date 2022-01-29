@@ -1,8 +1,8 @@
 package com.team2898.robot.subsystems
 
 import com.revrobotics.CANSparkMax
+import com.revrobotics.CANSparkMax.ControlType
 import com.revrobotics.CANSparkMaxLowLevel
-import com.revrobotics.ControlType
 import com.team2898.robot.OI
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import kotlin.math.absoluteValue

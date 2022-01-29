@@ -28,7 +28,6 @@ import com.team2898.robot.Constants.DRIVETRAIN_TRACK_WIDTH
 import edu.wpi.first.math.controller.SimpleMotorFeedforward
 import edu.wpi.first.math.trajectory.Trajectory
 import edu.wpi.first.wpilibj.Encoder
-import edu.wpi.first.wpilibj.SpeedController
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.drive.DifferentialDrive
 import edu.wpi.first.wpilibj.motorcontrol.MotorController
