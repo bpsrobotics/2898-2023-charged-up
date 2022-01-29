@@ -38,7 +38,7 @@ object Constants {
     const val DRIVETRAIN_PEAK_CURRENT_LIMIT_DURATION = 50
 
     // Can't be const because it's an expression
-    val DRIVETRAIN_MAX_VELOCITY = `M/s`(1.0)
+    val DRIVETRAIN_MAX_VELOCITY = `M/s`(2.0)
     val DRIVETRAIN_MAX_ACCELERATION = MetersPerSecondSquared(0.5)  // placeholder
 
     // Horizontal distance between the centers of the wheels on each side of the drivetrain

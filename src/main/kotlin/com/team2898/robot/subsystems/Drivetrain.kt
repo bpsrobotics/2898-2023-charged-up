@@ -99,7 +99,8 @@ object Drivetrain : SubsystemBase() {
             } else if (this is CANSparkMax) {
                 restoreFactoryDefaults()
                 setSmartCurrentLimit(DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT)
-                idleMode = CANSparkMax.IdleMode.kCoast
+                idleMode = CANSparkMax.IdleMode.kBrake  // for auto
+//                idleMode = CANSparkMax.IdleMode.kCoast
             }
         }
 
@@ -183,8 +184,8 @@ object Drivetrain : SubsystemBase() {
                 file.write(
                             "," + leftPid.setpoint
                             + "," + rightPid.setpoint
-                            + "," + l
-                            + "," + r
+//                            + "," + l
+//                            + "," + r
                             + "," + lf
                             + "," + rf
                             + "\n"
@@ -195,7 +196,7 @@ object Drivetrain : SubsystemBase() {
 //
 //                SmartDashboard.putNumber("left ff", lf)
 //                SmartDashboard.putNumber("right ff", rf)
-                rawDrive(l + lf, r + rf)
+                rawDrive(/*l + */lf, /*r + */rf)
             }
         }
     }
