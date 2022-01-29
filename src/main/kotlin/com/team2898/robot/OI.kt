@@ -3,6 +3,7 @@ package com.team2898.robot
 import com.bpsrobotics.engine.async.AsyncLooper
 import com.bpsrobotics.engine.utils.Millis
 import com.bpsrobotics.engine.utils.Sugar.clamp
+import com.team2898.robot.OI.Ramp.ramp
 import edu.wpi.first.wpilibj.XboxController
 import kotlin.math.abs
 import kotlin.math.pow
@@ -100,11 +101,11 @@ object OI {
     private val driverController = XboxController(0)
 
     // Left and right shoulder switches (the ones next to the trigger) for quickturn
-    val quickTurnRight get() = process(driverController.getRawAxis(3), deadzone = true, square = true)
-    val quickTurnLeft get() = process(driverController.getRawAxis(2), deadzone = true, square = true)
+    val quickTurnRight by ramp { process(driverController.getRawAxis(3), deadzone = true, square = true) }
+    val quickTurnLeft by ramp { process(driverController.getRawAxis(2), deadzone = true, square = true) }
 
     // Right joystick y-axis.  Controller mapping can be tricky, the best way is to use the driver station to see what buttons and axis are being pressed.
     // Squared for better control on turn, cubed on throttle
-    val throttle get() = process(driverController.getRawAxis(5), deadzone = true, cube = true)
-    val turn get() = process(driverController.getRawAxis(0), deadzone = true, square = true)
+    val throttle by ramp { process(driverController.leftY, deadzone = true, cube = true) }
+    val turn by ramp { process(driverController.rightX, deadzone = true, square = true) }
 }

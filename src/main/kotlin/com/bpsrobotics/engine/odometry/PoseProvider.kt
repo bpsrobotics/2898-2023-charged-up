@@ -1,6 +1,6 @@
 package com.bpsrobotics.engine.odometry
 
-import edu.wpi.first.wpilibj.geometry.Pose2d
+import edu.wpi.first.math.geometry.Pose2d
 
 /** Provides an orientation and position for the robot */
 interface PoseProvider {
@@ -9,4 +9,6 @@ interface PoseProvider {
 
     /** Updates the [pose] variable */
     fun update()
+
+    fun reset()
 }
