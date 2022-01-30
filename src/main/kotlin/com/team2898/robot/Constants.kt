@@ -1,20 +1,19 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 // Some constants aren't used outside of this file, but they may be later
 @file:Suppress("MemberVisibilityCanBePrivate")
 
 package com.team2898.robot
 
+import com.bpsrobotics.engine.utils.MetersPerSecondSquared
+import com.bpsrobotics.engine.utils.Volts
+import com.bpsrobotics.engine.utils.`M/s`
+import com.team2898.robot.subsystems.Climb
 import com.bpsrobotics.engine.controls.Controller
 import com.bpsrobotics.engine.utils.MetersPerSecondSquared
 import com.bpsrobotics.engine.utils.Volts
 import com.bpsrobotics.engine.utils.`M/s`
 import com.bpsrobotics.engine.utils.*
+import edu.wpi.first.math.controller.ElevatorFeedforward
+import edu.wpi.first.math.trajectory.TrapezoidProfile
 import com.team2898.robot.subsystems.Climb
 import edu.wpi.first.math.controller.ElevatorFeedforward
 import edu.wpi.first.math.trajectory.TrapezoidProfile
@@ -63,26 +62,14 @@ object Constants {
     const val DRIVETRAIN_RAMSETE_B = 2.0  // Higher values make it more aggressively stick to the trajectory. 0 < B
     const val DRIVETRAIN_RAMSETE_Z = 0.7  // Higher values give it more dampening. 0 < Z < 1
 
-    val CLIMBER_1_LOADED = Climb.ProfileManager(
-        Controller.PID(0.0, 0.0),
+    val CLIMBER_LOADED = Climb.ClimbControllerSpec(0.0,
+        0.0, 0.0, 0.0,
         ElevatorFeedforward(0.0, 0.0, 0.0, 0.0),
         TrapezoidProfile.Constraints(0.0, 0.0)
     )
 
-    val CLIMBER_1_UNLOADED = Climb.ProfileManager(
-        Controller.PID(0.0, 0.0),
-        ElevatorFeedforward(0.0, 0.0, 0.0, 0.0),
-        TrapezoidProfile.Constraints(0.0, 0.0)
-    )
-
-    val CLIMBER_2_LOADED = Climb.ProfileManager(
-        Controller.PID(0.0, 0.0),
-        ElevatorFeedforward(0.0, 0.0, 0.0, 0.0),
-        TrapezoidProfile.Constraints(0.0, 0.0)
-    )
-
-    val CLIMBER_2_UNLOADED = Climb.ProfileManager(
-        Controller.PID(0.0, 0.0),
+    val CLIMBER_UNLOADED = Climb.ClimbControllerSpec(0.0,
+        0.0, 0.0, 0.0,
         ElevatorFeedforward(0.0, 0.0, 0.0, 0.0),
         TrapezoidProfile.Constraints(0.0, 0.0)
     )
