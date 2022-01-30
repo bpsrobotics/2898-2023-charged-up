@@ -7,14 +7,7 @@ import com.bpsrobotics.engine.utils.MetersPerSecondSquared
 import com.bpsrobotics.engine.utils.Volts
 import com.bpsrobotics.engine.utils.`M/s`
 import com.team2898.robot.subsystems.Climb
-import com.bpsrobotics.engine.controls.Controller
-import com.bpsrobotics.engine.utils.MetersPerSecondSquared
-import com.bpsrobotics.engine.utils.Volts
-import com.bpsrobotics.engine.utils.`M/s`
 import com.bpsrobotics.engine.utils.*
-import edu.wpi.first.math.controller.ElevatorFeedforward
-import edu.wpi.first.math.trajectory.TrapezoidProfile
-import com.team2898.robot.subsystems.Climb
 import edu.wpi.first.math.controller.ElevatorFeedforward
 import edu.wpi.first.math.trajectory.TrapezoidProfile
 

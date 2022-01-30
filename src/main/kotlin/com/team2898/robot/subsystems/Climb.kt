@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 
-class Climb : SubsystemBase() {
+object Climb : SubsystemBase() {
     private val arm1 = Arm(
         MotorControllerGroup(arrayOf()),
         Encoder(4, 5),
@@ -40,8 +40,15 @@ class Climb : SubsystemBase() {
         piston2.set(value)
     }
 
+    fun arms(value: Meters, loaded: Boolean) {
+        arm1.goTo(value, loaded)
+        arm2.goTo(value, loaded)
+    }
+
+    val isFinished get() = arm1.isFinished && arm2.isFinished
+
     data class ClimbControllerSpec(
-        val kS: Double, val kP: Double, val kI: Double, val kD: Double, // ADDED kS
+        val kS: Double, val kP: Double, val kI: Double, val kD: Double,
         val feedforward: ElevatorFeedforward,
         val constraints: TrapezoidProfile.Constraints
     )
@@ -58,11 +65,14 @@ class Climb : SubsystemBase() {
             TrapezoidProfile(unloaded.constraints, State(0.0, 0.0), State(0.0, 0.0))
         private var startTime = 0.seconds
 
+        val isFinished get() = profile.isFinished(Timer.getFPGATimestamp() - startTime.value)
+
         private val loadedPID: Controller = PID(loaded.kP, loaded.kI, loaded.kD)
 
         private val unloadedPID: Controller = PID(unloaded.kP, unloaded.kI, unloaded.kD)
 
-        fun goTo(destination: Meters) {
+        fun goTo(destination: Meters, useLoaded: Boolean) {
+            isLoaded = useLoaded
             profile = if (isLoaded) {
                 TrapezoidProfile(loaded.constraints, State(destination.value, 0.0))
             } else {
