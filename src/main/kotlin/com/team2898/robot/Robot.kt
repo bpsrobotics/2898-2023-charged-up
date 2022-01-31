@@ -10,6 +10,7 @@ package com.team2898.robot
 import com.team2898.robot.commands.TeleOp
 //import com.team2898.robot.subsystems.Odometry
 import com.team2898.robot.subsystems.Drivetrain
+import com.team2898.robot.subsystems.LIDAR
 import com.team2898.robot.subsystems.Odometry
 import edu.wpi.first.wpilibj.TimedRobot
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
@@ -41,6 +42,7 @@ class Robot : TimedRobot() {
     autoCommand = robotContainer.getAutonomousCommand()
     Drivetrain
     SmartDashboard.putData("odometry", Odometry)
+    LIDAR
   }
 
   /**
