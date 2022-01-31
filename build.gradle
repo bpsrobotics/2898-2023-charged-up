@@ -51,7 +51,7 @@ def includeDesktopSupport = false
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0"
-    implementation files("LibCu-java-2022.1.1.jar")
+    implementation files("lib/LibCu-java-2022.1.1.jar")
 
     implementation wpi.java.deps.wpilib()
     implementation wpi.java.vendor.java()
