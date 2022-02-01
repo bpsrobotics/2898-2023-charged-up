@@ -167,6 +167,8 @@ inline val Double.seconds get() = Seconds(this)
 inline val Int.seconds get() = Seconds(toDouble())
 inline val Double.m get() = Meters(this)
 inline val Int.m get() = Meters(toDouble())
+inline val Double.deg get() = Degrees(this)
+inline val Int.deg get() = Degrees(toDouble())
 
 inline operator fun Seconds.minus(other: Seconds) = (value - other.value).seconds
 

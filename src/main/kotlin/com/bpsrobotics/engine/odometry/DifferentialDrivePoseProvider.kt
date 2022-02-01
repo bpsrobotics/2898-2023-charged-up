@@ -1,5 +1,7 @@
 package com.bpsrobotics.engine.odometry
 
+import com.bpsrobotics.engine.utils.Degrees
+import com.bpsrobotics.engine.utils.Meters
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.geometry.Translation2d
@@ -27,10 +29,10 @@ class DifferentialDrivePoseProvider(private val gyro: Gyro, private val leftEnco
         )
     }
 
-    override fun reset() {
+    override fun reset(x: Meters, y: Meters, theta: Degrees) {
         gyro.reset()
         leftEncoder?.reset()
         rightEncoder?.reset()
-        odometry.resetPosition(Pose2d(Translation2d(0.0, 0.0), Rotation2d(0.0)), Rotation2d(0.0))
+        odometry.resetPosition(Pose2d(Translation2d(x.value, y.value), Rotation2d(0.0)), Rotation2d(theta.radiansValue()))
     }
 }

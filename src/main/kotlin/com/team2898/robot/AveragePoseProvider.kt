@@ -1,8 +1,11 @@
 package com.team2898.robot
 
 import com.bpsrobotics.engine.odometry.PoseProvider
+import com.bpsrobotics.engine.utils.Degrees
+import com.bpsrobotics.engine.utils.Meters
+import com.bpsrobotics.engine.utils.deg
+import com.bpsrobotics.engine.utils.m
 import edu.wpi.first.math.geometry.Pose2d
-import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.wpilibj.interfaces.Gyro
 
 class AveragePoseProvider(
@@ -22,7 +25,7 @@ class AveragePoseProvider(
 
     override fun update() {}
 
-    override fun reset() {
-        providers.forEach { it.reset() }
+    override fun reset(x: Meters, y: Meters, theta: Degrees) {
+        providers.forEach { it.reset(0.m,0.m,0.deg) }
     }
 }

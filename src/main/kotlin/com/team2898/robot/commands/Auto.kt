@@ -1,5 +1,7 @@
 package com.team2898.robot.commands
 
+import com.bpsrobotics.engine.utils.deg
+import com.bpsrobotics.engine.utils.m
 import edu.wpi.first.wpilibj2.command.CommandBase
 import com.team2898.robot.subsystems.Drivetrain
 import com.team2898.robot.subsystems.Odometry
@@ -97,7 +99,7 @@ class Auto : CommandBase() {
 
             .end(Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)))
             .build()
-        Odometry.reset()
+        Odometry.reset(0.m, 0.m, 0.deg)
         println()
 
         Drivetrain.follow(t)

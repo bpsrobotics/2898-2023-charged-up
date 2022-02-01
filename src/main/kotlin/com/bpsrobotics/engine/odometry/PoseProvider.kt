@@ -1,5 +1,7 @@
 package com.bpsrobotics.engine.odometry
 
+import com.bpsrobotics.engine.utils.Degrees
+import com.bpsrobotics.engine.utils.Meters
 import edu.wpi.first.math.geometry.Pose2d
 
 /** Provides an orientation and position for the robot */
@@ -10,5 +12,5 @@ interface PoseProvider {
     /** Updates the [pose] variable */
     fun update()
 
-    fun reset()
+    fun reset(x: Meters, y: Meters, theta: Degrees)
 }

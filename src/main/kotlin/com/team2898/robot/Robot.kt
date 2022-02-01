@@ -42,7 +42,7 @@ class Robot : TimedRobot() {
     autoCommand = robotContainer.getAutonomousCommand()
     Drivetrain
     SmartDashboard.putData("odometry", Odometry)
-    LIDAR
+    // LIDAR
   }
 
   /**
