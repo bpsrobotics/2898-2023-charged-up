@@ -66,4 +66,6 @@ object Constants {
         ElevatorFeedforward(0.0, 0.0, 0.0, 0.0),
         TrapezoidProfile.Constraints(0.0, 0.0)
     )
+    const val INTAKE_MOTOR = 10 // Intake Spark ID
+    const val INTAKE_BUTTON = 0 // Intake Button on Joystick
 }

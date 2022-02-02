@@ -3,6 +3,7 @@ package com.team2898.robot.commands
 import com.bpsrobotics.engine.utils.`M/s`
 import com.team2898.robot.OI
 import com.team2898.robot.subsystems.Drivetrain
+import com.team2898.robot.subsystems.Intake
 import edu.wpi.first.wpilibj2.command.CommandBase
 import edu.wpi.first.wpilibj.drive.DifferentialDrive.curvatureDriveIK
 
@@ -28,6 +29,7 @@ class TeleOp : CommandBase() {
         }
 
         Drivetrain.stupidDrive(`M/s`(speeds.left * 2), `M/s`(speeds.right * 2))
+        Intake.setSpeed(OI.intake)
     }
 
     // Called once the command ends or is interrupted.
