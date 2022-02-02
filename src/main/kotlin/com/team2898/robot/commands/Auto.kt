@@ -2,115 +2,46 @@ package com.team2898.robot.commands
 
 import com.bpsrobotics.engine.utils.deg
 import com.bpsrobotics.engine.utils.m
-import edu.wpi.first.wpilibj2.command.CommandBase
+import com.pathplanner.lib.PathPlanner
 import com.team2898.robot.subsystems.Drivetrain
 import com.team2898.robot.subsystems.Odometry
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Rotation2d
-import kotlin.math.absoluteValue
-import kotlin.math.max
+import edu.wpi.first.math.geometry.Translation2d
+import edu.wpi.first.math.trajectory.TrajectoryUtil
+import edu.wpi.first.wpilibj.Filesystem
+import edu.wpi.first.wpilibj2.command.CommandBase
 
 class Auto : CommandBase() {
     override fun initialize() {
-        val t = Drivetrain.trajectoryMaker.builder()
-            .start(Pose2d())
-//            .point(0.5.m, 0.m)
+//        val t = Drivetrain.trajectoryMaker.builder()
+//            .start(Pose2d())
+//            .point(Translation2d(1.0, 0.0))
+//            .point(Translation2d(1.5, 0.5))
+//            .point(Translation2d(1.0, 1.0))
+//            .point(Translation2d(0.5, 0.0))
+//            .point(Translation2d(0.0, 0.0))
+//            .end(Pose2d(-0.1, 0.0, Rotation2d.fromDegrees(180.0)))
+//            .build()
+//        val trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve("PathWeaver/output/Test.wpilib.json")
+//        val t = TrajectoryUtil.fromPathweaverJson(trajectoryPath)
 
-//            .point(1.m, 1.m)
-//            .point(0.m, 2.m)
-//            .point((-1).m, 1.m)
-//            .point((-0.5).m, (0.5).m)
-//            .point(0.m, 0.m)
-//
-//            .point(1.m, 1.m)
-//            .point(0.m, 2.m)
-//            .point((-1).m, 1.m)
-//            .point((-0.5).m, (0.5).m)
+//        Drivetrain.follow(t)
 
-//            .point(1.m, 1.m)
-//            .point(0.m, 2.m)
-//            .point((-1).m, 1.m)
-//
-//            .point(0.m, 0.m)
-//
-//            .point(1.m, (-1).m)
-//            .point(0.m, (-2).m)
-//            .point((-1).m, (-1).m)
-//
-//            .point(0.m, 0.m)
-//
-//            .point(1.m, 1.m)
-//            .point(0.m, 2.m)
-//            .point((-1).m, 1.m)
-//
-//            .point(0.m, 0.m)
-//
-//            .point(1.m, (-1).m)
-//            .point(0.m, (-2).m)
-//            .point((-1).m, (-1).m)
-//
-//            .point(0.m, 0.m)
-//
-//            .point(1.m, 1.m)
-//            .point(0.m, 2.m)
-//            .point((-1).m, 1.m)
-//
-//            .point(0.m, 0.m)
-//
-//            .point(1.m, (-1).m)
-//            .point(0.m, (-2).m)
-//            .point((-1).m, (-1).m)
-//
-//            .point(0.m, 0.m)
-//
-//            .point(1.m, 1.m)
-//            .point(0.m, 2.m)
-//            .point((-1).m, 1.m)
-//
-//            .point(0.m, 0.m)
-//
-//            .point(1.m, (-1).m)
-//            .point(0.m, (-2).m)
-//            .point((-1).m, (-1).m)
-
-            .point(2.0, -2.0)
-            .point(0.0, -4.0)
-            .point(-2.0, -2.0)
-
-            .point(0.0, 0.0)
-
-            .point(2.0, 2.0)
-            .point(0.0, 4.0)
-            .point(-2.0, 2.0)
+        val path = PathPlanner.loadPath("LeadingAuto", 8.0, 1.5)
+        val pathInitialPoseProvider = path.initialPose
 
 
-            .point(0.0, 0.0)
-
-
-            .point(2.0, -2.0)
-            .point(0.0, -4.0)
-            .point(-2.0, -2.0)
-
-            .point(0.0, 0.0)
-
-            .point(2.0, 2.0)
-            .point(0.0, 4.0)
-            .point(-2.0, 2.0)
-
-            .end(Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)))
-            .build()
-        Odometry.reset(0.m, 0.m, 0.deg)
-        println()
-
-        Drivetrain.follow(t)
+        Odometry.reset(pathInitialPoseProvider.x.m, pathInitialPoseProvider.y.m, (-pathInitialPoseProvider.rotation.degrees).deg)
+        Drivetrain.follow(path)
     }
 
     override fun execute() {
-//        Drivetrain.stupidDrive(MetersPerSecond(-1.0), MetersPerSecond(-1.0))
-//        Drivetrain.rawDrive(DRIVETRAIN_KS.value + DRIVETRAIN_KV, DRIVETRAIN_KS.value + DRIVETRAIN_KV)
-        if (max(Drivetrain.leftEncoder.rate.absoluteValue, Drivetrain.rightEncoder.rate.absoluteValue) > 5.0) {
-            Drivetrain.mode = Drivetrain.Mode.OPEN_LOOP
-            println("STOPPING")
-        }
+//        Drivetrain.stupidDrive(MetersPerSecond(2.0), MetersPerSecond(2.0))
+//        Drivetrain.rawDrive(DRIVETRAIN_KS.value, DRIVETRAIN_KS.value)
+//        if (max(Drivetrain.leftEncoder.rate.absoluteValue, Drivetrain.rightEncoder.rate.absoluteValue) > 3.0) {
+//            Drivetrain.mode = Drivetrain.Mode.OPEN_LOOP
+//            println("STOPPING")
+//        }
     }
 }
