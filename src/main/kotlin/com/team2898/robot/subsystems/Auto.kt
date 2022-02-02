@@ -3,6 +3,11 @@ package com.team2898.robot.subsystems
 import com.bpsrobotics.engine.utils.deg
 import com.bpsrobotics.engine.utils.m
 import com.pathplanner.lib.PathPlanner
+import edu.wpi.first.math.geometry.Pose2d
+import edu.wpi.first.math.geometry.Rotation2d
+import edu.wpi.first.math.geometry.Translation2d
+import edu.wpi.first.math.trajectory.TrajectoryUtil
+import edu.wpi.first.wpilibj.Filesystem
 import edu.wpi.first.wpilibj2.command.CommandBase
 
 class Auto : CommandBase() {
@@ -18,14 +23,14 @@ class Auto : CommandBase() {
 //            .build()
 //        val trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve("PathWeaver/output/Test.wpilib.json")
 //        val t = TrajectoryUtil.fromPathweaverJson(trajectoryPath)
-//
+
 //        Drivetrain.follow(t)
 
-        val path = PathPlanner.loadPath("HideAuto", 0.5, 0.2)
+        val path = PathPlanner.loadPath("LeadingAuto", 8.0, 1.5)
         val pathInitialPoseProvider = path.initialPose
 
 
-        Odometry.reset(pathInitialPoseProvider.x.m, pathInitialPoseProvider.y.m, pathInitialPoseProvider.rotation.degrees.deg)
+        Odometry.reset(pathInitialPoseProvider.x.m, pathInitialPoseProvider.y.m, (-pathInitialPoseProvider.rotation.degrees).deg)
         Drivetrain.follow(path)
     }
 

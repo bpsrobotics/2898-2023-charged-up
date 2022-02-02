@@ -25,7 +25,7 @@ class Ramsete(
     private val rightController: Controller,
     private val leftFF: SimpleMotorFeedforward,
     private val rightFF: SimpleMotorFeedforward,
-    b: Double = 2.0,
+    b: Double = 5.0, // TODO: Figure out how these two constants affect robot performance
     z: Double = 0.7,
 ) {
     private val ramsete = RamseteController(b, z)

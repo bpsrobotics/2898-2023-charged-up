@@ -166,7 +166,11 @@ object Drivetrain : SubsystemBase() {
 
     override fun periodic() {
         when (mode) {
-            Mode.OPEN_LOOP -> {}  // Nothing to do in the loop because it's handled by [Robot]
+            Mode.OPEN_LOOP -> {
+                if (trajectory != null) {
+                    SmartDashboard.putNumber("path heading", trajectory!!.initialPose.rotation.degrees)
+                }
+            }  // Nothing to do in the loop because it's handled by [Robot]
             Mode.CLOSED_LOOP -> {
                 rawDrive(
                     ramsete.voltages(
