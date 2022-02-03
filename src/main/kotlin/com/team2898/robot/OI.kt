@@ -22,7 +22,7 @@ object OI {
      * Threshold below which [process] will return 0.
      * 0.1 historically used, but optimal value unknown.
      */
-    private const val DEADZONE_THRESHOLD = 0.1
+    private const val DEADZONE_THRESHOLD = 0.05
 
     /**
      * Utility function for controller axis, optional deadzone and square/cube for extra fine-grain control
@@ -109,7 +109,7 @@ object OI {
 
     // Right joystick y-axis.  Controller mapping can be tricky, the best way is to use the driver station to see what buttons and axis are being pressed.
     // Squared for better control on turn, cubed on throttle
-    val throttle by ramp { process(driverController.leftY, deadzone = true, cube = true) }
+    val throttle by ramp { process(-driverController.leftY, deadzone = true) }
     val turn by ramp { process(driverController.rightX, deadzone = true, square = true) }
 
     val intake get() = if(operatorController.getRawButton(INTAKE_BUTTON)) 0.5 else 0.0
