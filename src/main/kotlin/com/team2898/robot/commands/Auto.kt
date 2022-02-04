@@ -37,6 +37,7 @@ class Auto : CommandBase() {
     }
 
     override fun execute() {
+//        Drivetrain.rawDrive(0.0, 0.0)
 //        Drivetrain.stupidDrive(MetersPerSecond(2.0), MetersPerSecond(2.0))
 //        Drivetrain.rawDrive(DRIVETRAIN_KS.value, DRIVETRAIN_KS.value)
 //        if (max(Drivetrain.leftEncoder.rate.absoluteValue, Drivetrain.rightEncoder.rate.absoluteValue) > 3.0) {

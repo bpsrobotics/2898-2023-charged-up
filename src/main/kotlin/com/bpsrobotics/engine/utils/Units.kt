@@ -9,6 +9,7 @@
  */
 package com.bpsrobotics.engine.utils
 
+import com.bpsrobotics.engine.utils.Sugar.radiansToDegrees
 import kotlin.math.PI
 
 interface Unit {
@@ -160,6 +161,8 @@ typealias Millis = Milliseconds
 fun DistanceUnit.toMeters() = Meters(meterValue())
 
 fun VelocityUnit.toMetersPerSecond() = `M/s`(metersPerSecondValue())
+
+fun Radians.toDegrees() = Degrees(value.radiansToDegrees())
 // TODO: more
 
 inline val Double.volts get() = Volts(this)
@@ -169,7 +172,19 @@ inline val Double.m get() = Meters(this)
 inline val Int.m get() = Meters(toDouble())
 inline val Double.deg get() = Degrees(this)
 inline val Int.deg get() = Degrees(toDouble())
+inline val Int.rad get() = Radians(toDouble())
+inline val Double.rad get() = Radians(this)
 
 inline operator fun Seconds.minus(other: Seconds) = (value - other.value).seconds
 
 inline operator fun Volts.plus(other: Volts) = (value + other.value).volts
+
+inline operator fun Radians.plus(other: Radians) = (value + other.value).rad
+
+inline operator fun Radians.minus(other: Radians) = (value - other.value).rad
+
+inline operator fun Meters.plus(other: Meters) = (value + other.value).m
+
+inline operator fun Meters.minus(other: Meters) = (value - other.value).m
+
+inline operator fun Meters.unaryMinus() = Meters(-value)

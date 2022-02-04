@@ -116,7 +116,7 @@ object Drivetrain : SubsystemBase() {
             } else if (this is CANSparkMax) {
                 restoreFactoryDefaults()
                 setSmartCurrentLimit(DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT)
-                idleMode = CANSparkMax.IdleMode.kBrake  // for auto
+                idleMode = CANSparkMax.IdleMode.kCoast  // for auto
            }
         }
 
