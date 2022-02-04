@@ -65,6 +65,12 @@ class VisionPoseProvider(private val other: PoseProvider) : PoseProvider {
             other.pose.rotation
         )
 
+        if (visionPose.getDistance(finalPose.translation) > 1.5) {
+            pose = Pose2d(other.pose.x + xOffset.value, other.pose.y + yOffset.value, other.pose.rotation)
+            SmartDashboard.putNumber("lastupdated", Timer.getFPGATimestamp())
+            return
+        }
+
         xOffset = other.pose.x.m - finalPose.x.m
         yOffset = other.pose.y.m - finalPose.y.m
 
