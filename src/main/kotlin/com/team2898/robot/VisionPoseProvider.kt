@@ -59,6 +59,8 @@ class VisionPoseProvider(private val other: PoseProvider) : PoseProvider {
 
         val visionPose = getXY(visionDistance, visionAngle, absoluteAngle)
 
+        provF.getObject("pure vision").pose = Pose2d(visionPose, other.pose.rotation)
+
         val finalPose = Pose2d(
             visionPose.x * visionWeight + otherX.value * otherWeight,
             visionPose.y * visionWeight + otherY.value * otherWeight,
