@@ -31,18 +31,22 @@ class Auto : CommandBase() {
         val path = PathPlanner.loadPath("LeadingAuto", 8.0, 1.5)
         val pathInitialPoseProvider = path.initialPose
 
-
         Odometry.reset(pathInitialPoseProvider.x.m, pathInitialPoseProvider.y.m, (-pathInitialPoseProvider.rotation.degrees).deg)
-        Drivetrain.follow(path)
+//        Drivetrain.follow(path)
+        Drivetrain.rawDrive(0.0, 0.0)
     }
 
     override fun execute() {
-//        Drivetrain.rawDrive(0.0, 0.0)
+        Drivetrain.rawDrive(0.0, 0.0)
 //        Drivetrain.stupidDrive(MetersPerSecond(2.0), MetersPerSecond(2.0))
 //        Drivetrain.rawDrive(DRIVETRAIN_KS.value, DRIVETRAIN_KS.value)
 //        if (max(Drivetrain.leftEncoder.rate.absoluteValue, Drivetrain.rightEncoder.rate.absoluteValue) > 3.0) {
 //            Drivetrain.mode = Drivetrain.Mode.OPEN_LOOP
 //            println("STOPPING")
 //        }
+    }
+
+    override fun isFinished(): Boolean {
+        return false
     }
 }

@@ -38,6 +38,7 @@ class VisionPoseProvider(private val other: PoseProvider) : PoseProvider {
     }
 
     override fun update() {
+        SmartDashboard.putNumber("roll", Odometry.Blah.navx.roll.toDouble())
 //        otherProvF.robotPose = Odometry.otherProvider.pose
         provF.getObject("other").pose = Odometry.otherProvider.pose
         provF.robotPose = pose
@@ -80,9 +81,9 @@ class VisionPoseProvider(private val other: PoseProvider) : PoseProvider {
     }
 
     private fun getXY(dist: Meters, angle: Radians, absoluteAngle: Radians): Translation2d {
-        val c = (PI / 2).rad - (absoluteAngle - angle)
-        val x = cos(c.value) * dist.value + 8.2296  // field offset
-        val y = sin(c.value) * dist.value + 4.1148  // field offset
+        val c = /*(PI / 2).rad*//*0.rad -*/ (absoluteAngle - angle)
+        val x = cos(c.value) * -dist.value + 8.2296  // field offset
+        val y = sin(c.value) * -dist.value + 4.1148  // field offset
         return Translation2d(x, y)
     }
 
