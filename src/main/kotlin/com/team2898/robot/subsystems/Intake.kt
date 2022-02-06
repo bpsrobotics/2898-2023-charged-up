@@ -7,10 +7,10 @@ import com.team2898.robot.Constants.INTAKE_MOTOR
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 
 object Intake : SubsystemBase() {
-    private val Controller = CANSparkMax(INTAKE_MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless)
+    private val controller = CANSparkMax(INTAKE_MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless)
 
     fun setSpeed(speed: Double) {
-        Controller.set(speed.clamp(0.0, 1.0))
+        controller.set(speed.clamp(0.0, 1.0))
     }
 
 }
