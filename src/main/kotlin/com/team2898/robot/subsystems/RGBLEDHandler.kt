@@ -54,21 +54,21 @@ object RGBLEDHandler : SubsystemBase() {
         }
     }
 
-    fun setColors(data: IntArray, colors: IntArray) {
-        for (n in data.indices) {
-            data[n] = colors[n.mod(colors.size)]
+    fun setColors(colors: IntArray) {
+        for (n in ledStripBuffer.indices) {
+            ledStripBuffer[n] = colors[n.mod(colors.size)]
         }
     }
 
     /** Change the color being displayed. This function should not be called in the periodic. */
-    fun setColors(data: IntArray, colors: ColorSets) {
+    fun setColors(colors: ColorSets) {
         when (colors) {
             ColorSets.RAINBOW -> {
-                for (n in 0 until data.size / 4) {
+                for (n in 0 until ledStripBuffer.size / 4) {
                     val rainbow = rainbow().take(1).toList()[0]
-                    data[n * 4] = rainbow[0]
-                    data[n * 4 + 1] = rainbow[1]
-                    data[n * 4 + 2] = rainbow[2]
+                    ledStripBuffer[n * 4] = rainbow[0]
+                    ledStripBuffer[n * 4 + 1] = rainbow[1]
+                    ledStripBuffer[n * 4 + 2] = rainbow[2]
                 }
             }
             ColorSets.TRANS -> {
@@ -95,7 +95,7 @@ object RGBLEDHandler : SubsystemBase() {
                 lightPink.copyInto(finalFlag, 4 * ledsPerFlagColor * 3)
                 lightBlue.copyInto(finalFlag, 4 * ledsPerFlagColor * 4)
 
-                setColors(data, finalFlag)
+                setColors(finalFlag)
             }
             ColorSets.ENBY -> {
                 val stripes = 4
@@ -125,7 +125,7 @@ object RGBLEDHandler : SubsystemBase() {
                 purple.copyInto(finalFlag, 4 * ledsPerFlagColor * 2)
                 black.copyInto(finalFlag, 4 * ledsPerFlagColor * 3)
 
-                setColors(data, finalFlag)
+                setColors(finalFlag)
             }
             ColorSets.ACE -> {
                 val stripes = 4
@@ -155,6 +155,8 @@ object RGBLEDHandler : SubsystemBase() {
                 silver.copyInto(finalFlag, 4 * ledsPerFlagColor * 1)
                 white.copyInto(finalFlag, 4 * ledsPerFlagColor * 2)
                 purple.copyInto(finalFlag, 4 * ledsPerFlagColor * 3)
+
+                setColors(finalFlag)
             }
             ColorSets.PAN -> {
                 val stripes = 3
@@ -178,81 +180,90 @@ object RGBLEDHandler : SubsystemBase() {
                 pink.copyInto(finalFlag)
                 yellow.copyInto(finalFlag, 4 * ledsPerFlagColor * 1)
                 blue.copyInto(finalFlag, 4 * ledsPerFlagColor * 2)
+
+                setColors(finalFlag)
             }
             ColorSets.RED -> { // 1510 red
-                for (n in 0 until data.size / 4) {
-                    data[n * 4] = 0xDF
-                    data[n * 4 + 1] = 0x00
-                    data[n * 4 + 2] = 0x0F
+                for (n in 0 until ledStripBuffer.size / 4) {
+                    ledStripBuffer[n * 4] = 0xDF
+                    ledStripBuffer[n * 4 + 1] = 0x00
+                    ledStripBuffer[n * 4 + 2] = 0x0F
                 }
             }
             ColorSets.BLUE -> { // 2898 blue
-                for (n in 0 until data.size / 4) {
-                    data[n * 4] = 0x1b
-                    data[n * 4 + 1] = 0x45
-                    data[n * 4 + 2] = 0x9b
+                for (n in 0 until ledStripBuffer.size / 4) {
+                    ledStripBuffer[n * 4] = 0x1b
+                    ledStripBuffer[n * 4 + 1] = 0x45
+                    ledStripBuffer[n * 4 + 2] = 0x9b
                 }
             }
             ColorSets.GREEN -> {
-                for (n in 0 until data.size / 4) {
-                    data[n * 4] = 0x00
-                    data[n * 4 + 1] = 0xFF
-                    data[n * 4 + 2] = 0x00
+                for (n in 0 until ledStripBuffer.size / 4) {
+                    ledStripBuffer[n * 4] = 0x00
+                    ledStripBuffer[n * 4 + 1] = 0xFF
+                    ledStripBuffer[n * 4 + 2] = 0x00
                 }
             }
             ColorSets.ORANGE -> {
-                for (n in 0 until data.size / 4) {
-                    data[n * 4] = 0xFF
-                    data[n * 4 + 1] = 0xA5
-                    data[n * 4 + 2] = 0x00
+                for (n in 0 until ledStripBuffer.size / 4) {
+                    ledStripBuffer[n * 4] = 0xFF
+                    ledStripBuffer[n * 4 + 1] = 0xA5
+                    ledStripBuffer[n * 4 + 2] = 0x00
                 }
             }
             ColorSets.PINK -> {
-                for (n in 0 until data.size / 4) {
-                    data[n * 4] = 0xFF
-                    data[n * 4 + 1] = 0xC0
-                    data[n * 4 + 2] = 0xCB
+                for (n in 0 until ledStripBuffer.size / 4) {
+                    ledStripBuffer[n * 4] = 0xFF
+                    ledStripBuffer[n * 4 + 1] = 0xC0
+                    ledStripBuffer[n * 4 + 2] = 0xCB
                 }
             }
         }
     }
 
-    fun slideEffect(data: IntArray) {
-        val temp = intArrayOf(data[0], data[1], data[2], data[3])
-        for (n in 0 until data.size / 4 - 1) {
-            data[n * 4] = data[(n + 1) * 4]
-            data[n * 4 + 1] = data[(n + 1) * 4 + 1]
-            data[n * 4 + 2] = data[(n + 1) * 4 + 2]
-            data[n * 4 + 3] = data[(n + 1) * 4 + 3]
+    fun slideLeftEffect() {
+        val temp = intArrayOf(ledStripBuffer[0], ledStripBuffer[1], ledStripBuffer[2], ledStripBuffer[3])
+        for (n in 0 until ledStripBuffer.size / 4 - 1) {
+            ledStripBuffer[n * 4] = ledStripBuffer[(n + 1) * 4]
+            ledStripBuffer[n * 4 + 1] = ledStripBuffer[(n + 1) * 4 + 1]
+            ledStripBuffer[n * 4 + 2] = ledStripBuffer[(n + 1) * 4 + 2]
+            ledStripBuffer[n * 4 + 3] = ledStripBuffer[(n + 1) * 4 + 3]
         }
-        data[data.size - 1] = temp[3]
-        data[data.size - 2] = temp[2]
-        data[data.size - 3] = temp[1]
-        data[data.size - 4] = temp[0]
+        ledStripBuffer[ledStripBuffer.size - 1] = temp[3]
+        ledStripBuffer[ledStripBuffer.size - 2] = temp[2]
+        ledStripBuffer[ledStripBuffer.size - 3] = temp[1]
+        ledStripBuffer[ledStripBuffer.size - 4] = temp[0]
     }
 
-    fun randomBlinkEffect(data: IntArray) {
-        for (n in 0 until data.size / 4) {
-            data[n * 4 + 3] = Random.nextInt(0, 2) * 255
+    fun slideRightEffect() {
+        val temp = IntArray(ledCount + 4)
+        ledStripBuffer.copyInto(temp, 4)
+        temp.copyInto(temp, 0, ledStripBuffer.size)
+        temp.copyInto(ledStripBuffer, 0, 0, ledStripBuffer.size)
+    }
+
+    fun randomBlinkEffect() {
+        for (n in 0 until ledStripBuffer.size / 4) {
+            ledStripBuffer[n * 4 + 3] = Random.nextInt(0, 2) * 255
         }
     }
 
-    fun randomBrightnessEffect(data: IntArray) {
-        for (n in 0 until data.size / 4) {
-            data[n * 4 + 3] += Random.nextInt(-25, 25) // Epilepsy protection
-            data[n * 4 + 3] = data[n * 4 + 3].coerceIn(0, 255)
+    fun randomBrightnessEffect() {
+        for (n in 0 until ledStripBuffer.size / 4) {
+            ledStripBuffer[n * 4 + 3] += Random.nextInt(-25, 25) // Epilepsy protection
+            ledStripBuffer[n * 4 + 3] = ledStripBuffer[n * 4 + 3].coerceIn(0, 255)
         }
     }
 
-    fun colorDriftEffect(data: IntArray) {
-        for (n in 0 until data.size / 4) {
-            val hsv = RGBtoHSV(data[n * 4], data[n * 4 + 1], data[n * 4 + 2])
+    fun colorDriftEffect() {
+        for (n in 0 until ledStripBuffer.size / 4) {
+            val hsv = RGBtoHSV(ledStripBuffer[n * 4], ledStripBuffer[n * 4 + 1], ledStripBuffer[n * 4 + 2])
             hsv[0] = (hsv[0] + Random.nextInt(-5, 10)).mod(180)
             val rgb = HSVtoRGB(hsv[0], hsv[1], hsv[2])
 
-            data[n * 4] = rgb[0]
-            data[n * 4 + 1] = rgb[1]
-            data[n * 4 + 2] = rgb[2]
+            ledStripBuffer[n * 4] = rgb[0]
+            ledStripBuffer[n * 4 + 1] = rgb[1]
+            ledStripBuffer[n * 4 + 2] = rgb[2]
         }
     }
 
@@ -264,15 +275,15 @@ object RGBLEDHandler : SubsystemBase() {
         toggle = true
     }
 
-    fun setDataRGBA(data: IntArray) {
+    fun setDataRGBA() {
         if (toggle) {
-            for (n in 0..data.size / 4) {
-                val alpha = (data[n * 4 + 3] + 1) / 255.0
+            for (n in 0..ledStripBuffer.size / 4) {
+                val alpha = (ledStripBuffer[n * 4 + 3] + 1) / 255.0
                 finalLEDStripBuffer.setRGB(
                     n,
-                    (data[n * 4] * alpha).toInt(),
-                    (data[n * 4 + 1] * alpha).toInt(),
-                    (data[n * 4 + 2] * alpha).toInt()
+                    (ledStripBuffer[n * 4] * alpha).toInt(),
+                    (ledStripBuffer[n * 4 + 1] * alpha).toInt(),
+                    (ledStripBuffer[n * 4 + 2] * alpha).toInt()
                 )
             }
         } else {
