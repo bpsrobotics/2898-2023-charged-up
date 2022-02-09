@@ -1,5 +1,7 @@
 package com.team2898.robot.subsystems
 
+import com.bpsrobotics.engine.utils.ColorSpaceConversions.HSVtoRGB
+import com.bpsrobotics.engine.utils.ColorSpaceConversions.RGBtoHSV
 import edu.wpi.first.wpilibj.AddressableLED
 import edu.wpi.first.wpilibj.AddressableLEDBuffer
 import edu.wpi.first.wpilibj2.command.SubsystemBase
@@ -7,18 +9,16 @@ import kotlin.math.PI
 import kotlin.math.roundToInt
 import kotlin.math.sin
 import kotlin.random.Random
-import com.bpsrobotics.engine.utils.ColorSpaceConversions.HSVtoRGB
-import com.bpsrobotics.engine.utils.ColorSpaceConversions.RGBtoHSV
 
 object RGBLEDHandler : SubsystemBase() {
-    private val ledCount = 200 // TODO: How many WS2812s do we have
+    private const val ledCount = 200 // TODO: How many WS2812s do we have
     private val ledStrip = AddressableLED(8) // TODO: PWM Port Constant
     private val finalLEDStripBuffer = AddressableLEDBuffer(ledCount)
 
     private val ledStripBuffer = IntArray(ledCount * 4) // RGBA
     private var toggle = true
     private const val rainbowSpeed = 1.0 // Configure rainbow spacing, 0 to 2 PI
-    private val ledsPerFlagColor = 4 // Size of each color strip in flag color modes
+    private const val ledsPerFlagColor = 4 // Size of each color strip in flag color modes
 
     enum class ColorSets {
         RED,
@@ -64,7 +64,7 @@ object RGBLEDHandler : SubsystemBase() {
     fun setColors(data: IntArray, colors: ColorSets) {
         when (colors) {
             ColorSets.RAINBOW -> {
-                for (n in 0 until data.size/4) {
+                for (n in 0 until data.size / 4) {
                     val rainbow = rainbow().take(1).toList()[0]
                     data[n * 4] = rainbow[0]
                     data[n * 4 + 1] = rainbow[1]
@@ -180,35 +180,35 @@ object RGBLEDHandler : SubsystemBase() {
                 blue.copyInto(finalFlag, 4 * ledsPerFlagColor * 2)
             }
             ColorSets.RED -> { // 1510 red
-                for (n in 0 until data.size/4) {
+                for (n in 0 until data.size / 4) {
                     data[n * 4] = 0xDF
                     data[n * 4 + 1] = 0x00
                     data[n * 4 + 2] = 0x0F
                 }
             }
             ColorSets.BLUE -> { // 2898 blue
-                for (n in 0 until data.size/4) {
+                for (n in 0 until data.size / 4) {
                     data[n * 4] = 0x1b
                     data[n * 4 + 1] = 0x45
                     data[n * 4 + 2] = 0x9b
                 }
             }
             ColorSets.GREEN -> {
-                for (n in 0 until data.size/4) {
+                for (n in 0 until data.size / 4) {
                     data[n * 4] = 0x00
                     data[n * 4 + 1] = 0xFF
                     data[n * 4 + 2] = 0x00
                 }
             }
             ColorSets.ORANGE -> {
-                for (n in 0 until data.size/4) {
+                for (n in 0 until data.size / 4) {
                     data[n * 4] = 0xFF
                     data[n * 4 + 1] = 0xA5
                     data[n * 4 + 2] = 0x00
                 }
             }
             ColorSets.PINK -> {
-                for (n in 0 until data.size/4) {
+                for (n in 0 until data.size / 4) {
                     data[n * 4] = 0xFF
                     data[n * 4 + 1] = 0xC0
                     data[n * 4 + 2] = 0xCB
@@ -219,7 +219,7 @@ object RGBLEDHandler : SubsystemBase() {
 
     fun slideEffect(data: IntArray) {
         val temp = intArrayOf(data[0], data[1], data[2], data[3])
-        for (n in 0 until data.size/4 - 1) {
+        for (n in 0 until data.size / 4 - 1) {
             data[n * 4] = data[(n + 1) * 4]
             data[n * 4 + 1] = data[(n + 1) * 4 + 1]
             data[n * 4 + 2] = data[(n + 1) * 4 + 2]
@@ -232,20 +232,20 @@ object RGBLEDHandler : SubsystemBase() {
     }
 
     fun randomBlinkEffect(data: IntArray) {
-        for (n in 0 until data.size/4) {
+        for (n in 0 until data.size / 4) {
             data[n * 4 + 3] = Random.nextInt(0, 2) * 255
         }
     }
 
     fun randomBrightnessEffect(data: IntArray) {
-        for (n in 0 until data.size/4) {
+        for (n in 0 until data.size / 4) {
             data[n * 4 + 3] += Random.nextInt(-25, 25) // Epilepsy protection
             data[n * 4 + 3] = data[n * 4 + 3].coerceIn(0, 255)
         }
     }
 
-    fun tokyoDriftEffect(data: IntArray){
-        for (n in 0 until data.size/4) {
+    fun colorDriftEffect(data: IntArray) {
+        for (n in 0 until data.size / 4) {
             val hsv = RGBtoHSV(data[n * 4], data[n * 4 + 1], data[n * 4 + 2])
             hsv[0] = (hsv[0] + Random.nextInt(-5, 10)).mod(180)
             val rgb = HSVtoRGB(hsv[0], hsv[1], hsv[2])
@@ -267,11 +267,15 @@ object RGBLEDHandler : SubsystemBase() {
     fun setDataRGBA(data: IntArray) {
         if (toggle) {
             for (n in 0..data.size / 4) {
-                val alpha = data[n * 4 + 3] + 1
-                finalLEDStripBuffer.setRGB(n, data[n * 4]/alpha, data[n * 4 + 1]/alpha, data[n * 4 + 2]/alpha)
+                val alpha = (data[n * 4 + 3] + 1) / 255.0
+                finalLEDStripBuffer.setRGB(
+                    n,
+                    (data[n * 4] * alpha).toInt(),
+                    (data[n * 4 + 1] * alpha).toInt(),
+                    (data[n * 4 + 2] * alpha).toInt()
+                )
             }
-        }
-        else {
+        } else {
             for (n in 0 until ledCount) {
                 finalLEDStripBuffer.setRGB(n, 0, 0, 0)
             }
