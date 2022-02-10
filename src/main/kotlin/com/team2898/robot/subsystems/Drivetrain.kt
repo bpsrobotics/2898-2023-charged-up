@@ -41,10 +41,10 @@ import kotlin.math.PI
 
 object Drivetrain : SubsystemBase() {
 
-    private val leftMain: MotorController = CANSparkMax(DRIVETRAIN_LEFT_MAIN, kBrushless)
-    private val leftSecondary: MotorController = CANSparkMax(DRIVETRAIN_LEFT_SECONDARY, kBrushless)
-    private val rightMain: MotorController = CANSparkMax(DRIVETRAIN_RIGHT_MAIN, kBrushless)
-    private val rightSecondary: MotorController = CANSparkMax(DRIVETRAIN_RIGHT_SECONDARY, kBrushless)
+    private val leftMain = CANSparkMax(DRIVETRAIN_LEFT_MAIN, kBrushless)
+    private val leftSecondary = CANSparkMax(DRIVETRAIN_LEFT_SECONDARY, kBrushless)
+    private val rightMain = CANSparkMax(DRIVETRAIN_RIGHT_MAIN, kBrushless)
+    private val rightSecondary = CANSparkMax(DRIVETRAIN_RIGHT_SECONDARY, kBrushless)
 
     private val left  = MotorControllerGroup(leftMain,  leftSecondary)
     private val right = MotorControllerGroup(rightMain, rightSecondary)

@@ -30,7 +30,8 @@ object RGBLEDHandler : SubsystemBase() {
         TRANS,
         ENBY,
         ACE,
-        PAN
+        PAN,
+        LESBIAN
     }
 
     init {
@@ -180,6 +181,42 @@ object RGBLEDHandler : SubsystemBase() {
                 pink.copyInto(finalFlag)
                 yellow.copyInto(finalFlag, 4 * ledsPerFlagColor * 1)
                 blue.copyInto(finalFlag, 4 * ledsPerFlagColor * 2)
+
+                setColors(finalFlag)
+            }
+            ColorSets.LESBIAN -> {
+                val stripes = 5
+                val red = IntArray(4 * ledsPerFlagColor)
+                for (n in 0 until ledsPerFlagColor) {
+                    intArrayOf(0xD6, 0x29, 0x00, 0xFF).copyInto(red, n * ledsPerFlagColor)
+                }
+
+                val orange = IntArray(4 * ledsPerFlagColor)
+                for (n in 0 until ledsPerFlagColor) {
+                    intArrayOf(0xFF, 0x9B, 0x55, 0xFF).copyInto(orange, n * ledsPerFlagColor)
+                }
+
+                val white = IntArray(4 * ledsPerFlagColor)
+                for (n in 0 until ledsPerFlagColor) {
+                    intArrayOf(0xFF, 0xFF, 0xFF, 0xFF).copyInto(white, n * ledsPerFlagColor)
+                }
+
+                val pink = IntArray(4 * ledsPerFlagColor)
+                for (n in 0 until ledsPerFlagColor) {
+                    intArrayOf(0xD4, 0x61, 0xA6, 0xFF).copyInto(pink, n * ledsPerFlagColor)
+                }
+
+                val purple = IntArray(4 * ledsPerFlagColor)
+                for (n in 0 until ledsPerFlagColor) {
+                    intArrayOf(0xA5, 0x00, 0x62, 0xFF).copyInto(purple, n * ledsPerFlagColor)
+                }
+
+                val finalFlag = IntArray(4 * ledsPerFlagColor * stripes)
+                red.copyInto(finalFlag)
+                orange.copyInto(finalFlag, 4 * ledsPerFlagColor * 1)
+                white.copyInto(finalFlag, 4 * ledsPerFlagColor * 2)
+                pink.copyInto(finalFlag, 4 * ledsPerFlagColor * 3)
+                purple.copyInto(finalFlag, 4 * ledsPerFlagColor * 4)
 
                 setColors(finalFlag)
             }
