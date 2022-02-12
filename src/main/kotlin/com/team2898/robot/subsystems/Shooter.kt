@@ -1,5 +1,6 @@
 package com.team2898.robot.subsystems
 
+import com.bpsrobotics.engine.utils.RPM
 import com.revrobotics.CANSparkMax
 import com.revrobotics.CANSparkMax.ControlType
 import com.revrobotics.CANSparkMaxLowLevel
@@ -10,17 +11,18 @@ import kotlin.math.max
 
 object Shooter : SubsystemBase() {
     // TODO: constants
-    private val controllerA = CANSparkMax(1, CANSparkMaxLowLevel.MotorType.kBrushless)
-    private val controllerB = CANSparkMax(2, CANSparkMaxLowLevel.MotorType.kBrushless)
-    private var goal = 0.0
-    private val actual by OI.Ramp.ramp(60.0) { goal }
-
+    private val shooterMotor = CANSparkMax(1, CANSparkMaxLowLevel.MotorType.kBrushless)
+    private val spinnerMotor = CANSparkMax(2, CANSparkMaxLowLevel.MotorType.kBrushless)
+    private var shooterGoal = 0.0
+    private val shooterActual by OI.Ramp.ramp(60.0) { shooterGoal }
+    private var spinnerGoal = 0.0
+    private val spinnerActual by OI.Ramp.ramp(60.0) { spinnerGoal }
     init {
         // apply 5 volts if it's off by 15 rev/sec
         val kP = (5.0 / 12) / (15 * 60)
         val kD = kP / 5
 
-        listOf(controllerA, controllerB).forEach {
+        listOf(shooterMotor, spinnerMotor).forEach {
             it.restoreFactoryDefaults()
             it.pidController.p = kP
 //            it.pidController.i = 0.000001
@@ -30,49 +32,58 @@ object Shooter : SubsystemBase() {
         }
     }
 
-    fun setRPM(speed: Double) {
+    fun setRPM(shooterSpeed: RPM, spinnerSpeed: RPM) {
         if (isDisabled) return
-        goal = speed
+        shooterGoal = shooterSpeed.value
+        spinnerGoal = spinnerSpeed.value
 //        controllerA.pidController.setReference(speed, ControlType.kVelocity)
 //        controllerB.pidController.setReference(-speed, ControlType.kVelocity)
+    }
+
+    fun getRPM(): Pair<RPM, RPM> {
+        return Pair(RPM(shooterMotor.encoder.velocity), RPM(spinnerMotor.encoder.velocity))
     }
 
     private var isDisabled = false
 
     fun disable() {
         isDisabled = true
-        controllerA.disable()
-        controllerB.disable()
+        shooterMotor.disable()
+        spinnerMotor.disable()
+    }
+
+    fun reEnable(){
+        isDisabled = false
     }
 
     override fun periodic() {
-        val vel = max(controllerA.encoder.velocity.absoluteValue, controllerB.encoder.velocity.absoluteValue)
+        val vel = max(shooterMotor.encoder.velocity.absoluteValue, spinnerMotor.encoder.velocity.absoluteValue)
         if (!isDisabled) {
-            controllerA.pidController.setReference(actual, ControlType.kVelocity)
-            controllerB.pidController.setReference(-actual, ControlType.kVelocity)
+            shooterMotor.pidController.setReference(shooterActual, ControlType.kVelocity)
+            spinnerMotor.pidController.setReference(-spinnerActual, ControlType.kVelocity)
             if (vel > (40.0 * 60)) {
                 println("RPM is $vel, over threshold, stopping")
                 disable()
                 return
-            } else if (max(controllerA.motorTemperature, controllerB.motorTemperature) > 40.0) {
-                println("Max motor temperature reached (${max(controllerA.motorTemperature, controllerB.motorTemperature)}), stopping")
+            } else if (max(shooterMotor.motorTemperature, spinnerMotor.motorTemperature) > 40.0) {
+                println("Max motor temperature reached (${max(shooterMotor.motorTemperature, spinnerMotor.motorTemperature)}), stopping")
                 disable()
                 return
             }
             println(vel)
         } else {
-            controllerA.pidController.p = 0.0
-            controllerA.pidController.i = 0.0
-            controllerA.pidController.d = 0.0
-            controllerA.pidController.ff = 0.0
+            shooterMotor.pidController.p = 0.0
+            shooterMotor.pidController.i = 0.0
+            shooterMotor.pidController.d = 0.0
+            shooterMotor.pidController.ff = 0.0
 
-            controllerB.pidController.p = 0.0
-            controllerB.pidController.i = 0.0
-            controllerB.pidController.d = 0.0
-            controllerB.pidController.ff = 0.0
+            spinnerMotor.pidController.p = 0.0
+            spinnerMotor.pidController.i = 0.0
+            spinnerMotor.pidController.d = 0.0
+            spinnerMotor.pidController.ff = 0.0
 
-            controllerA.set(0.0)
-            controllerB.set(0.0)
+            shooterMotor.set(0.0)
+            spinnerMotor.set(0.0)
         }
     }
 }

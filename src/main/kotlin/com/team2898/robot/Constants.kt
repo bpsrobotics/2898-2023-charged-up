@@ -68,4 +68,17 @@ object Constants {
     )
     const val INTAKE_MOTOR = 10 // Intake Spark ID
     const val INTAKE_BUTTON = 0 // Intake Button on Joystick
+
+
+    const val SHOOTER_THRESHOLD = 5 // TODO() Difference between current and target RPM that must be reached before shooter lock is removed
+    const val TIME_TO_SHOOT = 1.0 // TODO() Time it takes to shoot (approx, should be reasonably similar each time)
+
+    const val FEEDER_BALL_DETECTOR_1 = 1 //TODO()
+    const val FEEDER_BALL_DETECTOR_2 = 1 //TODO()
+    const val FEEDER_BALL_DETECTOR_SHOOTER = 1 //TODO()
+    const val FEEDER_TOP_MOTOR = 1 //TODO()
+    const val FEEDER_BOTTOM_MOTOR = 1 //TODO()
+    const val TOP_SPEED = 1.0//TODO()
+    const val BOTTOM_SPEED = 1.0 //TODO()
+
 }
