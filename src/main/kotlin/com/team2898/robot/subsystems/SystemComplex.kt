@@ -64,7 +64,7 @@ object SystemComplex : SubsystemBase() {
 
     fun putToShuffleboard(){
         SmartDashboard.putNumber("Number of Balls", ballCount.toDouble())
-        SmartDashboard.putNumber("Accuracy", Interpolation.getAccuracy(distance)))
+        SmartDashboard.putNumber("Accuracy", Interpolation.getAccuracy(distance))
         SmartDashboard.putString("Intake State", when(intakeState){
             IntakeStates.OPEN -> "open"
             IntakeStates.CLOSED -> "Closed"
