@@ -15,7 +15,7 @@ object SystemComplex : SubsystemBase() {
     val firstBall get() = Feed.ballDetector1.distanceCentimeters < 2.0
     val secondBall get() = Feed.ballDetector2.distanceCentimeters < 2.0
     val shooting get() = Feed.ballDetectorShooter.distanceCentimeters < 2.0
-    val distance: Double = TODO()
+    val distance: Meters = Vision.distance
     enum class IntakeStates{
         OPEN,
         ACTIVE,
@@ -64,7 +64,7 @@ object SystemComplex : SubsystemBase() {
 
     fun putToShuffleboard(){
         SmartDashboard.putNumber("Number of Balls", ballCount.toDouble())
-        SmartDashboard.putNumber("Accuracy", Interpolation.getAccuracy(Meters(distance)))
+        SmartDashboard.putNumber("Accuracy", Interpolation.getAccuracy(distance)))
         SmartDashboard.putString("Intake State", when(intakeState){
             IntakeStates.OPEN -> "open"
             IntakeStates.CLOSED -> "Closed"
