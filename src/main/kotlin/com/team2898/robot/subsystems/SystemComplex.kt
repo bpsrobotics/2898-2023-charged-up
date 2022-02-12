@@ -6,6 +6,7 @@ import com.bpsrobotics.engine.utils.RPM
 import com.bpsrobotics.engine.utils.Seconds
 import com.team2898.robot.Constants
 import edu.wpi.first.wpilibj.Timer
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import kotlin.math.abs
 
@@ -14,6 +15,7 @@ object SystemComplex : SubsystemBase() {
     val firstBall get() = Feed.ballDetector1.distanceCentimeters < 2.0
     val secondBall get() = Feed.ballDetector2.distanceCentimeters < 2.0
     val shooting get() = Feed.ballDetectorShooter.distanceCentimeters < 2.0
+    val distance: Double = TODO()
     enum class IntakeStates{
         OPEN,
         ACTIVE,
@@ -59,6 +61,22 @@ object SystemComplex : SubsystemBase() {
     fun forceIntake(){
 
     }
+
+    fun putToShuffleboard(){
+        SmartDashboard.putNumber("Number of Balls", ballCount.toDouble())
+        SmartDashboard.putNumber("Accuracy", Interpolation.getAccuracy(Meters(distance)))
+        SmartDashboard.putString("Intake State", when(intakeState){
+            IntakeStates.OPEN -> "open"
+            IntakeStates.CLOSED -> "Closed"
+            IntakeStates.ACTIVE -> "Active"
+        })
+        SmartDashboard.putString("Feeder State", when(Feed.state){
+            Feed.Mode.IDLE -> "Idle"
+            Feed.Mode.SHOOT -> "Shooting"
+            Feed.Mode.FEED -> "Feeding"
+        })
+
+    }
     override fun periodic() {
         if (LastShotInitTime.value > Timer.getFPGATimestamp() + Constants.TIME_TO_SHOOT && !shooting) {
             Shooter.setRPM(RPM(0.0), RPM(0.0))
@@ -80,5 +98,6 @@ object SystemComplex : SubsystemBase() {
                 Intake.setIntake(false)
             }
         }
+        putToShuffleboard()
     }
 }

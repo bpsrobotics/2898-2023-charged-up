@@ -27,7 +27,7 @@ object Feed : SubsystemBase() {
 
     // we can determine the top motor's speed and the bottom motor's speed with some testing
     private fun feedBall() {
-        if (ballDetector1.getDistanceCentimeters() > 2.0 && ballDetector2.getDistanceCentimeters() < 2.0) {
+        if (ballDetector1.distanceCentimeters > 2.0 && ballDetector2.distanceCentimeters < 2.0) {
             topMotor.set(Constants.TOP_SPEED)
             bottomMotor.set(Constants.BOTTOM_SPEED)
         } else {
@@ -38,7 +38,7 @@ object Feed : SubsystemBase() {
     }
 
     fun shootBall() {
-        if (ballDetector1.getDistanceCentimeters() < 2.0 && ballDetectorShooter.getDistanceCentimeters() < 2.0) {
+        if (ballDetector1.distanceCentimeters < 2.0 && ballDetectorShooter.distanceCentimeters < 2.0) {
             topMotor.set(Constants.TOP_SPEED)
             bottomMotor.set(Constants.BOTTOM_SPEED)
         } else {

@@ -7,4 +7,7 @@ object Interpolation {
             RPM(distance.value*distance.value*1.18467 + distance.value*76.6137 + 1136.61) /* Secondary Motor*/
         )
     }
+    fun getAccuracy(distance: Meters): Double{
+        return 1.0 //TODO
+    }
 }
