@@ -3,7 +3,8 @@ package com.team2898.robot
 import com.bpsrobotics.engine.async.AsyncLooper
 import com.bpsrobotics.engine.utils.Millis
 import com.bpsrobotics.engine.utils.Sugar.clamp
-import com.team2898.robot.Constants.INTAKE_BUTTON
+import com.team2898.robot.Constants.OPEN_INTAKE_BUTTON
+import com.team2898.robot.Constants.RUN_INTAKE_BUTTON
 import com.team2898.robot.OI.Ramp.ramp
 import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.XboxController
@@ -112,5 +113,6 @@ object OI {
     val throttle by ramp { process(-driverController.leftY, deadzone = true) }
     val turn by ramp { process(driverController.rightX, deadzone = true, square = true) }
 
-    val intake get() = if(operatorController.getRawButton(INTAKE_BUTTON)) 0.5 else 0.0
+     val openIntake get() = operatorController.getRawButton(OPEN_INTAKE_BUTTON)
+     val runIntake get() = operatorController.getRawButton(RUN_INTAKE_BUTTON)
 }

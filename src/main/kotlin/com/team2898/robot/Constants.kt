@@ -67,5 +67,6 @@ object Constants {
         TrapezoidProfile.Constraints(0.0, 0.0)
     )
     const val INTAKE_MOTOR = 10 // Intake Spark ID
-    const val INTAKE_BUTTON = 0 // Intake Button on Joystick
+    const val OPEN_INTAKE_BUTTON = 0 // TODO: Open Intake Button on Joystick
+    const val RUN_INTAKE_BUTTON = 0 // TODO: Run Intake Button on Joystick
 }

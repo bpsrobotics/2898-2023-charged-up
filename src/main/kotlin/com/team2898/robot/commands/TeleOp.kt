@@ -29,7 +29,8 @@ class TeleOp : CommandBase() {
         }
 
         Drivetrain.stupidDrive(`M/s`(speeds.left * 2), `M/s`(speeds.right * 2))
-        Intake.setSpeed(OI.intake)
+        Intake.setOpenState(OI.openIntake)
+        Intake.setIntake(OI.runIntake)
     }
 
     // Called once the command ends or is interrupted.
