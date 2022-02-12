@@ -14,6 +14,12 @@ object SystemComplex : SubsystemBase() {
     val firstBall get() = Feed.ballDetector1.distanceCentimeters < 2.0
     val secondBall get() = Feed.ballDetector2.distanceCentimeters < 2.0
     val shooting get() = Feed.ballDetectorShooter.distanceCentimeters < 2.0
+    enum class IntakeStates{
+        OPEN,
+        ACTIVE,
+        CLOSED
+    }
+    var intakeState = IntakeStates.CLOSED
     val ballCount
         get() = run {
             var ct = 0
@@ -44,12 +50,35 @@ object SystemComplex : SubsystemBase() {
         Feed.changeState(Feed.Mode.SHOOT)
     }
 
+    fun intakeBall() {
+        if(ballCount <= 2){
+            forceIntake()
+        }
+    }
+
+    fun forceIntake(){
+
+    }
     override fun periodic() {
         if (LastShotInitTime.value > Timer.getFPGATimestamp() + Constants.TIME_TO_SHOOT && !shooting) {
             Shooter.setRPM(RPM(0.0), RPM(0.0))
         }
         if (secondBall && !firstBall && !shooting && Feed.state != Feed.Mode.SHOOT) {
             Feed.changeState(Feed.Mode.FEED)
+        }
+        when(intakeState){
+            IntakeStates.ACTIVE -> {
+                Intake.setOpenState(true)
+                Intake.setIntake(true)
+            }
+            IntakeStates.OPEN -> {
+                Intake.setOpenState(true)
+                Intake.setIntake(false)
+            }
+            IntakeStates.CLOSED -> {
+                Intake.setOpenState(false)
+                Intake.setIntake(false)
+            }
         }
     }
 }
