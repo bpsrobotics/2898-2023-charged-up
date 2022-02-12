@@ -7,6 +7,7 @@
 
 package com.team2898.robot
 
+import com.bpsrobotics.engine.async.BatteryLogger
 import com.team2898.robot.commands.TeleOp
 //import com.team2898.robot.subsystems.Odometry
 import com.team2898.robot.subsystems.Drivetrain
@@ -42,6 +43,10 @@ class Robot : TimedRobot() {
     autoCommand = robotContainer.getAutonomousCommand()
     Drivetrain
     SmartDashboard.putData("odometry", Odometry)
+
+    // initialize battery logger
+    BatteryLogger
+
     // LIDAR
   }
 

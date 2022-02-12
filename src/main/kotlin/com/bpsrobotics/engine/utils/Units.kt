@@ -24,16 +24,28 @@ interface DistanceUnit : Unit {
 @JvmInline
 value class Meters(override val value: Double) : DistanceUnit {
     override fun meterValue() = value
+
+    override fun toString(): String {
+        return "$value m"
+    }
 }
 
 @JvmInline
 value class Feet(override val value: Double) : DistanceUnit {
     override fun meterValue() = value * 0.3048
+
+    override fun toString(): String {
+        return "$value ft"
+    }
 }
 
 @JvmInline
 value class Inches(override val value: Double) : DistanceUnit {
     override fun meterValue() = value * 0.0254
+
+    override fun toString(): String {
+        return "$value in"
+    }
 }
 
 // Velocity
@@ -44,11 +56,19 @@ interface VelocityUnit : Unit {
 @JvmInline
 value class MetersPerSecond(override val value: Double) : VelocityUnit {
     override fun metersPerSecondValue() = value
+
+    override fun toString(): String {
+        return "$value m/s"
+    }
 }
 
 @JvmInline
 value class FeetPerSecond(override val value: Double) : VelocityUnit {
     override fun metersPerSecondValue() = value * 0.3084
+
+    override fun toString(): String {
+        return "$value ft/s"
+    }
 }
 
 @JvmInline
@@ -59,6 +79,10 @@ value class KilometersPerHour(override val value: Double) : VelocityUnit {
 @JvmInline
 value class MilesPerHour(override val value: Double) : VelocityUnit {
     override fun metersPerSecondValue() = value * 0.44704
+
+    override fun toString(): String {
+        return "$value mph"
+    }
 }
 
 // Acceleration
@@ -69,6 +93,10 @@ interface AccelerationUnit : Unit {
 @JvmInline
 value class MetersPerSecondSquared(override val value: Double) : AccelerationUnit {
     override fun metersPerSecondSquaredValue() = value
+
+    override fun toString(): String {
+        return "$value m/s^2"
+    }
 }
 
 // Angles
@@ -79,6 +107,10 @@ interface AngleUnit : Unit {
 @JvmInline
 value class Radians(override val value: Double) : AngleUnit {
     override fun radiansValue() = value
+
+    override fun toString(): String {
+        return "$value rad"
+    }
 }
 
 @JvmInline
@@ -88,6 +120,10 @@ value class Degrees(override val value: Double) : AngleUnit {
     }
 
     override fun radiansValue() = value * DEGREES_TO_RADS
+
+    override fun toString(): String {
+        return "$value deg"
+    }
 }
 
 // Mass
@@ -100,6 +136,10 @@ value class Kilograms(override val value: Double) : MassUnit, WeightUnit {  // s
     override fun kilogramsValue() = value
 
     override fun kilogramsWeightValue() = value
+
+    override fun toString(): String {
+        return "$value kg"
+    }
 }
 
 // Weight
@@ -110,6 +150,10 @@ interface WeightUnit : Unit {
 @JvmInline
 value class Pounds(override val value: Double) : WeightUnit {
     override fun kilogramsWeightValue() = value * 0.453592
+
+    override fun toString(): String {
+        return "$value lbs"
+    }
 }
 
 // Time
@@ -120,6 +164,10 @@ interface TimeUnit : Unit {
 @JvmInline
 value class Seconds(override val value: Double) : TimeUnit {
     override fun secondsValue() = value
+
+    override fun toString(): String {
+        return "$value s"
+    }
 }
 
 @JvmInline
@@ -131,14 +179,26 @@ value class Milliseconds(override val value: Double) : TimeUnit {
     constructor(count: Long) : this(count.toDouble())
 
     override fun secondsValue() = value / 1000
+
+    override fun toString(): String {
+        return "$value ms"
+    }
 }
 
 // Electrical (no interface because there is only one set of electrical units)
 @JvmInline
-value class Volts(override val value: Double) : Unit
+value class Volts(override val value: Double) : Unit {
+    override fun toString(): String {
+        return "$value v"
+    }
+}
 
 @JvmInline
-value class Amps(override val value: Double) : Unit
+value class Amps(override val value: Double) : Unit {
+    override fun toString(): String {
+        return "$value a"
+    }
+}
 
 // Typealiases for ease of use
 typealias M = Meters
