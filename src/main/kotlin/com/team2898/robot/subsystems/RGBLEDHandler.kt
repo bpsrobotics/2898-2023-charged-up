@@ -17,9 +17,12 @@ object RGBLEDHandler : SubsystemBase() {
     private val ledStrip = AddressableLED(8) // TODO: PWM Port Constant
     private val finalLEDStripBuffer = AddressableLEDBuffer(ledCount)
     private val ledStripBuffer = RGBAArray(ledCount)
-    var turnedOn = true
     private const val rainbowSpeed = 1.0 // Configure rainbow spacing, 0 to 2 PI
     private const val ledsPerFlagColor = 4 // Size of each color strip in flag color modes
+
+    /**
+     * The current color mode.  Set it to the desired value and the subsystem will handle updating.
+     */
     var mode = ColorMode.OFF  // reinitialized below in an init block so that it invokes the setter
         set(value) {
             // when the mode is set, have it set all the colors once because the flag modes
@@ -28,6 +31,7 @@ object RGBLEDHandler : SubsystemBase() {
             val t = Timer.getFPGATimestamp().seconds
             value.lambda.invoke(ledStripBuffer, t)
             setDataRGBA()
+            ledStrip.setData(finalLEDStripBuffer)
             lastUpdate = t
         }
 
@@ -37,11 +41,15 @@ object RGBLEDHandler : SubsystemBase() {
 
     enum class ColorMode(val lambda: RGBAArray.(time: Seconds) -> Unit, val updateRate: Hertz = (-1).hz, val randomlySelectable: Boolean = true) {
         OFF({ fill(RGBA(0x00, 0x00, 0x00)) }),
-        RED({ fill(RGBA(0xDF, 0x00, 0xFF)) }),
-        BLUE({ fill(RGBA(0x1B, 0x45, 0x9B)) }),
+
+        // solid colors (use in match for signaling?)
+        RED({ fill(RGBA(0xDF, 0x00, 0xFF)) }),  // 1510 red
+        BLUE({ fill(RGBA(0x1B, 0x45, 0x9B)) }),  // 2898 blue
         GREEN({ fill(RGBA(0x00, 0xFF, 0x00)) }),
         ORANGE({ fill(RGBA(0xFF, 0xA5, 0x00)) }),
         PINK({ fill(RGBA(0xFF, 0xC0, 0xCB)) }),
+
+        // pride flags
         RAINBOW({
             val time = Timer.getFPGATimestamp().seconds
             for (i in indices) {
@@ -84,6 +92,8 @@ object RGBLEDHandler : SubsystemBase() {
             RGBA(0xD4, 0x61, 0xA6),
             RGBA(0xA5, 0x00, 0x62)))
         }),
+
+        // effects that modify existing data in the buffer
         SLIDE_LEFT({
             array.copyInto(temp.array, 0, 1)
             temp[temp.size - 1] = temp[0]
@@ -129,26 +139,27 @@ object RGBLEDHandler : SubsystemBase() {
 
     private val temp = RGBAArray(ledStripBuffer.size + 1)
 
+    /**
+     * Copies the data from [ledStripBuffer] to the actual LED buffer, multiplying by alpha to
+     * adjust the brightness
+     */
     private fun setDataRGBA() {
-        if (turnedOn) {
-            for (i in ledStripBuffer.indices) {
-                val color = ledStripBuffer[i]
-                finalLEDStripBuffer.setRGB(i,
-                    color.r.toInt() * color.a.toInt() / 255,
-                    color.g.toInt() * color.a.toInt() / 255,
-                    color.b.toInt() * color.a.toInt() / 255
-                )
-            }
-        } else {
-            for (n in 0 until ledCount) {
-                finalLEDStripBuffer.setRGB(n, 0, 0, 0)
-            }
+        for (i in ledStripBuffer.indices) {
+            val color = ledStripBuffer[i]
+            finalLEDStripBuffer.setRGB(i,
+                color.r.toInt() * color.a.toInt() / 255,
+                color.g.toInt() * color.a.toInt() / 255,
+                color.b.toInt() * color.a.toInt() / 255
+            )
         }
     }
 
+    /** The last time the current mode's update lambda was invoked. */
     private var lastUpdate = 0.seconds
 
     override fun periodic() {
+        // if the current mode requires periodic updates, and it's been long enough since the last
+        // update, then call the mode's update method and copy the data over to the strip.
         if (mode.updateRate.value > 0.0) {
             val time = Timer.getFPGATimestamp().seconds
 
@@ -157,8 +168,9 @@ object RGBLEDHandler : SubsystemBase() {
             if (timeSince.value > 1 / mode.updateRate.hertzValue()) {
                 mode.lambda.invoke(ledStripBuffer, time)
                 setDataRGBA()
+                lastUpdate = time
             }
+            ledStrip.setData(finalLEDStripBuffer)
         }
-        ledStrip.setData(finalLEDStripBuffer)
     }
 }
