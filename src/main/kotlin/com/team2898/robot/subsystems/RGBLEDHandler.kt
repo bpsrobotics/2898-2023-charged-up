@@ -52,7 +52,7 @@ object RGBLEDHandler : SubsystemBase() {
 
                 set(i, RGBA(r, g, b))
             }
-        }, 10.hz),
+        }, 5.hz),
         TRANS({ stripes(RGBAArray.of(
             RGBA(0x55, 0xCD, 0xFC),
             RGBA(0xF7, 0xA8, 0xB8),
@@ -105,6 +105,13 @@ object RGBLEDHandler : SubsystemBase() {
                 val old = this[i]
                 this[i] = RGBA(old.r, old.g, old.b, (old.a.toInt() + Random.nextInt(-25, 25)).coerceIn(0, 255).toUByte())
             }
+        }, 5.hz, false),
+        COLOR_DRIFT({
+            for (i in indices) {
+                val hsv = ColorSpaceConversions.RGBtoHSV(this[i])
+                val h = (hsv.h.toInt() + Random.nextInt(-5, 5)).mod(180)
+                this[i] = ColorSpaceConversions.HSVtoRGB(HSVA(h, hsv.s, hsv.v))
+            }
         }, 5.hz, false)
     }
 
@@ -121,18 +128,6 @@ object RGBLEDHandler : SubsystemBase() {
     }
 
     private val temp = RGBAArray(ledStripBuffer.size + 1)
-
-//    fun colorDriftEffect() {
-//        for (n in 0 until ledStripBuffer.size / 4) {
-//            val hsv = RGBtoHSV(ledStripBuffer[n * 4], ledStripBuffer[n * 4 + 1], ledStripBuffer[n * 4 + 2])
-//            hsv[0] = (hsv[0] + Random.nextInt(-5, 10)).mod(180)
-//            val rgb = HSVtoRGB(hsv[0], hsv[1], hsv[2])
-//
-//            ledStripBuffer[n * 4] = rgb[0]
-//            ledStripBuffer[n * 4 + 1] = rgb[1]
-//            ledStripBuffer[n * 4 + 2] = rgb[2]
-//        }
-//    }
 
     private fun setDataRGBA() {
         if (turnedOn) {
