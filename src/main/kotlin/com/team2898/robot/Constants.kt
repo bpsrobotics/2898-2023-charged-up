@@ -3,11 +3,8 @@
 
 package com.team2898.robot
 
-import com.bpsrobotics.engine.utils.MetersPerSecondSquared
-import com.bpsrobotics.engine.utils.Volts
-import com.bpsrobotics.engine.utils.`M/s`
-import com.team2898.robot.subsystems.Climb
 import com.bpsrobotics.engine.utils.*
+import com.team2898.robot.subsystems.Climb
 import edu.wpi.first.math.controller.ElevatorFeedforward
 import edu.wpi.first.math.trajectory.TrapezoidProfile
 
@@ -45,23 +42,26 @@ object Constants {
 
     // Drivetrain characterization parameters, see [https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-characterization/index.html]
     // These do not carry from robot to robot, even if they're the same design! Characterize each drivetrain.
-          val DRIVETRAIN_KS = Volts(0.10259)  // Voltage to make the motor start turning
+    val DRIVETRAIN_KS = Volts(0.10259)  // Voltage to make the motor start turning
     const val DRIVETRAIN_KV = 4.8 / 12  // Coefficient describing the friction proportional to rotation speed
     const val DRIVETRAIN_KA = 0.11235 / 12 // Describes how much voltage is required for a given amount of acceleration
     const val DRIVETRAIN_KP = 0.18636 // Proportional PID component
-    const val DRIVETRAIN_KD = 0.0     // Derivative PID component (note: no I term is used because it can lead to runaway)
+    const val DRIVETRAIN_KD =
+        0.0     // Derivative PID component (note: no I term is used because it can lead to runaway)
 
     // Ramsete parameters, see [https://file.tavsys.net/control/controls-engineering-in-frc.pdf] page 81
     const val DRIVETRAIN_RAMSETE_B = 2.0  // Higher values make it more aggressively stick to the trajectory. 0 < B
     const val DRIVETRAIN_RAMSETE_Z = 0.7  // Higher values give it more dampening. 0 < Z < 1
 
-    val CLIMBER_LOADED = Climb.ClimbControllerSpec(0.0,
+    val CLIMBER_LOADED = Climb.ClimbControllerSpec(
+        0.0,
         0.0, 0.0, 0.0,
         ElevatorFeedforward(0.0, 0.0, 0.0, 0.0),
         TrapezoidProfile.Constraints(0.0, 0.0)
     )
 
-    val CLIMBER_UNLOADED = Climb.ClimbControllerSpec(0.0,
+    val CLIMBER_UNLOADED = Climb.ClimbControllerSpec(
+        0.0,
         0.0, 0.0, 0.0,
         ElevatorFeedforward(0.0, 0.0, 0.0, 0.0),
         TrapezoidProfile.Constraints(0.0, 0.0)
@@ -70,16 +70,17 @@ object Constants {
     const val INTAKE_BUTTON = 0 // Intake Button on Joystick
 
 
-    const val SHOOTER_THRESHOLD = 5 // TODO() Difference between current and target RPM that must be reached before shooter lock is removed
+    // TODO() Difference between current and target RPM that must be reached before shooter lock is removed
+    const val SHOOTER_THRESHOLD = 5
     const val TIME_TO_SHOOT = 1.0 // TODO() Time it takes to shoot (approx, should be reasonably similar each time)
 
-    const val FEEDER_BALL_DETECTOR_1 = 1 //TODO()
-    const val FEEDER_BALL_DETECTOR_2 = 1 //TODO()
-    const val FEEDER_BALL_DETECTOR_SHOOTER = 1 //TODO()
-    const val FEEDER_TOP_MOTOR = 1 //TODO()
-    const val FEEDER_BOTTOM_MOTOR = 1 //TODO()
-    const val TOP_SPEED = 1.0//TODO()
-    const val BOTTOM_SPEED = 1.0 //TODO()
+    const val FEEDER_BALL_DETECTOR_1 = 1 // TODO()
+    const val FEEDER_BALL_DETECTOR_2 = 1 // TODO()
+    const val FEEDER_BALL_DETECTOR_SHOOTER = 1 // TODO()
+    const val FEEDER_TOP_MOTOR = 1 // TODO()
+    const val FEEDER_BOTTOM_MOTOR = 1 // TODO()
+    const val TOP_SPEED = 1.0 // TODO()
+    const val BOTTOM_SPEED = 1.0 // TODO()
 
     const val OPEN_INTAKE_BUTTON = 0 // TODO: Open Intake Button on Joystick
     const val RUN_INTAKE_BUTTON = 0 // TODO: Run Intake Button on Joystick

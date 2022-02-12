@@ -17,6 +17,7 @@ object Shooter : SubsystemBase() {
     private val shooterActual by OI.Ramp.ramp(60.0) { shooterGoal }
     private var spinnerGoal = 0.0
     private val spinnerActual by OI.Ramp.ramp(60.0) { spinnerGoal }
+
     init {
         // apply 5 volts if it's off by 15 rev/sec
         val kP = (5.0 / 12) / (15 * 60)
@@ -52,7 +53,7 @@ object Shooter : SubsystemBase() {
         spinnerMotor.disable()
     }
 
-    fun reEnable(){
+    fun reEnable() {
         isDisabled = false
     }
 
@@ -66,7 +67,14 @@ object Shooter : SubsystemBase() {
                 disable()
                 return
             } else if (max(shooterMotor.motorTemperature, spinnerMotor.motorTemperature) > 40.0) {
-                println("Max motor temperature reached (${max(shooterMotor.motorTemperature, spinnerMotor.motorTemperature)}), stopping")
+                println(
+                    "Max motor temperature reached (${
+                        max(
+                            shooterMotor.motorTemperature,
+                            spinnerMotor.motorTemperature
+                        )
+                    }), stopping"
+                )
                 disable()
                 return
             }

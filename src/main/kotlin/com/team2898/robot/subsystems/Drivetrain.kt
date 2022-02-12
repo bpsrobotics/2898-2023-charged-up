@@ -116,7 +116,7 @@ object Drivetrain : SubsystemBase() {
             } else if (this is CANSparkMax) {
                 restoreFactoryDefaults()
                 setSmartCurrentLimit(DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT)
-                idleMode = CANSparkMax.IdleMode.kCoast  // for auto
+                idleMode = CANSparkMax.IdleMode.kCoast
            }
         }
 
@@ -128,6 +128,10 @@ object Drivetrain : SubsystemBase() {
         trajectory = path
         startTime = Timer.getFPGATimestamp().seconds
         mode = Mode.CLOSED_LOOP
+    }
+
+    fun stopAuto() {
+        trajectory = null
     }
 
     fun stupidDrive(left: `M/s`, right: `M/s`) {
