@@ -1,16 +1,17 @@
+@file:Suppress("FunctionName")  // capitalized function names
+
 package com.bpsrobotics.engine.utils
 
 object ColorSpaceConversions {
     /**
      * Converts an HSV color to an RGB color.
-     *
-     * @param h the h value [0-180]
-     * @param s the s value [0-255]
-     * @param v the v value [0-255]
      */
-    fun HSVtoRGB(h: Int, s: Int, v: Int): IntArray {
+    fun HSVtoRGB(hsv: HSVA): RGBA {
+        val h = hsv.h.toInt()
+        val s = hsv.s.toInt()
+        val v = hsv.v.toInt()
         if (s == 0) {
-            return intArrayOf(v, v, v)
+            return RGBA(v, v, v)
         }
         val region = h / 30
         val remainder = (h - region * 30) * 6
@@ -18,35 +19,30 @@ object ColorSpaceConversions {
         val q = v * (255 - (s * remainder shr 8)) shr 8
         val t = v * (255 - (s * (255 - remainder) shr 8)) shr 8
         return when (region) {
-            0 -> intArrayOf(v, t, p)
-            1 -> intArrayOf(q, v, p)
-            2 -> intArrayOf(p, v, t)
-            3 -> intArrayOf(p, q, v)
-            4 -> intArrayOf(t, p, v)
-            else -> intArrayOf(v, p, q)
+            0 -> RGBA(v, t, p)
+            1 -> RGBA(q, v, p)
+            2 -> RGBA(p, v, t)
+            3 -> RGBA(p, q, v)
+            4 -> RGBA(t, p, v)
+            else -> RGBA(v, p, q)
         }
     }
 
     /**
      * Converts an RGB color to an HSV color.
-     *
-     * @param r the h value [0-255]
-     * @param g the s value [0-255]
-     * @param b the v value [0-255]
      */
-    fun RGBtoHSV(r: Int, g: Int, b: Int): IntArray {
+    fun RGBtoHSV(rgb: RGBA): HSVA {
         // R, G, B values are divided by 255
         // to change the range from 0..255 to 0..1
-        val r = r / 255.0
-        val g = g / 255.0
-        val b = b / 255.0
+        val r = rgb.r.toDouble() / 255
+        val g = rgb.g.toDouble() / 255
+        val b = rgb.b.toDouble() / 255
 
         // h, s, v = hue, saturation, value
-        val cmax = Math.max(r, Math.max(g, b)) // maximum of r, g, b
-        val cmin = Math.min(r, Math.min(g, b)) // minimum of r, g, b
+        val cmax = r.coerceAtLeast(g.coerceAtLeast(b)) // maximum of r, g, b
+        val cmin = r.coerceAtMost(g.coerceAtMost(b)) // minimum of r, g, b
         val diff = cmax - cmin // diff of cmax and cmin.
         var h = -1.0
-        var s = -1.0
 
         // if cmax and cmax are equal then h = 0
         when (cmax) {
@@ -59,11 +55,11 @@ object ColorSpaceConversions {
         }
 
         // if cmax equal zero
-        s = if (cmax == 0.0) 0.0 else diff / cmax * 100
+        val s = if (cmax == 0.0) 0.0 else diff / cmax * 100
 
         // compute v
         val v = cmax * 100
 
-        return intArrayOf(h.toInt(), s.toInt(), v.toInt())
+        return HSVA(h.toInt(), s.toInt().toUByte(), v.toInt().toUByte())
     }
 }
