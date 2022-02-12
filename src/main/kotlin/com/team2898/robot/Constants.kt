@@ -81,4 +81,6 @@ object Constants {
     const val TOP_SPEED = 1.0//TODO()
     const val BOTTOM_SPEED = 1.0 //TODO()
 
+    const val OPEN_INTAKE_BUTTON = 0 // TODO: Open Intake Button on Joystick
+    const val RUN_INTAKE_BUTTON = 0 // TODO: Run Intake Button on Joystick
 }
