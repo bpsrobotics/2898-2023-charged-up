@@ -13,6 +13,7 @@ import com.team2898.robot.commands.TeleOp
 import com.team2898.robot.subsystems.Drivetrain
 import com.team2898.robot.subsystems.LIDAR
 import com.team2898.robot.subsystems.Odometry
+import edu.wpi.first.cameraserver.CameraServer
 import edu.wpi.first.wpilibj.TimedRobot
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
@@ -43,6 +44,8 @@ class Robot : TimedRobot() {
     autoCommand = robotContainer.getAutonomousCommand()
     Drivetrain
     SmartDashboard.putData("odometry", Odometry)
+
+    CameraServer.startAutomaticCapture()
 
     // initialize battery logger
     BatteryLogger
