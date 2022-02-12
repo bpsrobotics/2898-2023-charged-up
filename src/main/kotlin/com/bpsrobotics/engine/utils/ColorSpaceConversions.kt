@@ -1,3 +1,5 @@
+@file:Suppress("FunctionName")  // capitalized function names
+
 package com.bpsrobotics.engine.utils
 
 object ColorSpaceConversions {
@@ -8,22 +10,22 @@ object ColorSpaceConversions {
      * @param s the s value [0-255]
      * @param v the v value [0-255]
      */
-    fun HSVtoRGB(h: Int, s: Int, v: Int): IntArray {
-        if (s == 0) {
-            return intArrayOf(v, v, v)
+    fun HSVtoRGB(h: UByte, s: UByte, v: UByte): RGBA {
+        if (s == 0.toUByte()) {
+            return RGBA(v, v, v)
         }
-        val region = h / 30
-        val remainder = (h - region * 30) * 6
-        val p = v * (255 - s) shr 8
-        val q = v * (255 - (s * remainder shr 8)) shr 8
-        val t = v * (255 - (s * (255 - remainder) shr 8)) shr 8
+        val region = h.toInt() / 30
+        val remainder = (h.toInt() - region * 30) * 6
+        val p = (v.toInt() * (255 - s.toInt()) shr 8).toUByte()
+        val q = (v.toInt() * (255 - (s.toInt() * remainder shr 8)) shr 8).toUByte()
+        val t = (v.toInt() * (255 - (s.toInt() * (255 - remainder) shr 8)) shr 8).toUByte()
         return when (region) {
-            0 -> intArrayOf(v, t, p)
-            1 -> intArrayOf(q, v, p)
-            2 -> intArrayOf(p, v, t)
-            3 -> intArrayOf(p, q, v)
-            4 -> intArrayOf(t, p, v)
-            else -> intArrayOf(v, p, q)
+            0 -> RGBA(v, t, p)
+            1 -> RGBA(q, v, p)
+            2 -> RGBA(p, v, t)
+            3 -> RGBA(p, q, v)
+            4 -> RGBA(t, p, v)
+            else -> RGBA(v, p, q)
         }
     }
 
@@ -42,11 +44,10 @@ object ColorSpaceConversions {
         val b = b / 255.0
 
         // h, s, v = hue, saturation, value
-        val cmax = Math.max(r, Math.max(g, b)) // maximum of r, g, b
-        val cmin = Math.min(r, Math.min(g, b)) // minimum of r, g, b
+        val cmax = r.coerceAtLeast(g.coerceAtLeast(b)) // maximum of r, g, b
+        val cmin = r.coerceAtMost(g.coerceAtMost(b)) // minimum of r, g, b
         val diff = cmax - cmin // diff of cmax and cmin.
         var h = -1.0
-        var s = -1.0
 
         // if cmax and cmax are equal then h = 0
         when (cmax) {
@@ -59,7 +60,7 @@ object ColorSpaceConversions {
         }
 
         // if cmax equal zero
-        s = if (cmax == 0.0) 0.0 else diff / cmax * 100
+        val s = if (cmax == 0.0) 0.0 else diff / cmax * 100
 
         // compute v
         val v = cmax * 100
