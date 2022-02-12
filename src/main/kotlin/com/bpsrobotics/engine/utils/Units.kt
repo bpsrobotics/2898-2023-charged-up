@@ -99,6 +99,16 @@ value class MetersPerSecondSquared(override val value: Double) : AccelerationUni
     }
 }
 
+// Rotations
+interface Rotations : Unit {
+    fun rotationsPerMinute(): Double
+}
+
+@JvmInline
+value class RPM(override val value: Double) : Rotations {
+    override fun rotationsPerMinute() = value
+}
+
 // Angles
 interface AngleUnit : Unit {
     fun radiansValue(): Double
