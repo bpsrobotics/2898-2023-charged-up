@@ -29,7 +29,7 @@ object Feed : SubsystemBase() {
     private fun feedBall() {
         if (ballDetector1.distanceCentimeters > 2.0 && ballDetector2.distanceCentimeters < 2.0) {
             topMotor.set(Constants.TOP_SPEED)
-            bottomMotor.set(Constants.BOTTOM_SPEED)
+            bottomMotor.set(0.0)
         } else {
             topMotor.set(0.0)
             bottomMotor.set(0.0)
