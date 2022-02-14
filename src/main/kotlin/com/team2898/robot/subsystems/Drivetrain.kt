@@ -30,6 +30,7 @@ import com.team2898.robot.Constants.DRIVETRAIN_TRACK_WIDTH
 import edu.wpi.first.math.controller.SimpleMotorFeedforward
 import edu.wpi.first.math.trajectory.Trajectory
 import edu.wpi.first.wpilibj.Encoder
+import edu.wpi.first.wpilibj.RobotBase
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.drive.DifferentialDrive
 import edu.wpi.first.wpilibj.motorcontrol.MotorController
@@ -58,13 +59,15 @@ object Drivetrain : SubsystemBase() {
         }
     }
 
-    val file = File("/home/lvuser/dt-data.csv").outputStream().bufferedWriter()
-
     init {
         listOf(leftEncoder, rightEncoder).map {
             it.distancePerPulse = (In(6.0).meterValue() * PI) / 2048
         }
-        file.write("time,leftvel,rightvel,leftgoal,rightgoal,leftpid,rightpid,leftff,rightff\n")
+        if (RobotBase.isReal()) {
+             val file = File("/home/lvuser/dt-data.csv").outputStream().bufferedWriter()
+             file.write("time,leftvel,rightvel,leftgoal,rightgoal,leftpid,rightpid,leftff,rightff\n")
+        }
+
     }
 
     val trajectoryMaker = TrajectoryMaker(DRIVETRAIN_MAX_VELOCITY, DRIVETRAIN_MAX_ACCELERATION)
@@ -75,12 +78,14 @@ object Drivetrain : SubsystemBase() {
     private val rightFF = SimpleMotorFeedforward(DRIVETRAIN_KS.value, DRIVETRAIN_KV, DRIVETRAIN_KA)
 
     init {
-        CSVLogger("drivetrain", 50.0,
-            "leftVelocity" to { leftEncoder.rate },
-            "rightVelocity" to { rightEncoder.rate },
-            "leftSet" to { leftPid.setpoint},
-            "rightSet" to { rightPid.setpoint}
-            )
+        if (RobotBase.isReal()) {
+            CSVLogger("drivetrain", 50.0,
+                "leftVelocity" to { leftEncoder.rate },
+                "rightVelocity" to { rightEncoder.rate },
+                "leftSet" to { leftPid.setpoint},
+                "rightSet" to { rightPid.setpoint}
+                )
+        }
     }
 
     private val ramsete: Ramsete = Ramsete(
