@@ -7,10 +7,12 @@ import com.team2898.robot.Constants.INTAKE_MOTOR
 import edu.wpi.first.wpilibj.DoubleSolenoid
 import edu.wpi.first.wpilibj.PneumaticsModuleType
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import java.lang.Double.max
+import kotlin.math.abs
 
 object Intake : SubsystemBase() {
-    private val piston1 = DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 1) // TODO Piston Constants
-    private val piston2 = DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 1) // TODO Piston Constants
+    private val piston1 = DoubleSolenoid(PneumaticsModuleType.REVPH, 10, 11) // TODO Piston Constants
+    private val piston2 = DoubleSolenoid(PneumaticsModuleType.REVPH, 12, 13) // TODO Piston Constants
     private val controller = CANSparkMax(INTAKE_MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless)
 
     fun setOpenState(state: Boolean) {
@@ -19,6 +21,11 @@ object Intake : SubsystemBase() {
     }
 
     fun setIntake(state: Boolean) {
-        if (state) controller.set(0.5) else controller.set(0.0)
+        if (state) {
+            val drivetrainSpeed = max(Odometry.vels.leftMetersPerSecond, Odometry.vels.rightMetersPerSecond)
+            controller.set(abs(drivetrainSpeed / 10).coerceIn(0.0, 0.5))
+        } else {
+            controller.set(0.0)
+        }
     }
 }
