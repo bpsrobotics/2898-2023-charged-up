@@ -18,7 +18,10 @@ object SystemComplex : SubsystemBase() {
     val secondBall get() = Feed.ballDetector2.distanceCentimeters < 2.0
     val shooting get() = Feed.ballDetectorShooter.distanceCentimeters < 2.0
     val distance: Meters = Vision.distance
-    val intakeIsOpen: Boolean get() = true
+    val intakeIsOpen: Boolean get() = !(intakeState == IntakeStates.CLOSED)
+    var intakeCommand: Boolean = false // Modify in other systems
+    var intakeCloseCommand: Boolean = false
+    var shootCommand: Boolean = false
 
     enum class RobotStates {
         N1N2OPEN,
@@ -125,9 +128,6 @@ object SystemComplex : SubsystemBase() {
     }
 
     override fun periodic() {
-        var intakeCommand: Boolean = false // Get Intake button press from Teleop
-        var intakeCloseCommand: Boolean = false // Get Close Intake command from Teleop
-        var shootCommand: Boolean = false // Get Shoot Command from Teleop
         if (LastShotInitTime.value > Timer.getFPGATimestamp() + Constants.TIME_TO_SHOOT && !shooting) {
             Shooter.setRPM(RPM(0.0), RPM(0.0))
         }
