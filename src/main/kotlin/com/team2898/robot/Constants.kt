@@ -22,11 +22,13 @@ object Constants {
     const val DRIVETRAIN_RIGHT_MAIN = 2
     const val DRIVETRAIN_RIGHT_SECONDARY = 4
 
-    // GPIO
+    // DIO
     const val DRIVETRAIN_LEFT_ENCODER_A = 0
     const val DRIVETRAIN_LEFT_ENCODER_B = 1
     const val DRIVETRAIN_RIGHT_ENCODER_A = 2
     const val DRIVETRAIN_RIGHT_ENCODER_B = 3
+    const val CLIMBER_ARM_1_LIMIT_SWITCH = 4
+    const val CLIMBER_ARM_2_LIMIT_SWITCH = 5
 
     // Drivetrain info
     const val DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT = 10

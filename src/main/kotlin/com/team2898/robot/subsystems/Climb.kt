@@ -5,15 +5,14 @@ import com.bpsrobotics.engine.controls.Controller.PID
 import com.bpsrobotics.engine.utils.Meters
 import com.bpsrobotics.engine.utils.minus
 import com.bpsrobotics.engine.utils.seconds
+import com.team2898.robot.Constants.CLIMBER_ARM_1_LIMIT_SWITCH
+import com.team2898.robot.Constants.CLIMBER_ARM_2_LIMIT_SWITCH
 import com.team2898.robot.Constants.CLIMBER_LOADED
 import com.team2898.robot.Constants.CLIMBER_UNLOADED
 import edu.wpi.first.math.controller.ElevatorFeedforward
 import edu.wpi.first.math.trajectory.TrapezoidProfile
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State
-import edu.wpi.first.wpilibj.DoubleSolenoid
-import edu.wpi.first.wpilibj.Encoder
-import edu.wpi.first.wpilibj.PneumaticsModuleType
-import edu.wpi.first.wpilibj.Timer
+import edu.wpi.first.wpilibj.*
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 
@@ -22,14 +21,16 @@ object Climb : SubsystemBase() {
         MotorControllerGroup(arrayOf()),
         Encoder(4, 5),
         DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 1),
-        CLIMBER_LOADED, CLIMBER_UNLOADED
+        CLIMBER_LOADED, CLIMBER_UNLOADED,
+        DigitalInput(CLIMBER_ARM_1_LIMIT_SWITCH)
     )
 
     private val arm2 = Arm(
         MotorControllerGroup(arrayOf()),
         Encoder(4, 5),
         DoubleSolenoid(PneumaticsModuleType.REVPH, 2, 3),
-        CLIMBER_LOADED, CLIMBER_UNLOADED
+        CLIMBER_LOADED, CLIMBER_UNLOADED,
+        DigitalInput(CLIMBER_ARM_2_LIMIT_SWITCH)
     )
 
     private val piston1 = DoubleSolenoid(PneumaticsModuleType.REVPH, 4, 5)
@@ -58,12 +59,14 @@ object Climb : SubsystemBase() {
         private val encoder: Encoder,
         private val brake: DoubleSolenoid,
         private val loaded: ClimbControllerSpec,
-        private val unloaded: ClimbControllerSpec
+        private val unloaded: ClimbControllerSpec,
+        private val limitSwitch: DigitalInput
     ) {
         var isLoaded = false
         private var profile =
             TrapezoidProfile(unloaded.constraints, State(0.0, 0.0), State(0.0, 0.0))
         private var startTime = 0.seconds
+        private var lastLimitSwitchValue = false
 
         val isFinished get() = profile.isFinished(Timer.getFPGATimestamp() - startTime.value)
 
@@ -82,6 +85,14 @@ object Climb : SubsystemBase() {
         }
 
         fun update() {
+            val limitSwitchValue = limitSwitch.get()
+            val leadingEdge = limitSwitchValue && !lastLimitSwitchValue
+            lastLimitSwitchValue = limitSwitchValue
+
+            if (leadingEdge) {
+                encoder.reset()
+            }
+
             val p = profile
             val time = Timer.getFPGATimestamp().seconds - startTime
 
@@ -106,7 +117,16 @@ object Climb : SubsystemBase() {
                 unloaded.feedforward.calculate(goal.velocity)
             }
 
-            motors.set(pid + ff)
+            var out = pid + ff
+
+            if (limitSwitchValue) out = out.coerceAtLeast(0.0)
+
+            motors.set(out)
         }
+    }
+
+    override fun periodic() {
+        arm1.update()
+        arm2.update()
     }
 }

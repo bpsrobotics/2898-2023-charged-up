@@ -115,4 +115,12 @@ object OI {
 
      val openIntake get() = operatorController.getRawButton(OPEN_INTAKE_BUTTON)
      val runIntake get() = operatorController.getRawButton(RUN_INTAKE_BUTTON)
+
+    /*
+    * POV stick for intake + open (wait a moment before closing)
+    * forward rightmost button is climb mode
+    * right 2 close buttons for climb actuation (only enabled in climb mode)
+    * left 3 buttons for manual speeds
+    *
+    */
 }
