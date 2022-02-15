@@ -18,44 +18,32 @@ object SystemComplex : SubsystemBase() {
     val secondBall get() = Feed.ballDetector2.distanceCentimeters < 2.0
     val shooting get() = Feed.ballDetectorShooter.distanceCentimeters < 2.0
     val distance: Meters = Vision.distance
-    val intakeIsOpen: Boolean get() = !(intakeState == IntakeStates.CLOSED)
     var intakeCommand: Boolean = false // Modify in other systems
-    var intakeCloseCommand: Boolean = false
+    var forceUse: Boolean = false
     var shootCommand: Boolean = false
 
     enum class RobotStates {
-        N1N2OPEN,
-        N1B2OPEN,
-        N1CLOSED,
-        B1N2OPEN,
-        B1B2OPEN,
-        B1CLOSED,
+        N1N2,
+        N1B2,
+        B1N2,
+        B1B2
     }
 
     val RobotState: RobotStates
         get() =
-            run {
-                if (intakeIsOpen) {
-                    if (firstBall) {
-                        if (secondBall) {
-                            return@run RobotStates.B1B2OPEN
-                        } else {
-                            return@run RobotStates.B1N2OPEN
-                        }
-                    } else {
-                        if (secondBall) {
-                            return@run RobotStates.N1B2OPEN
-                        } else {
-                            return@run RobotStates.N1N2OPEN
-                        }
-                    }
+            run {if(firstBall) {
+                if (secondBall) {
+                    return@run RobotStates.B1B2
                 } else {
-                    if (firstBall) {
-                        return@run RobotStates.B1CLOSED
-                    } else {
-                        return@run RobotStates.N1CLOSED
-                    }
+                    return@run RobotStates.B1N2
                 }
+            }else{
+                if (secondBall) {
+                    return@run RobotStates.N1B2
+                } else {
+                    return@run RobotStates.N1N2
+                }
+            }
             }
 
     enum class IntakeStates {
@@ -146,64 +134,32 @@ object SystemComplex : SubsystemBase() {
             }
         }
         when (RobotState) {
-            RobotStates.N1CLOSED -> {
-                if (intakeCommand) {
-                    intakeState = IntakeStates.ACTIVE // If the intake button is depressed, intake balls
-                } else if (intakeState == IntakeStates.ACTIVE) {
-                    intakeState = IntakeStates.OPEN // If it is intaking
-                }
-                if (intakeCloseCommand) { // Ignore this action in this state, no action is necessary
-                }
-                if (shootCommand) { // Nothing to shoot
-                }
-                Feed.changeState(Feed.Mode.IDLE)
-            }
-            RobotStates.N1N2OPEN -> {
-                if (intakeCloseCommand) { // IMPORTANT: Prioritize opening intake over closing intake when both open and close are instructed
-                    intakeState = IntakeStates.CLOSED
-                }
+            RobotStates.N1N2 -> {
                 if (intakeCommand) {
                     intakeState = IntakeStates.ACTIVE
                 } else if (intakeState == IntakeStates.ACTIVE) {
-                    intakeState = IntakeStates.OPEN
+                    intakeState = IntakeStates.CLOSED
                 }
                 if (shootCommand) { // Ignore
                 }
                 Feed.changeState(Feed.Mode.IDLE)
             }
-            RobotStates.N1B2OPEN -> {
+            RobotStates.N1B2 -> {
                 Feed.changeState(Feed.Mode.FEED) // No inputs allowed, just load the ball into slot 1
             }
-            RobotStates.B1CLOSED -> {
-                if (intakeCommand) {
-                    intakeState = IntakeStates.ACTIVE
+            RobotStates.B1N2 -> {
+                if (intakeCommand && LastShotInitTime.value >= Timer.getFPGATimestamp() + Constants.TIME_TO_SHOOT) {
+                    intakeState = IntakeStates.ACTIVE // IMPORTANT: Activate, but only if it didn't just shoot (to prevent 3 balls from simultaneously being in the robot
                 } else if (intakeState == IntakeStates.ACTIVE) {
-                    intakeState = IntakeStates.OPEN
-                }
-                if (intakeCloseCommand) { // Ignore
-                }
-                if (shootCommand) {
-                    shoot(distance)
-                } else {
-                    Feed.changeState(Feed.Mode.IDLE)
-                }
-            }
-            RobotStates.B1N2OPEN -> {
-                if (intakeCloseCommand) {
                     intakeState = IntakeStates.CLOSED
                 }
-                if (intakeCommand) {
-                    intakeState = IntakeStates.ACTIVE
-                } else if (intakeState == IntakeStates.ACTIVE) {
-                    intakeState = IntakeStates.OPEN
-                }
                 if (shootCommand) {
                     shoot(distance)
                 } else {
                     Feed.changeState(Feed.Mode.IDLE)
                 }
             }
-            RobotStates.B1B2OPEN -> {
+            RobotStates.B1B2 -> {
                 if (shootCommand) {
                     shoot(distance)
                 } else {
@@ -211,10 +167,14 @@ object SystemComplex : SubsystemBase() {
                 }
                 if (intakeCommand) { // Ignore
                 }
-                if (intakeCloseCommand) { // Ignore
-                }
             }
         }
         putToShuffleboard()
+        if(shootCommand && forceUse){
+            shoot(distance)
+        }
+        if(intakeCommand && forceUse){
+            intakeState = IntakeStates.ACTIVE
+        }
     }
 }
