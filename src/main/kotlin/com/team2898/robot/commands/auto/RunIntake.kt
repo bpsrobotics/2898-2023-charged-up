@@ -4,6 +4,7 @@ import com.team2898.robot.subsystems.Intake
 import com.team2898.robot.subsystems.Odometry
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.wpilibj2.command.CommandBase
+import kotlin.math.abs
 
 /**
  * Commands the intake to pick up a ball at a specific location.
@@ -43,11 +44,11 @@ class RunIntake(private val location: Translation2d) : CommandBase() {
     var finishedIntake = false
 
     override fun execute() {
-        if (Odometry.pose.translation.getDistance(location) < 2.0) {
+        if (abs(Odometry.pose.translation.getDistance(location)) < 2.0) {
             Intake.setOpenState(true)
             Intake.setIntake(true)
             ranIntake = true
-        } else if (Odometry.pose.translation.getDistance(location) > 2.0 && ranIntake) {
+        } else if (abs(Odometry.pose.translation.getDistance(location)) > 2.0 && ranIntake) {
             Intake.setOpenState(false)
             Intake.setIntake(false)
             finishedIntake = true

@@ -7,6 +7,7 @@ import com.team2898.robot.subsystems.Drivetrain
 import com.team2898.robot.subsystems.Odometry
 import edu.wpi.first.math.trajectory.Trajectory
 import edu.wpi.first.wpilibj2.command.CommandBase
+import kotlin.math.abs
 
 /**
  * Commands the drivetrain to follow a path.
@@ -26,10 +27,10 @@ class FollowPath(private val path: Trajectory, private val resetOdometry: Boolea
 
     override fun isFinished(): Boolean {
         return if (leftStart) {
-            path.endPose.translation.getDistance(Odometry.pose.translation) < 0.1
+            abs(path.endPose.translation.getDistance(Odometry.pose.translation)) < 0.1
         }
         else {
-            if (path.initialPose.translation.getDistance(Odometry.pose.translation) > 0.25) {
+            if (abs(path.initialPose.translation.getDistance(Odometry.pose.translation)) > 0.25) {
                 leftStart = true
             }
             false
