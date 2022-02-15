@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.CommandBase
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup
 import kotlin.math.PI
 
@@ -37,7 +38,7 @@ class LeadingAuto : CommandBase() {
 
         moveCommandGroup = SequentialCommandGroup(
             FireLowBall(1, firstPath.initialPose),
-            ParallelCommandGroup(
+            ParallelDeadlineGroup(
                 FollowPath(firstPath, true),
                 RunIntake(
                     when (alliance) {
