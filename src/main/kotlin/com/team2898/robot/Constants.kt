@@ -86,4 +86,7 @@ object Constants {
 
     const val OPEN_INTAKE_BUTTON = 0 // TODO: Open Intake Button on Joystick
     const val RUN_INTAKE_BUTTON = 0 // TODO: Run Intake Button on Joystick
+
+
+    val EJECT_SPEED = Pair<RPM, RPM>(RPM(0.0), RPM(0.0)) //TODO: values
 }

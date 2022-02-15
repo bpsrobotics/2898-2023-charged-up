@@ -18,6 +18,7 @@ object SystemComplex : SubsystemBase() {
     val secondBall get() = Feed.ballDetector2.distanceCentimeters < 2.0
     val shooting get() = Feed.ballDetectorShooter.distanceCentimeters < 2.0
     val distance: Meters = Vision.distance
+    var ejectCommand: Boolean = false
     var intakeCommand: Boolean = false // Modify in other systems
     var forceUse: Boolean = false
     var shootCommand: Boolean = false
@@ -69,6 +70,32 @@ object SystemComplex : SubsystemBase() {
         LastShotInitTime = Seconds(Timer.getFPGATimestamp())
         val targetMotorSpeeds = Interpolation.interpolate(distance)
         Shooter.setRPM(targetMotorSpeeds.first, targetMotorSpeeds.second)
+        val currentMotorSpeeds = Shooter.getRPM()
+        if (
+            abs(targetMotorSpeeds.first.value - currentMotorSpeeds.first.value) < Constants.SHOOTER_THRESHOLD &&
+            abs(targetMotorSpeeds.second.value - currentMotorSpeeds.second.value) < Constants.SHOOTER_THRESHOLD
+        ) {
+            forceShoot()
+        } else {
+            Feed.changeState(Feed.Mode.IDLE)
+        }
+    }
+    fun spinUp(distance: Meters) {
+        LastShotInitTime = Seconds(Timer.getFPGATimestamp())
+        val targetMotorSpeeds = Interpolation.interpolate(distance)
+        Shooter.setRPM(targetMotorSpeeds.first, targetMotorSpeeds.second)
+        val currentMotorSpeeds = Shooter.getRPM()
+        if (!(
+            abs(targetMotorSpeeds.first.value - currentMotorSpeeds.first.value) < Constants.SHOOTER_THRESHOLD &&
+            abs(targetMotorSpeeds.second.value - currentMotorSpeeds.second.value) < Constants.SHOOTER_THRESHOLD
+        )){
+            Feed.changeState(Feed.Mode.IDLE)
+        }
+    }
+    fun eject() {
+        LastShotInitTime = Seconds(Timer.getFPGATimestamp())
+        val targetMotorSpeeds = Interpolation.interpolate(distance)
+        Shooter.setRPM(Constants.EJECT_SPEED.first, Constants.EJECT_SPEED.second)
         val currentMotorSpeeds = Shooter.getRPM()
         if (
             abs(targetMotorSpeeds.first.value - currentMotorSpeeds.first.value) < Constants.SHOOTER_THRESHOLD &&
@@ -155,6 +182,8 @@ object SystemComplex : SubsystemBase() {
                 }
                 if (shootCommand) {
                     shoot(distance)
+                } else if(ejectCommand) {
+                    eject()
                 } else {
                     Feed.changeState(Feed.Mode.IDLE)
                 }
@@ -162,6 +191,8 @@ object SystemComplex : SubsystemBase() {
             RobotStates.B1B2 -> {
                 if (shootCommand) {
                     shoot(distance)
+                } else if(ejectCommand) {
+                    eject()
                 } else {
                     Feed.changeState(Feed.Mode.IDLE)
                 }
@@ -175,6 +206,9 @@ object SystemComplex : SubsystemBase() {
         }
         if(intakeCommand && forceUse){
             intakeState = IntakeStates.ACTIVE
+        }
+        if(ejectCommand && forceUse){
+            eject()
         }
     }
 }
