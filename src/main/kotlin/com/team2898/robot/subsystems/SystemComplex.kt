@@ -32,19 +32,20 @@ object SystemComplex : SubsystemBase() {
 
     val RobotState: RobotStates
         get() =
-            run {if(firstBall) {
-                if (secondBall) {
-                    return@run RobotStates.B1B2
+            run {
+                if (firstBall) {
+                    if (secondBall) {
+                        RobotStates.B1B2
+                    } else {
+                        RobotStates.B1N2
+                    }
                 } else {
-                    return@run RobotStates.B1N2
+                    if (secondBall) {
+                        RobotStates.N1B2
+                    } else {
+                        RobotStates.N1N2
+                    }
                 }
-            }else{
-                if (secondBall) {
-                    return@run RobotStates.N1B2
-                } else {
-                    return@run RobotStates.N1N2
-                }
-            }
             }
 
     enum class IntakeStates {
@@ -80,18 +81,21 @@ object SystemComplex : SubsystemBase() {
             Feed.changeState(Feed.Mode.IDLE)
         }
     }
+
     fun spinUp(distance: Meters) {
         LastShotInitTime = Seconds(Timer.getFPGATimestamp())
         val targetMotorSpeeds = Interpolation.interpolate(distance)
         Shooter.setRPM(targetMotorSpeeds.first, targetMotorSpeeds.second)
         val currentMotorSpeeds = Shooter.getRPM()
         if (!(
-            abs(targetMotorSpeeds.first.value - currentMotorSpeeds.first.value) < Constants.SHOOTER_THRESHOLD &&
-            abs(targetMotorSpeeds.second.value - currentMotorSpeeds.second.value) < Constants.SHOOTER_THRESHOLD
-        )){
+                    abs(targetMotorSpeeds.first.value - currentMotorSpeeds.first.value) < Constants.SHOOTER_THRESHOLD &&
+                            abs(targetMotorSpeeds.second.value - currentMotorSpeeds.second.value) < Constants.SHOOTER_THRESHOLD
+                    )
+        ) {
             Feed.changeState(Feed.Mode.IDLE)
         }
     }
+
     fun eject() {
         LastShotInitTime = Seconds(Timer.getFPGATimestamp())
         val targetMotorSpeeds = Interpolation.interpolate(distance)
@@ -176,13 +180,14 @@ object SystemComplex : SubsystemBase() {
             }
             RobotStates.B1N2 -> {
                 if (intakeCommand && LastShotInitTime.value >= Timer.getFPGATimestamp() + Constants.TIME_TO_SHOOT) {
-                    intakeState = IntakeStates.ACTIVE // IMPORTANT: Activate, but only if it didn't just shoot (to prevent 3 balls from simultaneously being in the robot
+                    intakeState =
+                        IntakeStates.ACTIVE // IMPORTANT: Activate, but only if it didn't just shoot (to prevent 3 balls from simultaneously being in the robot
                 } else if (intakeState == IntakeStates.ACTIVE) {
                     intakeState = IntakeStates.CLOSED
                 }
                 if (shootCommand) {
                     shoot(distance)
-                } else if(ejectCommand) {
+                } else if (ejectCommand) {
                     eject()
                 } else {
                     Feed.changeState(Feed.Mode.IDLE)
@@ -191,7 +196,7 @@ object SystemComplex : SubsystemBase() {
             RobotStates.B1B2 -> {
                 if (shootCommand) {
                     shoot(distance)
-                } else if(ejectCommand) {
+                } else if (ejectCommand) {
                     eject()
                 } else {
                     Feed.changeState(Feed.Mode.IDLE)
@@ -201,13 +206,13 @@ object SystemComplex : SubsystemBase() {
             }
         }
         putToShuffleboard()
-        if(shootCommand && forceUse){
+        if (shootCommand && forceUse) {
             shoot(distance)
         }
-        if(intakeCommand && forceUse){
+        if (intakeCommand && forceUse) {
             intakeState = IntakeStates.ACTIVE
         }
-        if(ejectCommand && forceUse){
+        if (ejectCommand && forceUse) {
             eject()
         }
     }
