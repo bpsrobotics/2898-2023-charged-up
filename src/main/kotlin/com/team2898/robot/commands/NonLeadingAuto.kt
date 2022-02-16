@@ -13,20 +13,19 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.*
 
-class LeadingAuto : CommandBase() {
+class NonLeadingAuto : CommandBase() {
     lateinit var moveCommandGroup: Command
     private val field = Field2d()
 
     override fun initialize() {
-        var firstPath: Trajectory = PathPlanner.loadPath("LeadingAutoP1", 8.0, 1.5) // TODO: Max Viable Speed
-        var secondPath: Trajectory = PathPlanner.loadPath("LeadingAutoP2", 8.0, 1.5) // TODO: Max Viable Speed
+        var firstPath: Trajectory = PathPlanner.loadPath("NonLeadingAuto", 8.0, 1.5) // TODO: Max Viable Speed
         val alliance = DriverStation.getAlliance()
 
         if (alliance == DriverStation.Alliance.Red) {
             firstPath = invertTrajectory(firstPath)
-            secondPath = invertTrajectory(secondPath)
         }
-        field.getObject("traj").setTrajectory(firstPath.concatenate(secondPath))
+
+        field.getObject("traj").setTrajectory(firstPath)
         field.robotPose = firstPath.initialPose
         SmartDashboard.putData(field)
 
@@ -36,27 +35,12 @@ class LeadingAuto : CommandBase() {
                 FollowPath(firstPath, true),
                 RunIntake(
                     when (alliance) {
-                        DriverStation.Alliance.Red -> RunIntake.Ball.RED_2
-                        else -> RunIntake.Ball.BLUE_2
-                    }
-                ),
-                RunIntake(
-                    when (alliance) {
-                        DriverStation.Alliance.Red -> RunIntake.Ball.RED_TERMINAL
-                        else -> RunIntake.Ball.BLUE_TERMINAL
-                    }
-                ),
-            ),
-            FireLowBall(2, firstPath.endPose),
-            ParallelCommandGroup(
-                FollowPath(secondPath),
-                RunIntake(
-                    when (alliance) {
-                        DriverStation.Alliance.Red -> RunIntake.Ball.RED_1
-                        else -> RunIntake.Ball.BLUE_3
+                        DriverStation.Alliance.Red -> RunIntake.Ball.RED_3
+                        else -> RunIntake.Ball.BLUE_1
                     }
                 )
-            )
+            ),
+            FireLowBall(1, firstPath.endPose)
         )
 
         moveCommandGroup.schedule()
