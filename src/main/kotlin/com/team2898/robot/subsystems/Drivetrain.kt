@@ -58,12 +58,6 @@ object Drivetrain : SubsystemBase() {
         listOf(leftEncoder, rightEncoder).map {
             it.distancePerPulse = (In(6.0).meterValue() * PI) / 2048
         }
-    }
-
-    init {
-        listOf(leftEncoder, rightEncoder).map {
-            it.distancePerPulse = (In(6.0).meterValue() * PI) / 2048
-        }
         if (RobotBase.isReal()) {
              val file = File("/home/lvuser/dt-data.csv").outputStream().bufferedWriter()
              file.write("time,leftvel,rightvel,leftgoal,rightgoal,leftpid,rightpid,leftff,rightff\n")
