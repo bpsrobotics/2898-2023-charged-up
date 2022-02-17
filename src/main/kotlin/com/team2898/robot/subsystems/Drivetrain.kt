@@ -112,6 +112,8 @@ object Drivetrain : SubsystemBase() {
 
     /** Initializes motor configurations. */
     init {
+        differentialDrive.setDeadband(0.0)
+
         applyToMotors {
             if (this is WPI_TalonSRX) {
                 configFactoryDefault()
@@ -149,7 +151,7 @@ object Drivetrain : SubsystemBase() {
     /** Outputs [left] to the left motor, and [right] to the right motor. */
     fun rawDrive(left: Double, right: Double) {
 //        Drivetrain.mode = Mode.OPEN_LOOP
-        differentialDrive.tankDrive(left, right)
+        differentialDrive.tankDrive(left, right, false)
     }
 
     /** Same as [rawDrive], but using the wrapper class. */
