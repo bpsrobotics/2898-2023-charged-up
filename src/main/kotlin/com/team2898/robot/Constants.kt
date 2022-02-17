@@ -76,14 +76,20 @@ object Constants {
     const val SHOOTER_THRESHOLD = 5
     const val TIME_TO_SHOOT = 1.0 // TODO() Time it takes to shoot (approx, should be reasonably similar each time)
 
-    const val FEEDER_BALL_DETECTOR_1 = 1 // TODO()
-    const val FEEDER_BALL_DETECTOR_2 = 1 // TODO()
-    const val FEEDER_BALL_DETECTOR_SHOOTER = 1 // TODO()
-    const val FEEDER_TOP_MOTOR = 1 // TODO()
-    const val FEEDER_BOTTOM_MOTOR = 1 // TODO()
+    const val FEEDER_BALL_DETECTOR_1 = 10 // TODO()
+    const val FEEDER_BALL_DETECTOR_2 = 11 // TODO()
+    const val FEEDER_BALL_DETECTOR_SHOOTER = 12 // TODO()
+    const val FEEDER_TOP_MOTOR = 13 // TODO()
+    const val FEEDER_BOTTOM_MOTOR = 14 // TODO()
     const val TOP_SPEED = 1.0 // TODO()
     const val BOTTOM_SPEED = 1.0 // TODO()
 
+    // Control Scheme Constants
+    enum class DriverMap {
+        DEFAULT,
+        FORZA
+    }
+    val DRIVER_MAP = DriverMap.DEFAULT
     const val OPEN_INTAKE_BUTTON = 0 // TODO: Open Intake Button on Joystick
     const val RUN_INTAKE_BUTTON = 0 // TODO: Run Intake Button on Joystick
 
