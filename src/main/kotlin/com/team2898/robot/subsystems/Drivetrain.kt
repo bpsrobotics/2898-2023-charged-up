@@ -22,6 +22,8 @@ import com.team2898.robot.Constants.DRIVETRAIN_MAX_ACCELERATION
 import com.team2898.robot.Constants.DRIVETRAIN_MAX_VELOCITY
 import com.team2898.robot.Constants.DRIVETRAIN_PEAK_CURRENT_LIMIT
 import com.team2898.robot.Constants.DRIVETRAIN_PEAK_CURRENT_LIMIT_DURATION
+import com.team2898.robot.Constants.DRIVETRAIN_RAMSETE_B
+import com.team2898.robot.Constants.DRIVETRAIN_RAMSETE_Z
 import com.team2898.robot.Constants.DRIVETRAIN_RIGHT_ENCODER_A
 import com.team2898.robot.Constants.DRIVETRAIN_RIGHT_ENCODER_B
 import com.team2898.robot.Constants.DRIVETRAIN_RIGHT_MAIN
@@ -89,7 +91,9 @@ object Drivetrain : SubsystemBase() {
         leftPid,
         rightPid,
         leftFF,
-        rightFF
+        rightFF,
+        DRIVETRAIN_RAMSETE_B,
+        DRIVETRAIN_RAMSETE_Z
     )
 
     private var trajectory: Trajectory? = null
