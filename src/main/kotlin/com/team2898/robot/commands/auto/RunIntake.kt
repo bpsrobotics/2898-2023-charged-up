@@ -44,26 +44,27 @@ class RunIntake(private val location: Translation2d) : CommandBase() {
     var finishedIntake = false
 
     override fun execute() {
-        if (abs(Odometry.pose.translation.getDistance(location)) < 2.0) {
-            Intake.setOpenState(true)
-            Intake.setIntake(true)
-            ranIntake = true
-        } else if (abs(Odometry.pose.translation.getDistance(location)) > 2.0 && ranIntake) {
-            Intake.setOpenState(false)
-            Intake.setIntake(false)
-            finishedIntake = true
-        } else {
-            Intake.setOpenState(false)
-            Intake.setIntake(false)
-        }
+//        if (abs(Odometry.pose.translation.getDistance(location)) < 2.0) {
+//            Intake.setOpenState(true)
+//            Intake.setIntake(true)
+//            ranIntake = true
+//        } else if (abs(Odometry.pose.translation.getDistance(location)) > 2.0 && ranIntake) {
+//            Intake.setOpenState(false)
+//            Intake.setIntake(false)
+//            finishedIntake = true
+//        } else {
+//            Intake.setOpenState(false)
+//            Intake.setIntake(false)
+//        }
     }
 
     override fun isFinished(): Boolean {
-        return finishedIntake
+//        return finishedIntake
+        return true
     }
 
     override fun end(interrupted: Boolean) {
-        Intake.setOpenState(false)
-        Intake.setIntake(false)
+//        Intake.setOpenState(false)
+//        Intake.setIntake(false)
     }
 }

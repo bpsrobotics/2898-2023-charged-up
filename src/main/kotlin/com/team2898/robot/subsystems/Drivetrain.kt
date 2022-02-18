@@ -69,8 +69,8 @@ object Drivetrain : SubsystemBase() {
 
     private val leftPid = Controller.PID(DRIVETRAIN_KP, DRIVETRAIN_KD)
     private val rightPid = Controller.PID(DRIVETRAIN_KP, DRIVETRAIN_KD)
-    private val leftFF = SimpleMotorFeedforward(DRIVETRAIN_KS.value, DRIVETRAIN_KV, DRIVETRAIN_KA)
-    private val rightFF = SimpleMotorFeedforward(DRIVETRAIN_KS.value, DRIVETRAIN_KV, DRIVETRAIN_KA)
+    private val leftFF = SimpleMotorFeedforward(DRIVETRAIN_KS, DRIVETRAIN_KV, DRIVETRAIN_KA)
+    private val rightFF = SimpleMotorFeedforward(DRIVETRAIN_KS, DRIVETRAIN_KV, DRIVETRAIN_KA)
 
     init {
         if (RobotBase.isReal()) {
