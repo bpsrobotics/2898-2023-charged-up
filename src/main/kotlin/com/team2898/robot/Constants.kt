@@ -40,14 +40,14 @@ object Constants {
     val DRIVETRAIN_MAX_ACCELERATION = MetersPerSecondSquared(0.5)  // placeholder
 
     // Horizontal distance between the centers of the wheels on each side of the drivetrain
-    val DRIVETRAIN_TRACK_WIDTH = In(22.0).toMeters()
+    val DRIVETRAIN_TRACK_WIDTH = In(23.0).toMeters()
 
     // Drivetrain characterization parameters, see [https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-characterization/index.html]
     // These do not carry from robot to robot, even if they're the same design! Characterize each drivetrain.
-    val DRIVETRAIN_KS = Volts(0.10259)  // Voltage to make the motor start turning
-    const val DRIVETRAIN_KV = 4.8 / 12  // Coefficient describing the friction proportional to rotation speed
-    const val DRIVETRAIN_KA = 0.11235 / 12 // Describes how much voltage is required for a given amount of acceleration
-    const val DRIVETRAIN_KP = 0.18636 // Proportional PID component
+    const val DRIVETRAIN_KS = 0.084314 / 12  // Voltage to make the motor start turning
+    const val DRIVETRAIN_KV = 2.4325 / 12  // Coefficient describing the friction proportional to rotation speed
+    const val DRIVETRAIN_KA = 0.39392 / 12 // Describes how much voltage is required for a given amount of acceleration
+    const val DRIVETRAIN_KP = 3.0 / 12 // Proportional PID component
     const val DRIVETRAIN_KD =
         0.0     // Derivative PID component (note: no I term is used because it can lead to runaway)
 
