@@ -6,6 +6,7 @@ import com.bpsrobotics.engine.utils.Sugar.clamp
 import com.team2898.robot.Constants.DRIVER_MAP
 import com.team2898.robot.Constants.OPEN_INTAKE_BUTTON
 import com.team2898.robot.Constants.RUN_INTAKE_BUTTON
+import com.team2898.robot.Constants.SHOOT_BUTTON
 import com.team2898.robot.OI.Ramp.ramp
 import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.XboxController
@@ -158,4 +159,6 @@ object OI {
     * left 3 buttons for manual speeds
     *
     */
+
+    val shootButton get() = operatorController.getRawButton(SHOOT_BUTTON)
 }

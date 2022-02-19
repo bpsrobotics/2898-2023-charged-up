@@ -260,6 +260,8 @@ inline val Int.rad get() = Radians(toDouble())
 inline val Double.rad get() = Radians(this)
 inline val Double.hz get() = Hertz(this)
 inline val Int.hz get() = Hertz(toDouble())
+inline val Int.RPM get() = RPM(toDouble())
+inline val Double.RPM get() = RPM(this)
 
 inline operator fun Seconds.minus(other: Seconds) = (value - other.value).seconds
 
@@ -274,6 +276,12 @@ inline operator fun Meters.plus(other: Meters) = (value + other.value).m
 inline operator fun Meters.minus(other: Meters) = (value - other.value).m
 
 inline operator fun Meters.unaryMinus() = Meters(-value)
+
+inline operator fun RPM.unaryMinus() = (-value).RPM
+
+inline operator fun RPM.plus(other: RPM) = (value + other.value).RPM
+
+inline operator fun RPM.minus(other: RPM) = (value - other.value).RPM
 
 @JvmInline
 value class RGBA(val packed: UInt) {

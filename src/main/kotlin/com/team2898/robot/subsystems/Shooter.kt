@@ -1,11 +1,16 @@
 package com.team2898.robot.subsystems
 
+import com.bpsrobotics.engine.utils.Interpolation
 import com.bpsrobotics.engine.utils.RPM
+import com.bpsrobotics.engine.utils.minus
 import com.revrobotics.CANSparkMax
 import com.revrobotics.CANSparkMax.ControlType
 import com.revrobotics.CANSparkMaxLowLevel
+import com.team2898.robot.Constants
+import com.team2898.robot.Constants.EJECT_SPEED
 import com.team2898.robot.OI
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import kotlin.math.abs
 import kotlin.math.absoluteValue
 import kotlin.math.max
 
@@ -17,7 +22,7 @@ object Shooter : SubsystemBase() {
     private val shooterActual by OI.Ramp.ramp(60.0) { shooterGoal }
     private var spinnerGoal = 0.0
     private val spinnerActual by OI.Ramp.ramp(60.0) { spinnerGoal }
-
+    private val shootCommand : Boolean get() = TODO() // TODO: Place every possible method of activating shooter here
     init {
         // apply 5 volts if it's off by 15 rev/sec
         val kP = (5.0 / 12) / (15 * 60)
@@ -32,6 +37,15 @@ object Shooter : SubsystemBase() {
 //            it.pidController.setOutputRange(-0.3, 0.3)
         }
     }
+
+    enum class ShooterStates{
+        IDLE,
+        SPINUP,
+        READY,
+        REQUIRESRELEASE,
+    }
+
+    var state = ShooterStates.IDLE
 
     fun setRPM(shooterSpeed: RPM, spinnerSpeed: RPM) {
         if (isDisabled) return
@@ -56,7 +70,6 @@ object Shooter : SubsystemBase() {
     fun reEnable() {
         isDisabled = false
     }
-
     override fun periodic() {
         val vel = max(shooterMotor.encoder.velocity.absoluteValue, spinnerMotor.encoder.velocity.absoluteValue)
         if (!isDisabled) {
@@ -92,6 +105,29 @@ object Shooter : SubsystemBase() {
 
             shooterMotor.set(0.0)
             spinnerMotor.set(0.0)
+        }
+        when (state){
+            ShooterStates.IDLE -> if(shootCommand){
+                state = ShooterStates.SPINUP
+            }
+            ShooterStates.SPINUP -> {
+                val targetMotorSpeeds = Interpolation.interpolate(Interpolation.poseToDistanceFromTarget(Odometry.pose))
+                setRPM(targetMotorSpeeds.first, targetMotorSpeeds.second)
+                if (abs((getRPM().first - targetMotorSpeeds.first).value) > Constants.SHOOTER_THRESHOLD || abs((getRPM().second - targetMotorSpeeds.second).value) > Constants.SHOOTER_THRESHOLD){
+                    state = ShooterStates.READY
+                }
+            }
+            ShooterStates.READY -> {
+                if (shootCommand){
+                    Feed.shoot()
+                    state = ShooterStates.REQUIRESRELEASE
+                }
+            }
+            ShooterStates.REQUIRESRELEASE -> {
+                if (!shootCommand){
+                    state = ShooterStates.IDLE
+                }
+            }
         }
     }
 }
