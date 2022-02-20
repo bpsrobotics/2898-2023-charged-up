@@ -9,8 +9,6 @@ import com.revrobotics.CANSparkMaxLowLevel
 import com.team2898.robot.Constants
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import kotlin.math.abs
-import kotlin.math.absoluteValue
-import kotlin.math.max
 
 object Shooter : SubsystemBase() {
     // TODO: constants
@@ -54,16 +52,14 @@ object Shooter : SubsystemBase() {
 
     fun disable() {
         isDisabled = true
-        shooterMotor.disable()
-        spinnerMotor.disable()
     }
 
-    fun reEnable() {
+    fun enable() {
         isDisabled = false
     }
 
     override fun periodic() {
-        val vel = max(shooterMotor.encoder.velocity.absoluteValue, spinnerMotor.encoder.velocity.absoluteValue)
+//        val vel = max(shooterMotor.encoder.velocity.absoluteValue, spinnerMotor.encoder.velocity.absoluteValue)
         if (!isDisabled) {
             shooterMotor.pidController.setReference(shooterGoal, ControlType.kVelocity)
             spinnerMotor.pidController.setReference(-spinnerGoal, ControlType.kVelocity)
@@ -93,7 +89,7 @@ object Shooter : SubsystemBase() {
                 state = ShooterStates.SPINUP
             }
             ShooterStates.SPINUP -> {
-                val targetMotorSpeeds = Interpolation.interpolate(Interpolation.targetDistance)
+                val targetMotorSpeeds = Interpolation.getRPMs()
                 setRPM(targetMotorSpeeds.first, targetMotorSpeeds.second)
                 if (abs((getRPM().first - targetMotorSpeeds.first).value) > Constants.SHOOTER_THRESHOLD || abs((getRPM().second - targetMotorSpeeds.second).value) > Constants.SHOOTER_THRESHOLD) {
                     state = ShooterStates.READY
