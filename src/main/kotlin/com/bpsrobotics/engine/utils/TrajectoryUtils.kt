@@ -8,13 +8,14 @@ import edu.wpi.first.math.trajectory.Trajectory
 import kotlin.math.PI
 
 object TrajectoryUtils {
+    val centerField = Pose2d(8.2296, 4.1148, Rotation2d())
+
     /**
      * Takes a trajectory made for one alliance and inverts it to be run as the other alliance.
      *
      * Designed for the 2022 RAPID REACT Field.
      */
     fun invertTrajectory(path: Trajectory): Trajectory {
-        val centerField = Pose2d(8.2296, 4.1148, Rotation2d())
         val positionTransform = Transform2d(
             centerField.minus(path.initialPose).translation,
             Rotation2d()

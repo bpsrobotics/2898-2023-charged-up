@@ -1,6 +1,5 @@
 package com.team2898.robot.subsystems
 
-import com.bpsrobotics.engine.utils.Sugar.clamp
 import com.revrobotics.CANSparkMax
 import com.revrobotics.CANSparkMaxLowLevel
 import com.team2898.robot.Constants.INTAKE_MOTOR
@@ -19,6 +18,7 @@ object Intake : SubsystemBase() {
         IDLE,
         RUNNING
     }
+
     var state = IntakeStates.IDLE
     fun setOpenState(state: Boolean) {
         piston1.set(if (state) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
@@ -35,9 +35,15 @@ object Intake : SubsystemBase() {
     }
 
     override fun periodic() {
-        when(state){
-            IntakeStates.IDLE -> {setIntake(false); setOpenState(false)}
-            IntakeStates.RUNNING -> {setIntake(true); setOpenState(true)}
+        when (state) {
+            IntakeStates.IDLE -> {
+                setIntake(false)
+                setOpenState(false)
+            }
+            IntakeStates.RUNNING -> {
+                setIntake(true)
+                setOpenState(true)
+            }
         }
     }
 }
