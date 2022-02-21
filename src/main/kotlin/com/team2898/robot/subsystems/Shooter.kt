@@ -110,7 +110,7 @@ object Shooter : SubsystemBase() {
             ShooterStates.ENABLED -> {
                 val targetMotorSpeeds = Interpolation.getRPMs()
                 setRPM(targetMotorSpeeds.first, targetMotorSpeeds.second)
-                if (abs((getRPM().first - targetMotorSpeeds.first).value) > Constants.SHOOTER_THRESHOLD || abs((getRPM().second - targetMotorSpeeds.second).value) > Constants.SHOOTER_THRESHOLD) {
+                if (abs((getRPM().first - targetMotorSpeeds.first).value) < Constants.SHOOTER_THRESHOLD && abs((getRPM().second - targetMotorSpeeds.second).value) < Constants.SHOOTER_THRESHOLD) {
                     state = ShooterStates.READY
                 }
                 if (lastShotTime < Timer.getFPGATimestamp() - 5.0){
@@ -121,7 +121,6 @@ object Shooter : SubsystemBase() {
                 val targetMotorSpeeds = Interpolation.getRPMs()
                 setRPM(targetMotorSpeeds.first, targetMotorSpeeds.second)
                 if (abs((getRPM().first - targetMotorSpeeds.first).value) > Constants.SHOOTER_THRESHOLD || abs((getRPM().second - targetMotorSpeeds.second).value) > Constants.SHOOTER_THRESHOLD) {
-                } else {
                     state = ShooterStates.ENABLED
                 }
                 if (lastShotTime < Timer.getFPGATimestamp() - 5.0){
@@ -130,7 +129,7 @@ object Shooter : SubsystemBase() {
             }
             ShooterStates.DUMP_ENABLED -> {
                 setRPM(EJECT_SPEED.first, EJECT_SPEED.second)
-                if (abs((getRPM().first - EJECT_SPEED.first).value) > Constants.SHOOTER_THRESHOLD || abs((getRPM().second - EJECT_SPEED.second).value) > Constants.SHOOTER_THRESHOLD) {
+                if (abs((getRPM().first - EJECT_SPEED.first).value) < Constants.SHOOTER_THRESHOLD && abs((getRPM().second - EJECT_SPEED.second).value) < Constants.SHOOTER_THRESHOLD) {
                     state = ShooterStates.READY
                 }
                 if (lastShotTime < Timer.getFPGATimestamp() - 5.0){
@@ -140,7 +139,6 @@ object Shooter : SubsystemBase() {
             ShooterStates.DUMP_READY -> {
                 setRPM(EJECT_SPEED.first, EJECT_SPEED.second)
                 if (abs((getRPM().first - EJECT_SPEED.first).value) > Constants.SHOOTER_THRESHOLD || abs((getRPM().second - EJECT_SPEED.second).value) > Constants.SHOOTER_THRESHOLD) {
-                } else {
                     state = ShooterStates.ENABLED
                 }
                 if (lastShotTime < Timer.getFPGATimestamp() - 5.0){
