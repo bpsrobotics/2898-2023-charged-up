@@ -3,14 +3,16 @@ package com.team2898.robot
 import com.bpsrobotics.engine.async.AsyncLooper
 import com.bpsrobotics.engine.utils.Millis
 import com.bpsrobotics.engine.utils.Sugar.clamp
+import com.bpsrobotics.engine.utils.seconds
 import com.team2898.robot.Constants.DRIVER_MAP
 import com.team2898.robot.Constants.OPEN_INTAKE_BUTTON
 import com.team2898.robot.Constants.RUN_INTAKE_BUTTON
 import com.team2898.robot.Constants.SHOOT_BUTTON
 import com.team2898.robot.OI.Ramp.ramp
 import edu.wpi.first.wpilibj.Joystick
+import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.XboxController
-import java.sql.Driver
+import edu.wpi.first.wpilibj2.command.SubsystemBase
 import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sign
@@ -19,8 +21,13 @@ import kotlin.reflect.KProperty
 /**
  * The Operator Interface object.
  * This is where you put all of the joystick, button, or keyboard inputs.
+ *
+ * A note about delegated properties, which are used in this object:
+ *  A delegated property is where getting (or setting) a field is outsourced
+ *  to another object.  Then, whenever you read the property, it asks the
+ *  object the property is delegated to for the value.
  */
-object OI {
+object OI : SubsystemBase() {
     /**
      * Threshold below which [process] will return 0.
      * 0.1 historically used, but optimal value unknown.
@@ -59,6 +66,10 @@ object OI {
 
         return output
     }
+
+    // conflicts with the other definition, name it something else after compilation
+    @JvmName("process1")
+    fun Double.process(deadzone: Boolean = false, square: Boolean = false, cube: Boolean = false) = process(this, deadzone, square, cube)
 
     private val driverController = XboxController(0)
     private val operatorController = Joystick(1)
@@ -149,16 +160,84 @@ object OI {
         process(driverController.rightX, deadzone = true, square = true)
     }
 
-    val openIntake get() = operatorController.getRawButton(OPEN_INTAKE_BUTTON)
-    val runIntake get() = operatorController.getRawButton(RUN_INTAKE_BUTTON)
-
     /*
-    * POV stick for intake + open (wait a moment before closing)
+    * POV stick to run intake wheels, mystery button to deploy/retract intake
     * forward rightmost button is climb mode
     * right 2 close buttons for climb actuation (only enabled in climb mode)
     * left 3 buttons for manual speeds
     *
     */
 
+    /**
+     * A property delegate (see top of the file for info) that returns true when the lambda switches to true,
+     * and false otherwise.
+     */
+    class LeadingEdge(private val lambda: () -> Boolean) {
+        private var lastValue = false
+
+        operator fun getValue(thisRef: Any?, property: KProperty<*>): Boolean {
+            val res = lambda()
+            if (res && !lastValue) {
+                lastValue = true
+                return true
+            }
+            lastValue = res
+            return false
+        }
+    }
+
+    class Toggle(private val lambda: () -> Boolean) {
+        private var value = false
+        private var lastValue = false
+
+        operator fun getValue(thisRef: Any?, property: KProperty<*>): Boolean {
+            val res = lambda()
+            lastValue = if (res && !lastValue) {
+                value = !value
+                true
+            } else {
+                res
+            }
+            return value
+        }
+    }
+
+    val climbMode by Toggle { operatorController.getRawButton(1234) }
+
+    val climbMove get() = if (climbMode) operatorController.y else 0.0
+
+    val intakeDown by Toggle { operatorController.getRawButton(1234) }
+
+    val intakeRun get() = operatorController.pov != -1
+
     val shootButton get() = operatorController.getRawButton(SHOOT_BUTTON)
+
+    val manualShoot by object {
+        // The time that the driver last had a manual speed button pressed
+        var lastUpdated = 0.seconds
+        // The return value, kept around so that it can be repeated for a few seconds after it's released
+        var value = -1.0
+
+        // Whenever the value is read, run this
+        operator fun getValue(thisRef: Any?, property: KProperty<*>): Double {
+            val newValue = when {
+                operatorController.getRawButton(1234) -> 1.0
+                operatorController.getRawButton(1235) -> 1.5
+                operatorController.getRawButton(1236) -> 2.0
+                else -> -1.0
+            }
+
+            if (newValue != -1.0) {
+                // If a speed is selected, reset the timeout and set the output value.
+                lastUpdated = Timer.getFPGATimestamp().seconds
+                value = newValue
+            } else {
+                // Otherwise, check if the timeout has expired.  If it has, set the value to -1 (no manual speed)
+                if (Timer.getFPGATimestamp() - lastUpdated.value > 5.0) {
+                    value = -1.0
+                }
+            }
+            return value
+        }
+    }
 }
