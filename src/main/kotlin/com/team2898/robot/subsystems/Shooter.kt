@@ -29,14 +29,14 @@ object Shooter : SubsystemBase() {
         shooterMotor.pidController.ff = 2.0
     }
 
-    fun shoot() {
+    fun spinUp() {
         lastShotTime = Timer.getFPGATimestamp()
         state = ShooterStates.SPINUP
         val speeds = Interpolation.getRPMs()
         setGoals(speeds.first, speeds.second)
     }
 
-    fun dump() {
+    fun dumpSpinUp() {
         lastShotTime = Timer.getFPGATimestamp()
         state = ShooterStates.SPINUP
         setGoals(Constants.EJECT_SPEED.first, Constants.EJECT_SPEED.second)

@@ -5,20 +5,16 @@ import com.bpsrobotics.engine.utils.Millis
 import com.bpsrobotics.engine.utils.Sugar.clamp
 import com.bpsrobotics.engine.utils.seconds
 import com.team2898.robot.Constants.DRIVER_MAP
-import com.team2898.robot.Constants.OPEN_INTAKE_BUTTON
-import com.team2898.robot.Constants.RUN_INTAKE_BUTTON
-import com.team2898.robot.Constants.SHOOT_BUTTON
 import com.team2898.robot.OI.Ramp.ramp
+import com.team2898.robot.subsystems.Feed
 import com.team2898.robot.subsystems.Intake
 import com.team2898.robot.subsystems.Shooter
 import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.XboxController
-import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.StartEndCommand
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.button.JoystickButton
-import edu.wpi.first.wpilibj2.command.button.POVButton
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import kotlin.math.abs
 import kotlin.math.pow
@@ -224,17 +220,18 @@ object OI : SubsystemBase() {
     val intakeTrigger = Trigger { intakeRun }
 
     init {
-        intakeTrigger.whileActiveContinuous(InstantCommand(Intake::startIntake))
-        intakeTrigger.whenInactive(InstantCommand(Intake::stopIntake))
+        intakeTrigger.whileActiveContinuous(Intake::startIntake).whenInactive(Intake::stopIntake)
     }
 
 //    val shootButton get() = operatorController.getRawButton(SHOOT_BUTTON)
-    val shootButton = JoystickButton(driverController, XboxController.Button.kA.value)
-    val dumpButton = JoystickButton(driverController, XboxController.Button.kB.value)
+    val spinUpButton = JoystickButton(driverController, XboxController.Button.kY.value)
+    val dumpSpinUpButton = JoystickButton(driverController, XboxController.Button.kA.value)
+    val shootButton = JoystickButton(driverController, XboxController.Button.kB.value)
 
     init {
-        shootButton.whileActiveContinuous(Shooter::shoot)
-        dumpButton.whileActiveContinuous(Shooter::dump)
+        spinUpButton.whileActiveContinuous(Shooter::spinUp)
+        dumpSpinUpButton.whileActiveContinuous(Shooter::dumpSpinUp)
+        shootButton.whileActiveContinuous(Feed::shoot)
     }
 
     val manualShoot by object {
