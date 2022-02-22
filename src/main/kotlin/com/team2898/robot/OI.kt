@@ -10,6 +10,7 @@ import com.team2898.robot.Constants.RUN_INTAKE_BUTTON
 import com.team2898.robot.Constants.SHOOT_BUTTON
 import com.team2898.robot.OI.Ramp.ramp
 import com.team2898.robot.subsystems.Intake
+import com.team2898.robot.subsystems.Shooter
 import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.XboxController
@@ -227,7 +228,14 @@ object OI : SubsystemBase() {
         intakeTrigger.whenInactive(InstantCommand(Intake::stopIntake))
     }
 
-    val shootButton get() = operatorController.getRawButton(SHOOT_BUTTON)
+//    val shootButton get() = operatorController.getRawButton(SHOOT_BUTTON)
+    val shootButton = JoystickButton(driverController, XboxController.Button.kA.value)
+    val dumpButton = JoystickButton(driverController, XboxController.Button.kB.value)
+
+    init {
+        shootButton.whileActiveContinuous(Shooter::shoot)
+        dumpButton.whileActiveContinuous(Shooter::dump)
+    }
 
     val manualShoot by object {
         // The time that the driver last had a manual speed button pressed

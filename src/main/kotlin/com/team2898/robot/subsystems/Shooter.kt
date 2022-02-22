@@ -46,7 +46,8 @@ object Shooter : SubsystemBase() {
     enum class ShooterStates {
         IDLE,
         SPINUP,
-        READY
+        READY,
+        DUMP
     }
 
     var state = ShooterStates.IDLE
@@ -91,6 +92,9 @@ object Shooter : SubsystemBase() {
         when (state) {
             ShooterStates.IDLE -> {}
             ShooterStates.SPINUP -> {
+                val speeds = Interpolation.getRPMs()
+                setGoals(speeds.first, speeds.second)
+
                 val shooterDiff = getRPM().first - shooterGoal.RPM
                 // TODO: sign
                 val spinnerDiff = getRPM().second - spinnerGoal.RPM
@@ -102,12 +106,20 @@ object Shooter : SubsystemBase() {
                 }
             }
             ShooterStates.READY -> {
+                val speeds = Interpolation.getRPMs()
+                setGoals(speeds.first, speeds.second)
+
                 val shooterDiff = getRPM().first - shooterGoal.RPM
                 // TODO: sign
                 val spinnerDiff = getRPM().second - spinnerGoal.RPM
                 if (max(spinnerDiff.value.absoluteValue, shooterDiff.value.absoluteValue) > Constants.SHOOTER_THRESHOLD) {
                     state = ShooterStates.SPINUP
                 }
+                if (lastShotTime < Timer.getFPGATimestamp() - 5.0) {
+                    state = ShooterStates.IDLE
+                }
+            }
+            ShooterStates.DUMP -> {
                 if (lastShotTime < Timer.getFPGATimestamp() - 5.0) {
                     state = ShooterStates.IDLE
                 }
