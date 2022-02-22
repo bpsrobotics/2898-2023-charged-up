@@ -9,6 +9,7 @@ import com.team2898.robot.OI.Ramp.ramp
 import com.team2898.robot.subsystems.Feed
 import com.team2898.robot.subsystems.Intake
 import com.team2898.robot.subsystems.Shooter
+import edu.wpi.first.wpilibj.GenericHID
 import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.XboxController
@@ -226,12 +227,21 @@ object OI : SubsystemBase() {
 //    val shootButton get() = operatorController.getRawButton(SHOOT_BUTTON)
     val spinUpButton = JoystickButton(driverController, XboxController.Button.kY.value)
     val dumpSpinUpButton = JoystickButton(driverController, XboxController.Button.kA.value)
+    val cancelButton = JoystickButton(driverController, XboxController.Button.kX.value)
     val shootButton = JoystickButton(driverController, XboxController.Button.kB.value)
+    val rumbleTrigger = Trigger { Shooter.state == Shooter.ShooterStates.READY }
 
     init {
         spinUpButton.whileActiveContinuous(Shooter::spinUp)
         dumpSpinUpButton.whileActiveContinuous(Shooter::dumpSpinUp)
+        cancelButton.whileActiveContinuous(Shooter::stopShooter)
         shootButton.whileActiveContinuous(Feed::shoot)
+        rumbleTrigger.whileActiveOnce(
+            StartEndCommand(
+                { driverController.setRumble(GenericHID.RumbleType.kLeftRumble, 1.0) },
+                { driverController.setRumble(GenericHID.RumbleType.kLeftRumble, 0.0) }
+            )
+        )
     }
 
     val manualShoot by object {

@@ -42,6 +42,10 @@ object Shooter : SubsystemBase() {
         setGoals(Constants.EJECT_SPEED.first, Constants.EJECT_SPEED.second)
     }
 
+    fun stopShooter() {
+        state = ShooterStates.IDLE
+    }
+
 
     enum class ShooterStates {
         IDLE,
