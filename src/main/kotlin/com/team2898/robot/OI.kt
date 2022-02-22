@@ -9,10 +9,16 @@ import com.team2898.robot.Constants.OPEN_INTAKE_BUTTON
 import com.team2898.robot.Constants.RUN_INTAKE_BUTTON
 import com.team2898.robot.Constants.SHOOT_BUTTON
 import com.team2898.robot.OI.Ramp.ramp
+import com.team2898.robot.subsystems.Intake
 import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.XboxController
+import edu.wpi.first.wpilibj2.command.InstantCommand
+import edu.wpi.first.wpilibj2.command.StartEndCommand
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import edu.wpi.first.wpilibj2.command.button.JoystickButton
+import edu.wpi.first.wpilibj2.command.button.POVButton
+import edu.wpi.first.wpilibj2.command.button.Trigger
 import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sign
@@ -71,8 +77,8 @@ object OI : SubsystemBase() {
     @JvmName("process1")
     fun Double.process(deadzone: Boolean = false, square: Boolean = false, cube: Boolean = false) = process(this, deadzone, square, cube)
 
-    private val driverController = XboxController(0)
-    private val operatorController = Joystick(1)
+    val driverController = XboxController(0)
+    val operatorController = Joystick(1)
 
     /**
      * do not question the r a m p
@@ -206,9 +212,20 @@ object OI : SubsystemBase() {
 
     val climbMove get() = if (climbMode) operatorController.y else 0.0
 
-    val intakeDown by Toggle { operatorController.getRawButton(1234) }
+//    val intakeDown by Toggle { operatorController.getRawButton(1234) }
+    val intakeDown = JoystickButton(operatorController, 1234)
+
+    init {
+        intakeDown.toggleWhenPressed(StartEndCommand(Intake::openIntake, Intake::closeIntake, Intake))
+    }
 
     val intakeRun get() = operatorController.pov != -1
+    val intakeTrigger = Trigger { intakeRun }
+
+    init {
+        intakeTrigger.whileActiveContinuous(InstantCommand(Intake::startIntake))
+        intakeTrigger.whenInactive(InstantCommand(Intake::stopIntake))
+    }
 
     val shootButton get() = operatorController.getRawButton(SHOOT_BUTTON)
 

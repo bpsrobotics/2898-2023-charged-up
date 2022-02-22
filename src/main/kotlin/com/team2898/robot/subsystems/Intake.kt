@@ -14,12 +14,12 @@ object Intake : SubsystemBase() {
     private val piston2 = DoubleSolenoid(PneumaticsModuleType.REVPH, 12, 13) // TODO Piston Constants
     private val controller = CANSparkMax(INTAKE_MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless)
 
-    enum class IntakeStates {
-        IDLE,
-        RUNNING
-    }
-
-    var state = IntakeStates.IDLE
+//    enum class IntakeStates {
+//        IDLE,
+//        RUNNING
+//    }
+//
+//    var state = IntakeStates.IDLE
     fun setOpenState(state: Boolean) {
         piston1.set(if (state) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
         piston2.set(if (state) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
@@ -34,16 +34,32 @@ object Intake : SubsystemBase() {
         }
     }
 
+    fun startIntake() {
+        setIntake(true)
+    }
+
+    fun stopIntake() {
+        setIntake(false)
+    }
+
+    fun openIntake() {
+        setOpenState(true)
+    }
+
+    fun closeIntake() {
+        setOpenState(false)
+    }
+
     override fun periodic() {
-        when (state) {
-            IntakeStates.IDLE -> {
-                setIntake(false)
-                setOpenState(false)
-            }
-            IntakeStates.RUNNING -> {
-                setIntake(true)
-                setOpenState(true)
-            }
-        }
+//        when (state) {
+//            IntakeStates.IDLE -> {
+//                setIntake(false)
+//                setOpenState(false)
+//            }
+//            IntakeStates.RUNNING -> {
+//                setIntake(true)
+//                setOpenState(true)
+//            }
+//        }
     }
 }
