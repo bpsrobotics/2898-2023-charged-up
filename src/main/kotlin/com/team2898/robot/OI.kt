@@ -209,32 +209,35 @@ object OI : SubsystemBase() {
         }
     }
 
-    val climbMode by Toggle { operatorController.getRawButton(1234) }
-
-    val climbMove get() = if (climbMode) operatorController.y else 0.0
+//    val climbMode by Toggle { operatorController.getRawButton(1234) }
+//
+//    val climbMove get() = if (climbMode) operatorController.y else 0.0
 
 //    val intakeDown by Toggle { operatorController.getRawButton(1234) }
-    val intakeDown = JoystickButton(operatorController, 1234)
+//    val intakeDown = JoystickButton(operatorController, 1234)
 
-    init {
-        intakeDown.toggleWhenPressed(StartEndCommand(Intake::openIntake, Intake::closeIntake, Intake))
-    }
+//    init {
+//        intakeDown.toggleWhenPressed(StartEndCommand(Intake::openIntake, Intake::closeIntake, Intake))
+//    }
 
     val intakeRun get() = operatorController.pov != -1
     val intakeTrigger = Trigger { intakeRun }
 
-    init {
-        intakeTrigger.whileActiveContinuous(InstantCommand(Intake::startIntake))
-        intakeTrigger.whenInactive(InstantCommand(Intake::stopIntake))
-    }
+//    init {
+//        intakeTrigger.whileActiveContinuous(InstantCommand(Intake::startIntake))
+//        intakeTrigger.whenInactive(InstantCommand(Intake::stopIntake))
+//    }
 
 //    val shootButton get() = operatorController.getRawButton(SHOOT_BUTTON)
     val shootButton = JoystickButton(driverController, XboxController.Button.kA.value)
     val dumpButton = JoystickButton(driverController, XboxController.Button.kB.value)
+    val testSolenoidButton by Toggle { driverController.aButton }
+
+    val manualClimb get() = operatorController.getRawAxis(1)
 
     init {
-        shootButton.whileActiveContinuous(Shooter::shoot)
-        dumpButton.whileActiveContinuous(Shooter::dump)
+//        shootButton.whileActiveContinuous(Shooter::shoot)
+//        dumpButton.whileActiveContinuous(Shooter::dump)
     }
 
     val manualShoot by object {
@@ -246,9 +249,9 @@ object OI : SubsystemBase() {
         // Whenever the value is read, run this
         operator fun getValue(thisRef: Any?, property: KProperty<*>): Double {
             val newValue = when {
-                operatorController.getRawButton(1234) -> 1.0
-                operatorController.getRawButton(1235) -> 1.5
-                operatorController.getRawButton(1236) -> 2.0
+                operatorController.getRawButton(1) -> 1.0
+                operatorController.getRawButton(2) -> 1.5
+                operatorController.getRawButton(3) -> 2.0
                 else -> -1.0
             }
 

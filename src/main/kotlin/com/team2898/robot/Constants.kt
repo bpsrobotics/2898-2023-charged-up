@@ -21,6 +21,10 @@ object Constants {
     const val DRIVETRAIN_LEFT_SECONDARY = 3
     const val DRIVETRAIN_RIGHT_MAIN = 2
     const val DRIVETRAIN_RIGHT_SECONDARY = 4
+    const val CLIMBER_ARM_1_MAIN = 5
+    const val CLIMBER_ARM_1_SECONDARY = 6
+    const val CLIMBER_ARM_2_MAIN = 7
+    const val CLIMBER_ARM_2_SECONDARY = 8
 
     // DIO
     const val DRIVETRAIN_LEFT_ENCODER_A = 0
