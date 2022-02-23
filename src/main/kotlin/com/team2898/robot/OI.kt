@@ -202,16 +202,16 @@ object OI : SubsystemBase() {
         }
     }
 
-    val climbMode by Toggle { operatorController.getRawButton(1234) }
-
-    val climbMove get() = if (climbMode) operatorController.y else 0.0
+//    val climbMode by Toggle { operatorController.getRawButton(1234) }
+//
+//    val climbMove get() = if (climbMode) operatorController.y else 0.0
 
 //    val intakeDown by Toggle { operatorController.getRawButton(1234) }
-    val intakeDown = JoystickButton(operatorController, 1234)
+//    val intakeDown = JoystickButton(operatorController, 1234)
 
-    init {
-        intakeDown.toggleWhenPressed(StartEndCommand(Intake::openIntake, Intake::closeIntake, Intake))
-    }
+//    init {
+//        intakeDown.toggleWhenPressed(StartEndCommand(Intake::openIntake, Intake::closeIntake, Intake))
+//    }
 
     val intakeRun get() = operatorController.pov != -1
     val intakeTrigger = Trigger { intakeRun }
@@ -239,6 +239,8 @@ object OI : SubsystemBase() {
             )
         )
     }
+
+    val manualClimb get() = operatorController.getRawAxis(1)
 
     val manualShoot by object {
         // The time that the driver last had a manual speed button pressed

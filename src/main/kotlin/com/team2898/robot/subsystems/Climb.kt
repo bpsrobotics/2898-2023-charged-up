@@ -3,10 +3,17 @@ package com.team2898.robot.subsystems
 import com.bpsrobotics.engine.controls.Controller
 import com.bpsrobotics.engine.controls.Controller.PID
 import com.bpsrobotics.engine.utils.Meters
+import com.bpsrobotics.engine.utils.Volts
 import com.bpsrobotics.engine.utils.minus
 import com.bpsrobotics.engine.utils.seconds
+import com.ctre.phoenix.motorcontrol.can.TalonSRX
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX
 import com.team2898.robot.Constants.CLIMBER_ARM_1_LIMIT_SWITCH
+import com.team2898.robot.Constants.CLIMBER_ARM_1_MAIN
+import com.team2898.robot.Constants.CLIMBER_ARM_1_SECONDARY
 import com.team2898.robot.Constants.CLIMBER_ARM_2_LIMIT_SWITCH
+import com.team2898.robot.Constants.CLIMBER_ARM_2_MAIN
+import com.team2898.robot.Constants.CLIMBER_ARM_2_SECONDARY
 import com.team2898.robot.Constants.CLIMBER_LOADED
 import com.team2898.robot.Constants.CLIMBER_UNLOADED
 import edu.wpi.first.math.controller.ElevatorFeedforward
@@ -17,18 +24,36 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 
 object Climb : SubsystemBase() {
+    private val leftArmMain = WPI_TalonSRX(CLIMBER_ARM_1_MAIN)
+    private val leftArmSecondary = WPI_TalonSRX(CLIMBER_ARM_1_SECONDARY)
+    private val rightArmMain = WPI_TalonSRX(CLIMBER_ARM_2_MAIN)
+    private val rightArmSecondary = WPI_TalonSRX(CLIMBER_ARM_2_SECONDARY)
+
+    init {
+        listOf(leftArmMain, leftArmSecondary, rightArmMain, rightArmSecondary).forEach {
+            it.configFactoryDefault()
+            it.configContinuousCurrentLimit(10)
+            it.enableVoltageCompensation(true)
+        }
+    }
+
+    fun openLoop(value: Volts) {
+        arm1.openLoop(value)
+        arm2.openLoop(value)
+    }
+
+    // TODO: stall detection
+
     private val arm1 = Arm(
-        MotorControllerGroup(arrayOf()),
+        listOf(leftArmMain, leftArmSecondary),
         Encoder(4, 5),
-        DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 1),
         CLIMBER_LOADED, CLIMBER_UNLOADED,
         DigitalInput(CLIMBER_ARM_1_LIMIT_SWITCH)
     )
 
     private val arm2 = Arm(
-        MotorControllerGroup(arrayOf()),
+        listOf(rightArmMain, rightArmSecondary),
         Encoder(4, 5),
-        DoubleSolenoid(PneumaticsModuleType.REVPH, 2, 3),
         CLIMBER_LOADED, CLIMBER_UNLOADED,
         DigitalInput(CLIMBER_ARM_2_LIMIT_SWITCH)
     )
@@ -55,9 +80,8 @@ object Climb : SubsystemBase() {
     )
 
     private class Arm(
-        private val motors: MotorControllerGroup,
+        private val motors: List<WPI_TalonSRX>,
         private val encoder: Encoder,
-        private val brake: DoubleSolenoid,
         private val loaded: ClimbControllerSpec,
         private val unloaded: ClimbControllerSpec,
         private val limitSwitch: DigitalInput
@@ -68,11 +92,22 @@ object Climb : SubsystemBase() {
         private var startTime = 0.seconds
         private var lastLimitSwitchValue = false
 
+        enum class Mode {
+            CLOSED_LOOP, OPEN_LOOP
+        }
+
+        var mode = Mode.OPEN_LOOP
+
         val isFinished get() = profile.isFinished(Timer.getFPGATimestamp() - startTime.value)
 
         private val loadedPID: Controller = PID(loaded.kP, loaded.kI, loaded.kD)
 
         private val unloadedPID: Controller = PID(unloaded.kP, unloaded.kI, unloaded.kD)
+
+        fun openLoop(value: Volts) {
+            if (mode == Mode.CLOSED_LOOP) return
+            motors.forEach { it.setVoltage(value.value) }
+        }
 
         fun goTo(destination: Meters, useLoaded: Boolean) {
             isLoaded = useLoaded
@@ -93,16 +128,21 @@ object Climb : SubsystemBase() {
                 encoder.reset()
             }
 
+            if (mode == Mode.OPEN_LOOP) {
+                if (limitSwitchValue && motors.first().motorOutputPercent < 0) {
+                    motors.forEach { it.set(0.0) }
+                }
+                return
+            }
+
             val p = profile
             val time = Timer.getFPGATimestamp().seconds - startTime
 
             if (p.isFinished(time.value)) {
-                motors.set(0.0)
-                brake.set(DoubleSolenoid.Value.kForward)
+                motors.forEach { it.set(0.0) }
                 return
             }
 
-            brake.set(DoubleSolenoid.Value.kReverse)
             val goal = p.calculate(time.value)
 
             val pid = if (isLoaded) {
@@ -121,7 +161,7 @@ object Climb : SubsystemBase() {
 
             if (limitSwitchValue) out = out.coerceAtLeast(0.0)
 
-            motors.set(out)
+            motors.forEach { it.set(out) }
         }
     }
 
