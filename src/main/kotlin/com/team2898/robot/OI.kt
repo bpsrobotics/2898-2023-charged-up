@@ -130,13 +130,13 @@ object OI : SubsystemBase() {
         get() = if (DRIVER_MAP == Constants.DriverMap.FORZA) {
             process(if (driverController.rightBumper) 1.0 else 0.0)
         } else {
-            process(driverController.getRawAxis(3), deadzone = true, square = true)
+            process(driverController.rightTriggerAxis, deadzone = true, square = true)
         }
     val quickTurnLeft
         get() = if (DRIVER_MAP == Constants.DriverMap.FORZA) {
             process(if (driverController.leftBumper) 1.0 else 0.0)
         } else {
-            process(driverController.getRawAxis(2), deadzone = true, square = true)
+            process(driverController.leftTriggerAxis, deadzone = true, square = true)
         }
 
     // Right joystick y-axis.  Controller mapping can be tricky, the best way is to use the driver station to see what buttons and axis are being pressed.
@@ -144,14 +144,10 @@ object OI : SubsystemBase() {
     val throttle
         get() = if (DRIVER_MAP == Constants.DriverMap.FORZA) {
             process(
-                if (driverController.rightTriggerAxis > TRIG_DEADZONE_THRESHOLD) {
-                    driverController.rightTriggerAxis
+                if (driverController.rightTriggerAxis > TRIG_DEADZONE_THRESHOLD || driverController.leftTriggerAxis > TRIG_DEADZONE_THRESHOLD) {
+                    driverController.rightTriggerAxis - driverController.leftTriggerAxis
                 } else {
-                    if (driverController.leftTriggerAxis > TRIG_DEADZONE_THRESHOLD) {
-                        -driverController.leftTriggerAxis
-                    } else {
-                        0.0
-                    }
+                    0.0
                 },
                 deadzone = true
             )
