@@ -33,6 +33,7 @@ object Climb : SubsystemBase() {
         listOf(leftArmMain, leftArmSecondary, rightArmMain, rightArmSecondary).forEach {
             it.configFactoryDefault()
             it.configContinuousCurrentLimit(10)
+            it.configPeakCurrentLimit(30, 50)
             it.enableVoltageCompensation(true)
         }
     }
