@@ -1,7 +1,6 @@
 package com.team2898.robot.commands
 
 import com.bpsrobotics.engine.utils.Sugar.degreesToRadians
-import com.bpsrobotics.engine.utils.TrajectoryUtils.endPose
 import com.bpsrobotics.engine.utils.TrajectoryUtils.invertTrajectory
 import com.pathplanner.lib.PathPlanner
 import com.team2898.robot.commands.auto.FireHighBall
@@ -33,7 +32,7 @@ class FiveBallAuto : CommandBase() {
         SmartDashboard.putData(field)
 
         moveCommandGroup = SequentialCommandGroup(
-            FireLowBall(1, firstPath.initialPose),
+            FireLowBall(1),
             ParallelDeadlineGroup(
                 FollowPath(firstPath, true),
                 RunIntake(
@@ -60,9 +59,9 @@ class FiveBallAuto : CommandBase() {
                         else -> RunIntake.Ball.BLUE_1
                     }
                 ),
-                FireHighBall(2, Pose2d(5.96, 3.12, Rotation2d(24.54.degreesToRadians())))
+                FireHighBall(Pose2d(5.96, 3.12, Rotation2d(24.54.degreesToRadians())))
             ),
-            FireHighBall(2, Pose2d(6.10, 6.54, Rotation2d((-43.48).degreesToRadians())))
+            FireHighBall(Pose2d(6.10, 6.54, Rotation2d((-43.48).degreesToRadians())))
         )
 
         moveCommandGroup.schedule()

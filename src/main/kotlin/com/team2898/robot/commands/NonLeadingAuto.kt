@@ -1,6 +1,5 @@
 package com.team2898.robot.commands
 
-import com.bpsrobotics.engine.utils.TrajectoryUtils.endPose
 import com.bpsrobotics.engine.utils.TrajectoryUtils.invertTrajectory
 import com.pathplanner.lib.PathPlanner
 import com.team2898.robot.commands.auto.FireLowBall
@@ -30,7 +29,7 @@ class NonLeadingAuto : CommandBase() {
         SmartDashboard.putData(field)
 
         moveCommandGroup = SequentialCommandGroup(
-            FireLowBall(1, firstPath.initialPose),
+            FireLowBall(1),
             ParallelDeadlineGroup(
                 FollowPath(firstPath, true),
                 RunIntake(
@@ -40,7 +39,7 @@ class NonLeadingAuto : CommandBase() {
                     }
                 )
             ),
-            FireLowBall(1, firstPath.endPose)
+            FireLowBall(1)
         )
 
         moveCommandGroup.schedule()

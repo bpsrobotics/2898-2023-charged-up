@@ -1,8 +1,6 @@
 package com.team2898.robot.subsystems
 
-import com.bpsrobotics.engine.utils.Interpolation
-import com.bpsrobotics.engine.utils.RPM
-import com.bpsrobotics.engine.utils.minus
+import com.bpsrobotics.engine.utils.*
 import com.revrobotics.CANSparkMax
 import com.revrobotics.CANSparkMax.ControlType
 import com.revrobotics.CANSparkMaxLowLevel
@@ -19,6 +17,7 @@ object Shooter : SubsystemBase() {
     private var shooterGoal = 0.0
     private var spinnerGoal = 0.0
     private var lastShotTime = 0.0
+    private var overrideMeters = 0.0.m
 
     init {
         // TODO Tune FF and PID loops, set constants
@@ -30,15 +29,24 @@ object Shooter : SubsystemBase() {
     }
 
     fun spinUp() {
+        overrideMeters = 0.0.m
         lastShotTime = Timer.getFPGATimestamp()
         state = ShooterStates.SPINUP
         val speeds = Interpolation.getRPMs()
         setGoals(speeds.first, speeds.second)
     }
 
-    fun dumpSpinUp() {
+    fun spinUp(distance: Meters) {
+        overrideMeters = distance
         lastShotTime = Timer.getFPGATimestamp()
         state = ShooterStates.SPINUP
+        val speeds = Interpolation.getRPMs(distance)
+        setGoals(speeds.first, speeds.second)
+    }
+
+    fun dumpSpinUp() {
+        lastShotTime = Timer.getFPGATimestamp()
+        state = ShooterStates.DUMP
         setGoals(Constants.EJECT_SPEED.first, Constants.EJECT_SPEED.second)
     }
 
@@ -96,7 +104,11 @@ object Shooter : SubsystemBase() {
         when (state) {
             ShooterStates.IDLE -> {}
             ShooterStates.SPINUP -> {
-                val speeds = Interpolation.getRPMs()
+                val speeds = if (overrideMeters.value >= 0.1) {
+                    Interpolation.getRPMs(overrideMeters)
+                } else {
+                    Interpolation.getRPMs()
+                }
                 setGoals(speeds.first, speeds.second)
 
                 val shooterDiff = getRPM().first - shooterGoal.RPM
@@ -110,7 +122,11 @@ object Shooter : SubsystemBase() {
                 }
             }
             ShooterStates.READY -> {
-                val speeds = Interpolation.getRPMs()
+                val speeds = if (overrideMeters.value >= 0.1) {
+                    Interpolation.getRPMs(overrideMeters)
+                } else {
+                    Interpolation.getRPMs()
+                }
                 setGoals(speeds.first, speeds.second)
 
                 val shooterDiff = getRPM().first - shooterGoal.RPM
