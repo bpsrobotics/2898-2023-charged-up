@@ -233,7 +233,9 @@ object OI : SubsystemBase() {
     val dumpButton = JoystickButton(driverController, XboxController.Button.kB.value)
     val testSolenoidButton by Toggle { driverController.aButton }
 
-    val manualClimb get() = operatorController.getRawAxis(1)
+    val manualClimb get() = operatorController.y.process(deadzone = true)
+    val climbPistonForward get() = operatorController.getRawButton(9)
+    val climbPistonReverse get() = operatorController.getRawButton(12)
 
     init {
 //        shootButton.whileActiveContinuous(Shooter::shoot)

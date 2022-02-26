@@ -6,28 +6,26 @@ import com.bpsrobotics.engine.utils.Meters
 import com.bpsrobotics.engine.utils.Volts
 import com.bpsrobotics.engine.utils.minus
 import com.bpsrobotics.engine.utils.seconds
-import com.ctre.phoenix.motorcontrol.can.TalonSRX
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX
-import com.team2898.robot.Constants.CLIMBER_ARM_1_LIMIT_SWITCH
-import com.team2898.robot.Constants.CLIMBER_ARM_1_MAIN
-import com.team2898.robot.Constants.CLIMBER_ARM_1_SECONDARY
-import com.team2898.robot.Constants.CLIMBER_ARM_2_LIMIT_SWITCH
-import com.team2898.robot.Constants.CLIMBER_ARM_2_MAIN
-import com.team2898.robot.Constants.CLIMBER_ARM_2_SECONDARY
+import com.team2898.robot.Constants.CLIMBER_LEFT_LIMIT_SWITCH
+import com.team2898.robot.Constants.CLIMBER_ARM_LEFT_MAIN
+import com.team2898.robot.Constants.CLIMBER_ARM_LEFT_SECONDARY
+import com.team2898.robot.Constants.CLIMBER_RIGHT_LIMIT_SWITCH
+import com.team2898.robot.Constants.CLIMBER_ARM_RIGHT_MAIN
+import com.team2898.robot.Constants.CLIMBER_ARM_RIGHT_SECONDARY
 import com.team2898.robot.Constants.CLIMBER_LOADED
 import com.team2898.robot.Constants.CLIMBER_UNLOADED
 import edu.wpi.first.math.controller.ElevatorFeedforward
 import edu.wpi.first.math.trajectory.TrapezoidProfile
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State
 import edu.wpi.first.wpilibj.*
-import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 
 object Climb : SubsystemBase() {
-    private val leftArmMain = WPI_TalonSRX(CLIMBER_ARM_1_MAIN)
-    private val leftArmSecondary = WPI_TalonSRX(CLIMBER_ARM_1_SECONDARY)
-    private val rightArmMain = WPI_TalonSRX(CLIMBER_ARM_2_MAIN)
-    private val rightArmSecondary = WPI_TalonSRX(CLIMBER_ARM_2_SECONDARY)
+    private val leftArmMain = WPI_TalonSRX(CLIMBER_ARM_LEFT_MAIN)
+    private val leftArmSecondary = WPI_TalonSRX(CLIMBER_ARM_LEFT_SECONDARY)
+    private val rightArmMain = WPI_TalonSRX(CLIMBER_ARM_RIGHT_MAIN)
+    private val rightArmSecondary = WPI_TalonSRX(CLIMBER_ARM_RIGHT_SECONDARY)
 
     init {
         listOf(leftArmMain, leftArmSecondary, rightArmMain, rightArmSecondary).forEach {
@@ -49,14 +47,14 @@ object Climb : SubsystemBase() {
         listOf(leftArmMain, leftArmSecondary),
         Encoder(4, 5),
         CLIMBER_LOADED, CLIMBER_UNLOADED,
-        DigitalInput(CLIMBER_ARM_1_LIMIT_SWITCH)
+        DigitalInput(CLIMBER_LEFT_LIMIT_SWITCH)
     )
 
     private val arm2 = Arm(
         listOf(rightArmMain, rightArmSecondary),
         Encoder(4, 5),
         CLIMBER_LOADED, CLIMBER_UNLOADED,
-        DigitalInput(CLIMBER_ARM_2_LIMIT_SWITCH)
+        DigitalInput(CLIMBER_RIGHT_LIMIT_SWITCH)
     )
 
     private val piston1 = DoubleSolenoid(PneumaticsModuleType.REVPH, 4, 5)

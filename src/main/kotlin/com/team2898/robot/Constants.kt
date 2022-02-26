@@ -17,22 +17,35 @@ object Constants {
     // Pneumatics ports
 
     // Motor IDs
-    const val DRIVETRAIN_LEFT_MAIN = 1
-    const val DRIVETRAIN_LEFT_SECONDARY = 3
-    const val DRIVETRAIN_RIGHT_MAIN = 2
-    const val DRIVETRAIN_RIGHT_SECONDARY = 4
-    const val CLIMBER_ARM_1_MAIN = 5
-    const val CLIMBER_ARM_1_SECONDARY = 6
-    const val CLIMBER_ARM_2_MAIN = 7
-    const val CLIMBER_ARM_2_SECONDARY = 8
+    const val DRIVETRAIN_LEFT_MAIN        = 1
+    const val DRIVETRAIN_LEFT_SECONDARY   = 3
+    const val DRIVETRAIN_RIGHT_MAIN       = 2
+    const val DRIVETRAIN_RIGHT_SECONDARY  = 4
+
+    const val CLIMBER_ARM_LEFT_MAIN       = 5
+    const val CLIMBER_ARM_LEFT_SECONDARY  = 6
+
+    const val CLIMBER_ARM_RIGHT_MAIN      = 7
+    const val CLIMBER_ARM_RIGHT_SECONDARY = 8
+
+    const val SHOOTER_FLYWHEEL            = 9
+    const val SHOOTER_SPINNER             = 10
+
+    const val INTAKE_MOTOR                = 11
+
+    const val FEEDER_LEFT_VECTOR          = 12
+    const val FEEDER_RIGHT_VECTOR         = 13
+    const val FEEDER_UPPER                = 14
 
     // DIO
-    const val DRIVETRAIN_LEFT_ENCODER_A = 0
-    const val DRIVETRAIN_LEFT_ENCODER_B = 1
-    const val DRIVETRAIN_RIGHT_ENCODER_A = 2
-    const val DRIVETRAIN_RIGHT_ENCODER_B = 3
-    const val CLIMBER_ARM_1_LIMIT_SWITCH = 4
-    const val CLIMBER_ARM_2_LIMIT_SWITCH = 5
+    const val DRIVETRAIN_LEFT_ENCODER_A   = 0
+    const val DRIVETRAIN_LEFT_ENCODER_B   = 1
+
+    const val DRIVETRAIN_RIGHT_ENCODER_A  = 2
+    const val DRIVETRAIN_RIGHT_ENCODER_B  = 3
+
+    const val CLIMBER_LEFT_LIMIT_SWITCH   = 4
+    const val CLIMBER_RIGHT_LIMIT_SWITCH  = 5
 
     // Drivetrain info
     const val DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT = 10
@@ -52,8 +65,7 @@ object Constants {
     const val DRIVETRAIN_KV = 2.4325 / 12  // Coefficient describing the friction proportional to rotation speed
     const val DRIVETRAIN_KA = 0.39392 / 12 // Describes how much voltage is required for a given amount of acceleration
     const val DRIVETRAIN_KP = 3.0 / 12 // Proportional PID component
-    const val DRIVETRAIN_KD =
-        0.0     // Derivative PID component (note: no I term is used because it can lead to runaway)
+    const val DRIVETRAIN_KD = 0.0 // Derivative PID component (note: no I term is used because it can lead to runaway)
 
     // Ramsete parameters, see [https://file.tavsys.net/control/controls-engineering-in-frc.pdf] page 81
     const val DRIVETRAIN_RAMSETE_B = 6.0  // Higher values make it more aggressively stick to the trajectory. 0 < B
@@ -72,7 +84,6 @@ object Constants {
         ElevatorFeedforward(0.0, 0.0, 0.0, 0.0),
         TrapezoidProfile.Constraints(0.0, 0.0)
     )
-    const val INTAKE_MOTOR = 10 // Intake Spark ID
     const val INTAKE_BUTTON = 0 // Intake Button on Joystick
 
 
@@ -82,8 +93,6 @@ object Constants {
     const val SHOOT_BUTTON = 1 // TODO: Shooter Button
 
     const val FEEDER_BALL_DETECTOR_1 = 10 // TODO
-    const val FEEDER_TOP_MOTOR = 13 // TODO
-    const val FEEDER_BOTTOM_MOTOR = 14 // TODO
     const val TOP_SPEED = 1.0 // TODO
     const val BOTTOM_SPEED = 1.0 // TODO
     const val FEEDER_MIN_DISTANCE = 2.0 // TODO: Distance at which ball is in shooter
@@ -99,5 +108,5 @@ object Constants {
     const val RUN_INTAKE_BUTTON = 0 // TODO: Run Intake Button on Joystick
 
 
-    val EJECT_SPEED = Pair<RPM, RPM>(RPM(0.0), RPM(0.0)) //TODO: values
+    val EJECT_SPEED = Pair(RPM(0.0), RPM(0.0)) //TODO: values
 }
