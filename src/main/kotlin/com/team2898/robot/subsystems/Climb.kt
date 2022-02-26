@@ -72,6 +72,7 @@ object Climb : SubsystemBase() {
     fun pistons(value: DoubleSolenoid.Value) {
         piston1.set(value)
         piston2.set(value)
+        Intake.openIntake()
     }
 
     fun arms(value: Meters, loaded: Boolean) {

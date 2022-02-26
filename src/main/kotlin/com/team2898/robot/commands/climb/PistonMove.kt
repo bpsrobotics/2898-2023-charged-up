@@ -1,6 +1,7 @@
 package com.team2898.robot.commands.climb
 
 import com.team2898.robot.subsystems.Climb
+import com.team2898.robot.subsystems.Intake
 import edu.wpi.first.wpilibj.DoubleSolenoid
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj2.command.CommandBase
@@ -18,4 +19,7 @@ class PistonMove(val dest: DoubleSolenoid.Value) : CommandBase() {
         return (Timer.getFPGATimestamp() - startTime) > 1
     }
 
+    override fun execute() {
+        Intake.openIntake()
+    }
 }
