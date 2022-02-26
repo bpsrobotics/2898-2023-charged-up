@@ -3,18 +3,19 @@ package com.team2898.robot.subsystems
 import com.bpsrobotics.engine.utils.*
 import com.revrobotics.CANSparkMax
 import com.revrobotics.CANSparkMax.ControlType
-import com.revrobotics.CANSparkMaxLowLevel
+import com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless
 import com.team2898.robot.Constants
 import com.team2898.robot.DriverDashboard
+import com.team2898.robot.RobotMap.SHOOTER_FLYWHEEL
+import com.team2898.robot.RobotMap.SHOOTER_SPINNER
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import kotlin.math.absoluteValue
 import kotlin.math.max
 
 object Shooter : SubsystemBase() {
-    // TODO: constants
-    private val shooterMotor = CANSparkMax(1, CANSparkMaxLowLevel.MotorType.kBrushless)
-    private val spinnerMotor = CANSparkMax(2, CANSparkMaxLowLevel.MotorType.kBrushless)
+    private val shooterMotor = CANSparkMax(SHOOTER_FLYWHEEL, kBrushless)
+    private val spinnerMotor = CANSparkMax(SHOOTER_SPINNER, kBrushless)
     private var shooterGoal = 0.0
     private var spinnerGoal = 0.0
     private var lastShotTime = 0.0

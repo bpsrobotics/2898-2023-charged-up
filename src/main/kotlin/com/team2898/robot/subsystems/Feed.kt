@@ -7,13 +7,13 @@ import com.cuforge.libcu.Lasershark
 import com.revrobotics.CANSparkMax
 import com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless
 import com.team2898.robot.DriverDashboard
+import com.team2898.robot.RobotMap.FEEDER_LEFT_VECTOR
+import com.team2898.robot.RobotMap.FEEDER_RIGHT_VECTOR
+import com.team2898.robot.RobotMap.FEEDER_UPPER
 import com.team2898.robot.subsystems.Feed.State.*
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup
 import edu.wpi.first.wpilibj2.command.SubsystemBase
-
-// TODO: merge with intake?  Otherwise add special state that the intake
-// puts it into to run the vectoring wheels while intaking the first ball
 
 object Feed : SubsystemBase() {
     private val mainLasershark = Lasershark(1)  // TODO: port
@@ -23,16 +23,16 @@ object Feed : SubsystemBase() {
     private val ballDetectorShooter = Lasershark(Constants.FEEDER_BALL_DETECTOR_SHOOTER)
     private val ballDetector2 = Lasershark(Constants.FEEDER_BALL_DETECTOR_2) */
 
-    private val vectorLeft = CANSparkMax(1, kBrushless)  // TODO: id
-    private val vectorRight = CANSparkMax(2, kBrushless)  // TODO: id
+    private val vectorLeft = CANSparkMax(FEEDER_LEFT_VECTOR, kBrushless)
+    private val vectorRight = CANSparkMax(FEEDER_RIGHT_VECTOR, kBrushless)
     private val vector = MotorControllerGroup(vectorLeft, vectorRight)
 
-    private val feederMotor = WPI_TalonSRX(3) // TODO: id
+    private val feederMotor = WPI_TalonSRX(FEEDER_UPPER)
 
     // public so that things can make decisions based on if it's ready or not
     var state = EMPTY
         private set(value) { // not settable from outside the object
-            if (value == SHOOTING) shootStartTime = Timer.getFPGATimestamp().seconds
+            stateStartTime = Timer.getFPGATimestamp().seconds
             field = value
         }
 
@@ -40,10 +40,18 @@ object Feed : SubsystemBase() {
     private val RUN_RANGE = 0.2..1.0
 
     enum class State {
-        EMPTY, READY, FEEDING, SHOOTING
+        EMPTY, READY, FEEDING, SHOOTING, INTAKING
     }
 
-    private var shootStartTime = 0.seconds
+    private var stateStartTime = 0.seconds
+
+    fun intake() {
+        state = INTAKING
+    }
+
+    fun stopIntaking() {
+        if (state == INTAKING) state = EMPTY  // switches to the right one automatically
+    }
 
     // TODO: current limits
 
@@ -60,15 +68,36 @@ object Feed : SubsystemBase() {
                 DriverDashboard.string("Feeder State", "Empty")
             }
             FEEDING -> {
+                DriverDashboard.string("Feeder State", "Feeding")
+                if (distance < RUN_RANGE.start) {
+                    state = READY
+                    return
+                } else if (distance > RUN_RANGE.endInclusive) {
+                    state = EMPTY
+                    return
+                }
                 vector.set(1.0)  // TODO speed
                 feederMotor.set(1.0)
+            }
+            INTAKING -> {
+                DriverDashboard.string("Feeder State", "Feeding")
+
+//                if (Timer.getFPGATimestamp() - stateStartTime.value > 1.0) {
+//                    state = EMPTY  // will automatically switch out of state if it isn't empty
+//                    return
+//                }
 
                 if (distance < RUN_RANGE.start) {
                     state = READY
-                } else if (distance > RUN_RANGE.endInclusive) {
-                    state = EMPTY
+                    return
                 }
-                DriverDashboard.string("Feeder State", "Feeding")
+
+                vector.set(1.0)  // TODO speed
+                feederMotor.set(0.0)
+
+                if (distance < RUN_RANGE.endInclusive) {
+                    state = FEEDING
+                }
             }
             READY -> {
                 vector.set(0.0)
@@ -84,7 +113,7 @@ object Feed : SubsystemBase() {
 
                 // if it's been in the shooting state for long enough switch to empty
                 // will switch again if there's another ball
-                if ((Timer.getFPGATimestamp().seconds - shootStartTime).value > 0.5) {  // TODO: constant
+                if ((Timer.getFPGATimestamp().seconds - stateStartTime).value > 0.5) {  // TODO: constant
                     state = EMPTY
                     DriverDashboard.string("Feeder State", "Shooting")
                 }

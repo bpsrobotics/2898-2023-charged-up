@@ -2,7 +2,7 @@ package com.team2898.robot.subsystems
 
 import com.revrobotics.CANSparkMax
 import com.revrobotics.CANSparkMaxLowLevel
-import com.team2898.robot.Constants.INTAKE_MOTOR
+import com.team2898.robot.RobotMap.INTAKE_MOTOR
 import com.team2898.robot.DriverDashboard
 import edu.wpi.first.wpilibj.DoubleSolenoid
 import edu.wpi.first.wpilibj.PneumaticsModuleType
@@ -28,9 +28,11 @@ object Intake : SubsystemBase() {
 
     fun setIntake(state: Boolean) {
         if (state) {
+            Feed.intake()
             val drivetrainSpeed = max(Odometry.vels.leftMetersPerSecond, Odometry.vels.rightMetersPerSecond)
             controller.set(abs(drivetrainSpeed / 10).coerceIn(0.0, 0.5))
         } else {
+            Feed.stopIntaking()
             controller.set(0.0)
         }
     }
