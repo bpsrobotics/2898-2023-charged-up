@@ -21,16 +21,16 @@ object Constants {
     const val DRIVETRAIN_LEFT_SECONDARY   = 3
     const val DRIVETRAIN_RIGHT_MAIN       = 2
     const val DRIVETRAIN_RIGHT_SECONDARY  = 4
-    const val CLIMBER_ARM_1_MAIN = 5
-    const val CLIMBER_ARM_1_SECONDARY = 6
-    const val CLIMBER_ARM_2_MAIN = 7
-    const val CLIMBER_ARM_2_SECONDARY = 8
+    const val CLIMBER_ARM_1_MAIN          = 5
+    const val CLIMBER_ARM_1_SECONDARY     = 6
+    const val CLIMBER_ARM_2_MAIN          = 7
+    const val CLIMBER_ARM_2_SECONDARY     = 8
 
-    const val CLIMBER_ARM_LEFT_MAIN       = 5
-    const val CLIMBER_ARM_LEFT_SECONDARY  = 6
+    const val CLIMBER_LEFT_MAIN           = 5
+    const val CLIMBER_LEFT_SECONDARY      = 6
 
-    const val CLIMBER_ARM_RIGHT_MAIN      = 7
-    const val CLIMBER_ARM_RIGHT_SECONDARY = 8
+    const val CLIMBER_RIGHT_MAIN          = 7
+    const val CLIMBER_RIGHT_SECONDARY     = 8
 
     const val SHOOTER_FLYWHEEL            = 9
     const val SHOOTER_SPINNER             = 10
@@ -42,14 +42,19 @@ object Constants {
     const val FEEDER_UPPER                = 14
 
     // DIO
-    const val DRIVETRAIN_LEFT_ENCODER_A   = 0
-    const val DRIVETRAIN_LEFT_ENCODER_B   = 1
+    const val DRIVETRAIN_LEFT_ENCODER_A   = 1
+    const val DRIVETRAIN_LEFT_ENCODER_B   = 2
 
-    const val DRIVETRAIN_RIGHT_ENCODER_A  = 2
-    const val DRIVETRAIN_RIGHT_ENCODER_B  = 3
+    const val DRIVETRAIN_RIGHT_ENCODER_A  = 3
+    const val DRIVETRAIN_RIGHT_ENCODER_B  = 4
 
-    const val CLIMBER_LEFT_LIMIT_SWITCH   = 4
-    const val CLIMBER_RIGHT_LIMIT_SWITCH  = 5
+    const val CLIMBER_LEFT_LIMIT_SWITCH   = 5
+    const val CLIMBER_RIGHT_LIMIT_SWITCH  = 6
+
+    const val CLIMBER_LEFT_ENCODER_A      = 7
+    const val CLIMBER_LEFT_ENCODER_B      = 8
+    const val CLIMBER_RIGHT_ENCODER_A     = 9
+    const val CLIMBER_RIGHT_ENCODER_B     = 10
 
     // Drivetrain info
     const val DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT = 10

@@ -8,19 +8,11 @@ import com.bpsrobotics.engine.utils.minus
 import com.bpsrobotics.engine.utils.seconds
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX
 import com.team2898.robot.Constants.CLIMBER_LEFT_LIMIT_SWITCH
-import com.team2898.robot.Constants.CLIMBER_ARM_LEFT_MAIN
-import com.team2898.robot.Constants.CLIMBER_ARM_LEFT_SECONDARY
+import com.team2898.robot.Constants.CLIMBER_LEFT_MAIN
+import com.team2898.robot.Constants.CLIMBER_LEFT_SECONDARY
 import com.team2898.robot.Constants.CLIMBER_RIGHT_LIMIT_SWITCH
-import com.team2898.robot.Constants.CLIMBER_ARM_RIGHT_MAIN
-import com.team2898.robot.Constants.CLIMBER_ARM_RIGHT_SECONDARY
-import com.ctre.phoenix.motorcontrol.can.TalonSRX
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX
-import com.team2898.robot.Constants.CLIMBER_ARM_1_LIMIT_SWITCH
-import com.team2898.robot.Constants.CLIMBER_ARM_1_MAIN
-import com.team2898.robot.Constants.CLIMBER_ARM_1_SECONDARY
-import com.team2898.robot.Constants.CLIMBER_ARM_2_LIMIT_SWITCH
-import com.team2898.robot.Constants.CLIMBER_ARM_2_MAIN
-import com.team2898.robot.Constants.CLIMBER_ARM_2_SECONDARY
+import com.team2898.robot.Constants.CLIMBER_RIGHT_MAIN
+import com.team2898.robot.Constants.CLIMBER_RIGHT_SECONDARY
 import com.team2898.robot.Constants.CLIMBER_LOADED
 import com.team2898.robot.Constants.CLIMBER_UNLOADED
 import edu.wpi.first.math.controller.ElevatorFeedforward
@@ -30,10 +22,11 @@ import edu.wpi.first.wpilibj.*
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 
 object Climb : SubsystemBase() {
-    private val leftArmMain = WPI_TalonSRX(CLIMBER_ARM_1_MAIN)
-    private val leftArmSecondary = WPI_TalonSRX(CLIMBER_ARM_1_SECONDARY)
-    private val rightArmMain = WPI_TalonSRX(CLIMBER_ARM_2_MAIN)
-    private val rightArmSecondary = WPI_TalonSRX(CLIMBER_ARM_2_SECONDARY)
+
+    private val leftArmMain = WPI_TalonSRX(CLIMBER_LEFT_MAIN)
+    private val leftArmSecondary = WPI_TalonSRX(CLIMBER_LEFT_SECONDARY)
+    private val rightArmMain = WPI_TalonSRX(CLIMBER_RIGHT_MAIN)
+    private val rightArmSecondary = WPI_TalonSRX(CLIMBER_RIGHT_SECONDARY)
 
     init {
         listOf(leftArmMain, leftArmSecondary, rightArmMain, rightArmSecondary).forEach {
@@ -45,41 +38,20 @@ object Climb : SubsystemBase() {
     }
 
     fun openLoop(value: Volts) {
-        arm1.openLoop(value)
-        arm2.openLoop(value)
+        leftArm.openLoop(value)
+        rightArm.openLoop(value)
     }
 
     // TODO: stall detection
 
-    private val leftArmMain = WPI_TalonSRX(CLIMBER_ARM_LEFT_MAIN)
-    private val leftArmSecondary = WPI_TalonSRX(CLIMBER_ARM_LEFT_SECONDARY)
-    private val rightArmMain = WPI_TalonSRX(CLIMBER_ARM_RIGHT_MAIN)
-    private val rightArmSecondary = WPI_TalonSRX(CLIMBER_ARM_RIGHT_SECONDARY)
-
-    init {
-        listOf(leftArmMain, leftArmSecondary, rightArmMain, rightArmSecondary).forEach {
-            it.configFactoryDefault()
-            it.configContinuousCurrentLimit(10)
-            it.configPeakCurrentLimit(30, 50)
-            it.enableVoltageCompensation(true)
-        }
-    }
-
-    fun openLoop(value: Volts) {
-        arm1.openLoop(value)
-        arm2.openLoop(value)
-    }
-
-    // TODO: stall detection
-
-    private val arm1 = Arm(
+    private val leftArm = Arm(
         listOf(leftArmMain, leftArmSecondary),
         Encoder(4, 5),
         CLIMBER_LOADED, CLIMBER_UNLOADED,
         DigitalInput(CLIMBER_LEFT_LIMIT_SWITCH)
     )
 
-    private val arm2 = Arm(
+    private val rightArm = Arm(
         listOf(rightArmMain, rightArmSecondary),
         Encoder(4, 5),
         CLIMBER_LOADED, CLIMBER_UNLOADED,
@@ -95,11 +67,11 @@ object Climb : SubsystemBase() {
     }
 
     fun arms(value: Meters, loaded: Boolean) {
-        arm1.goTo(value, loaded)
-        arm2.goTo(value, loaded)
+        leftArm.goTo(value, loaded)
+        rightArm.goTo(value, loaded)
     }
 
-    val isFinished get() = arm1.isFinished && arm2.isFinished
+    val isFinished get() = leftArm.isFinished && rightArm.isFinished
 
     data class ClimbControllerSpec(
         val kS: Double, val kP: Double, val kI: Double, val kD: Double,
@@ -194,7 +166,7 @@ object Climb : SubsystemBase() {
     }
 
     override fun periodic() {
-        arm1.update()
-        arm2.update()
+        leftArm.update()
+        rightArm.update()
     }
 }

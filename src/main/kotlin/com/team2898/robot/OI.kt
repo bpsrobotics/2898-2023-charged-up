@@ -202,9 +202,11 @@ object OI : SubsystemBase() {
         }
     }
 
-//    val climbMode by Toggle { operatorController.getRawButton(1234) }
-//
-//    val climbMove get() = if (climbMode) operatorController.y else 0.0
+    val climbMode by Toggle { operatorController.getRawButton(8) }
+
+    val climbMove get() = if (climbMode) operatorController.y else 0.0
+    val climbPistonForward get() = if (climbMode) operatorController.getRawButton(9) else false
+    val climbPistonReverse get() = if (climbMode) operatorController.getRawButton(12) else false
 
 //    val intakeDown by Toggle { operatorController.getRawButton(1234) }
 //    val intakeDown = JoystickButton(operatorController, 1234)
@@ -213,11 +215,10 @@ object OI : SubsystemBase() {
 //        intakeDown.toggleWhenPressed(StartEndCommand(Intake::openIntake, Intake::closeIntake, Intake))
 //    }
 
-    val intakeRun get() = operatorController.pov != -1
-    val intakeTrigger = Trigger { intakeRun }
+    val intakeTrigger = Trigger { operatorController.pov != -1 }
 
     init {
-        intakeTrigger.whileActiveContinuous(Intake::startIntake).whenInactive(Intake::stopIntake)
+        intakeTrigger.whenActive(Intake::startIntake).whenInactive(Intake::stopIntake)
     }
 
 //    val shootButton get() = operatorController.getRawButton(SHOOT_BUTTON)
