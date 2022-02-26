@@ -37,6 +37,9 @@ class TeleOp : CommandBase() {
 //        Pneumatics.testSolenoid.set(if (OI.testSolenoidButton) kForward else kReverse)
         val climbVolts = Volts(OI.manualClimb * 2.0)
         Climb.openLoop(climbVolts)
+
+        if (OI.climbPistonForward) Climb.pistons(kForward)
+        if (OI.climbPistonReverse) Climb.pistons(kReverse)
     }
 
     // Called once the command ends or is interrupted.

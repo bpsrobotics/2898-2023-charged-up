@@ -251,9 +251,9 @@ object OI : SubsystemBase() {
         // Whenever the value is read, run this
         operator fun getValue(thisRef: Any?, property: KProperty<*>): Double {
             val newValue = when {
-                operatorController.getRawButton(1234) -> 1.0
-                operatorController.getRawButton(1235) -> 1.5
-                operatorController.getRawButton(1236) -> 2.0
+                operatorController.getRawButton(1) -> 1.0
+                operatorController.getRawButton(2) -> 1.5
+                operatorController.getRawButton(3) -> 2.0
                 else -> -1.0
             }
 
