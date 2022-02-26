@@ -7,6 +7,8 @@ import com.bpsrobotics.engine.utils.Volts
 import com.bpsrobotics.engine.utils.minus
 import com.bpsrobotics.engine.utils.seconds
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX
+import com.team2898.robot.Constants.CLIMBER_LEFT_ENCODER_A
+import com.team2898.robot.Constants.CLIMBER_LEFT_ENCODER_B
 import com.team2898.robot.Constants.CLIMBER_LEFT_LIMIT_SWITCH
 import com.team2898.robot.Constants.CLIMBER_LEFT_MAIN
 import com.team2898.robot.Constants.CLIMBER_LEFT_SECONDARY
@@ -14,6 +16,8 @@ import com.team2898.robot.Constants.CLIMBER_RIGHT_LIMIT_SWITCH
 import com.team2898.robot.Constants.CLIMBER_RIGHT_MAIN
 import com.team2898.robot.Constants.CLIMBER_RIGHT_SECONDARY
 import com.team2898.robot.Constants.CLIMBER_LOADED
+import com.team2898.robot.Constants.CLIMBER_RIGHT_ENCODER_A
+import com.team2898.robot.Constants.CLIMBER_RIGHT_ENCODER_B
 import com.team2898.robot.Constants.CLIMBER_UNLOADED
 import edu.wpi.first.math.controller.ElevatorFeedforward
 import edu.wpi.first.math.trajectory.TrapezoidProfile
@@ -46,14 +50,14 @@ object Climb : SubsystemBase() {
 
     private val leftArm = Arm(
         listOf(leftArmMain, leftArmSecondary),
-        Encoder(4, 5),
+        Encoder(CLIMBER_LEFT_ENCODER_A, CLIMBER_LEFT_ENCODER_B),
         CLIMBER_LOADED, CLIMBER_UNLOADED,
         DigitalInput(CLIMBER_LEFT_LIMIT_SWITCH)
     )
 
     private val rightArm = Arm(
         listOf(rightArmMain, rightArmSecondary),
-        Encoder(4, 5),
+        Encoder(CLIMBER_RIGHT_ENCODER_A, CLIMBER_RIGHT_ENCODER_B),
         CLIMBER_LOADED, CLIMBER_UNLOADED,
         DigitalInput(CLIMBER_RIGHT_LIMIT_SWITCH)
     )
