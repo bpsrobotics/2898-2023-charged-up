@@ -19,6 +19,10 @@ import com.team2898.robot.Constants.CLIMBER_LOADED
 import com.team2898.robot.RobotMap.CLIMBER_RIGHT_ENCODER_A
 import com.team2898.robot.RobotMap.CLIMBER_RIGHT_ENCODER_B
 import com.team2898.robot.Constants.CLIMBER_UNLOADED
+import com.team2898.robot.RobotMap.CLIMB_L_FORWARD
+import com.team2898.robot.RobotMap.CLIMB_L_REVERSE
+import com.team2898.robot.RobotMap.CLIMB_R_FORWARD
+import com.team2898.robot.RobotMap.CLIMB_R_REVERSE
 import edu.wpi.first.math.controller.ElevatorFeedforward
 import edu.wpi.first.math.trajectory.TrapezoidProfile
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State
@@ -62,8 +66,8 @@ object Climb : SubsystemBase() {
         DigitalInput(CLIMBER_RIGHT_LIMIT_SWITCH)
     )
 
-    private val piston1 = DoubleSolenoid(PneumaticsModuleType.REVPH, 4, 5)
-    private val piston2 = DoubleSolenoid(PneumaticsModuleType.REVPH, 6, 7)
+    private val piston1 = DoubleSolenoid(PneumaticsModuleType.REVPH, CLIMB_L_FORWARD, CLIMB_L_REVERSE)
+    private val piston2 = DoubleSolenoid(PneumaticsModuleType.REVPH, CLIMB_R_FORWARD, CLIMB_R_REVERSE)
 
     fun pistons(value: DoubleSolenoid.Value) {
         piston1.set(value)

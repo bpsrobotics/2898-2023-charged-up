@@ -1,19 +1,23 @@
 package com.team2898.robot.subsystems
 
 import com.revrobotics.CANSparkMax
-import com.revrobotics.CANSparkMaxLowLevel
+import com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless
 import com.team2898.robot.RobotMap.INTAKE_MOTOR
 import com.team2898.robot.DriverDashboard
+import com.team2898.robot.RobotMap.INTAKE_L_FORWARD
+import com.team2898.robot.RobotMap.INTAKE_L_REVERSE
+import com.team2898.robot.RobotMap.INTAKE_R_FORWARD
+import com.team2898.robot.RobotMap.INTAKE_R_REVERSE
 import edu.wpi.first.wpilibj.DoubleSolenoid
-import edu.wpi.first.wpilibj.PneumaticsModuleType
+import edu.wpi.first.wpilibj.PneumaticsModuleType.REVPH
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import java.lang.Double.max
 import kotlin.math.abs
 
 object Intake : SubsystemBase() {
-    private val piston1 = DoubleSolenoid(PneumaticsModuleType.REVPH, 10, 11) // TODO Piston Constants
-    private val piston2 = DoubleSolenoid(PneumaticsModuleType.REVPH, 12, 13) // TODO Piston Constants
-    private val controller = CANSparkMax(INTAKE_MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless)
+    private val piston1 = DoubleSolenoid(REVPH, INTAKE_L_FORWARD, INTAKE_L_REVERSE)
+    private val piston2 = DoubleSolenoid(REVPH, INTAKE_R_FORWARD, INTAKE_R_REVERSE)
+    private val controller = CANSparkMax(INTAKE_MOTOR, kBrushless)
 
 //    enum class IntakeStates {
 //        IDLE,

@@ -5,6 +5,7 @@ package com.team2898.robot
 
 import com.bpsrobotics.engine.utils.*
 import com.team2898.robot.subsystems.Climb
+import com.team2898.robot.subsystems.Shooter
 import edu.wpi.first.math.controller.ElevatorFeedforward
 import edu.wpi.first.math.trajectory.TrapezoidProfile
 
@@ -14,8 +15,6 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile
  * declared globally (i.e. public static).  Do not put anything functional in this class.
  */
 object Constants {
-    // Pneumatics ports
-
     // Drivetrain info
     const val DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT = 10
     const val DRIVETRAIN_PEAK_CURRENT_LIMIT = 50
@@ -77,5 +76,5 @@ object Constants {
     const val RUN_INTAKE_BUTTON = 0 // TODO: Run Intake Button on Joystick
 
 
-    val EJECT_SPEED = Pair(RPM(0.0), RPM(0.0)) //TODO: values
+    val DUMP_SPEED = Shooter.ShooterSpeeds(RPM(0.0), RPM(0.0)) //TODO: values
 }

@@ -7,6 +7,7 @@ import com.cuforge.libcu.Lasershark
 import com.revrobotics.CANSparkMax
 import com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless
 import com.team2898.robot.DriverDashboard
+import com.team2898.robot.RobotMap.FEEDER_LASERSHARK
 import com.team2898.robot.RobotMap.FEEDER_LEFT_VECTOR
 import com.team2898.robot.RobotMap.FEEDER_RIGHT_VECTOR
 import com.team2898.robot.RobotMap.FEEDER_UPPER
@@ -16,7 +17,7 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 
 object Feed : SubsystemBase() {
-    private val mainLasershark = Lasershark(1)  // TODO: port
+    private val mainLasershark = Lasershark(FEEDER_LASERSHARK)
 
     // unused at the moment
     /* private val ballDetector1 = Lasershark(Constants.FEEDER_BALL_DETECTOR_1)

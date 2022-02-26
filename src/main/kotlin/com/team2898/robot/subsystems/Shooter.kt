@@ -16,18 +16,20 @@ import kotlin.math.max
 object Shooter : SubsystemBase() {
     private val shooterMotor = CANSparkMax(SHOOTER_FLYWHEEL, kBrushless)
     private val spinnerMotor = CANSparkMax(SHOOTER_SPINNER, kBrushless)
-    private var shooterGoal = 0.0
-    private var spinnerGoal = 0.0
+    private var shooterGoal = 0.0.RPM
+    private var spinnerGoal = 0.0.RPM
     private var lastShotTime = 0.0
     private var overrideMeters = 0.0.m
 
+    data class ShooterSpeeds(val top: RPM, val bottom: RPM)
+
     init {
         // TODO Tune FF and PID loops, set constants
-        shooterMotor.pidController.p = 10.0
-        shooterMotor.pidController.ff = 2.5
+        shooterMotor.pidController.p = 0.0
+        shooterMotor.pidController.ff = 0.5
 
-        spinnerMotor.pidController.p = 10.0
-        shooterMotor.pidController.ff = 2.0
+        spinnerMotor.pidController.p = 0.0
+        shooterMotor.pidController.ff = 0.0
     }
 
     fun spinUp() {
@@ -35,7 +37,7 @@ object Shooter : SubsystemBase() {
         lastShotTime = Timer.getFPGATimestamp()
         state = ShooterStates.SPINUP
         val speeds = Interpolation.getRPMs()
-        setGoals(speeds.first, speeds.second)
+        setGoals(speeds)
     }
 
     fun spinUp(distance: Meters) {
@@ -43,13 +45,13 @@ object Shooter : SubsystemBase() {
         lastShotTime = Timer.getFPGATimestamp()
         state = ShooterStates.SPINUP
         val speeds = Interpolation.getRPMs(distance)
-        setGoals(speeds.first, speeds.second)
+        setGoals(speeds)
     }
 
     fun dumpSpinUp() {
         lastShotTime = Timer.getFPGATimestamp()
         state = ShooterStates.DUMP
-        setGoals(Constants.EJECT_SPEED.first, Constants.EJECT_SPEED.second)
+        setGoals(Constants.DUMP_SPEED)
     }
 
     fun stopShooter() {
@@ -67,20 +69,20 @@ object Shooter : SubsystemBase() {
     var state = ShooterStates.IDLE
         private set
 
-    private fun setGoals(shooterSpeed: RPM, spinnerSpeed: RPM) {
-        shooterGoal = shooterSpeed.value
-        spinnerGoal = spinnerSpeed.value
+    private fun setGoals(speeds: ShooterSpeeds) {
+        shooterGoal = speeds.top
+        spinnerGoal = speeds.bottom
     }
 
-    fun getRPM(): Pair<RPM, RPM> {
-        return Pair(RPM(shooterMotor.encoder.velocity), RPM(spinnerMotor.encoder.velocity))
+    fun getRPM(): ShooterSpeeds {
+        return ShooterSpeeds(RPM(shooterMotor.encoder.velocity), RPM(spinnerMotor.encoder.velocity))
     }
 
     override fun periodic() {
 //        val vel = max(shooterMotor.encoder.velocity.absoluteValue, spinnerMotor.encoder.velocity.absoluteValue)
         if (state != ShooterStates.IDLE) {
-            shooterMotor.pidController.setReference(shooterGoal, ControlType.kVelocity)
-            spinnerMotor.pidController.setReference(-spinnerGoal, ControlType.kVelocity)
+            shooterMotor.pidController.setReference(shooterGoal.value, ControlType.kVelocity)
+            spinnerMotor.pidController.setReference(-spinnerGoal.value, ControlType.kVelocity)
 //            if (vel > (40.0 * 60)) {
 //                println("RPM is $vel, over threshold, stopping")
 //                disable()
@@ -113,11 +115,11 @@ object Shooter : SubsystemBase() {
                 } else {
                     Interpolation.getRPMs()
                 }
-                setGoals(speeds.first, speeds.second)
+                setGoals(speeds)
 
-                val shooterDiff = getRPM().first - shooterGoal.RPM
+                val shooterDiff = getRPM().top - shooterGoal
                 // TODO: sign
-                val spinnerDiff = getRPM().second - spinnerGoal.RPM
+                val spinnerDiff = getRPM().bottom - spinnerGoal
                 if (max(spinnerDiff.value.absoluteValue, shooterDiff.value.absoluteValue) < Constants.SHOOTER_THRESHOLD) {
                     state = ShooterStates.READY
                 }
@@ -132,11 +134,11 @@ object Shooter : SubsystemBase() {
                 } else {
                     Interpolation.getRPMs()
                 }
-                setGoals(speeds.first, speeds.second)
+                setGoals(speeds)
 
-                val shooterDiff = getRPM().first - shooterGoal.RPM
+                val shooterDiff = getRPM().top - shooterGoal
                 // TODO: sign
-                val spinnerDiff = getRPM().second - spinnerGoal.RPM
+                val spinnerDiff = getRPM().bottom - spinnerGoal
                 if (max(spinnerDiff.value.absoluteValue, shooterDiff.value.absoluteValue) > Constants.SHOOTER_THRESHOLD) {
                     state = ShooterStates.SPINUP
                 }
@@ -152,10 +154,10 @@ object Shooter : SubsystemBase() {
                 DriverDashboard.string("Shooter State", "Dump")
             }
         }
-        DriverDashboard.number("Shooter Target", shooterGoal)
-        DriverDashboard.number("Spinner Target", spinnerGoal)
-        DriverDashboard.number("Shooter Speed", getRPM().first.value)
-        DriverDashboard.number("Spinner Speed", getRPM().second.value)
+        DriverDashboard.number("Shooter Target", shooterGoal.value)
+        DriverDashboard.number("Spinner Target", spinnerGoal.value)
+        DriverDashboard.number("Shooter Speed", getRPM().top.value)
+        DriverDashboard.number("Spinner Speed", getRPM().bottom.value)
         DriverDashboard.boolean("Shooter up to speed", state == ShooterStates.READY)
     }
 }
