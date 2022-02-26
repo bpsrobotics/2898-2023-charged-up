@@ -9,10 +9,13 @@ import com.team2898.robot.OI.Ramp.ramp
 import com.team2898.robot.subsystems.Feed
 import com.team2898.robot.subsystems.Intake
 import com.team2898.robot.subsystems.Shooter
+import com.team2898.robot.subsystems.Shooter.ShooterStates.READY
 import edu.wpi.first.wpilibj.GenericHID
+import edu.wpi.first.wpilibj.GenericHID.RumbleType.kLeftRumble
 import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.XboxController
+import edu.wpi.first.wpilibj.XboxController.Button.*
 import edu.wpi.first.wpilibj2.command.StartEndCommand
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.button.JoystickButton
@@ -75,8 +78,8 @@ object OI : SubsystemBase() {
     @JvmName("process1")
     fun Double.process(deadzone: Boolean = false, square: Boolean = false, cube: Boolean = false) = process(this, deadzone, square, cube)
 
-    val driverController = XboxController(0)
-    val operatorController = Joystick(1)
+    private val driverController = XboxController(0)
+    private val operatorController = Joystick(1)
 
     /**
      * do not question the r a m p
@@ -221,12 +224,12 @@ object OI : SubsystemBase() {
         intakeTrigger.whenActive(Intake::startIntake).whenInactive(Intake::stopIntake)
     }
 
-//    val shootButton get() = operatorController.getRawButton(SHOOT_BUTTON)
-    val spinUpButton = JoystickButton(driverController, XboxController.Button.kY.value)
-    val dumpSpinUpButton = JoystickButton(driverController, XboxController.Button.kA.value)
-    val cancelButton = JoystickButton(driverController, XboxController.Button.kX.value)
-    val shootButton = JoystickButton(driverController, XboxController.Button.kB.value)
-    val rumbleTrigger = Trigger { Shooter.state == Shooter.ShooterStates.READY }
+    val spinUpButton = JoystickButton(driverController, kY.value)
+    val dumpSpinUpButton = JoystickButton(driverController, kA.value)
+    val cancelButton = JoystickButton(driverController, kX.value)
+    val shootButton = JoystickButton(driverController, kB.value)
+
+    val rumbleTrigger = Trigger { Shooter.state == READY }
 
     init {
         spinUpButton.whileActiveContinuous(Shooter::spinUp)
@@ -235,13 +238,11 @@ object OI : SubsystemBase() {
         shootButton.whileActiveContinuous(Feed::shoot)
         rumbleTrigger.whileActiveOnce(
             StartEndCommand(
-                { driverController.setRumble(GenericHID.RumbleType.kLeftRumble, 1.0) },
-                { driverController.setRumble(GenericHID.RumbleType.kLeftRumble, 0.0) }
+                { driverController.setRumble(kLeftRumble, 1.0) },
+                { driverController.setRumble(kLeftRumble, 0.0) }
             )
         )
     }
-
-    val manualClimb get() = operatorController.getRawAxis(1)
 
     val manualShoot by object {
         // The time that the driver last had a manual speed button pressed

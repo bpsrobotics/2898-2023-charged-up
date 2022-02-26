@@ -32,7 +32,7 @@ class TeleOp : CommandBase() {
         }
 
         Drivetrain.stupidDrive(`M/s`(speeds.left * 2), `M/s`(speeds.right * 2))
-        val climbVolts = Volts(OI.manualClimb * 2.0)
+        val climbVolts = Volts(OI.climbMove * 2.0)
         Climb.openLoop(climbVolts)
 
         if (OI.climbPistonForward) Climb.pistons(kForward)

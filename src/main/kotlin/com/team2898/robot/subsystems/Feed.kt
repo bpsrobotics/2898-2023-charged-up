@@ -6,6 +6,10 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX
 import com.cuforge.libcu.Lasershark
 import com.revrobotics.CANSparkMax
 import com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless
+import com.team2898.robot.Constants.FEEDER_MAX_DISTANCE
+import com.team2898.robot.Constants.FEEDER_MIN_DISTANCE
+import com.team2898.robot.Constants.FEEDER_SPEED
+import com.team2898.robot.Constants.FEEDER_VECTOR_SPEED
 import com.team2898.robot.DriverDashboard
 import com.team2898.robot.RobotMap.FEEDER_LASERSHARK
 import com.team2898.robot.RobotMap.FEEDER_LEFT_VECTOR
@@ -38,7 +42,7 @@ object Feed : SubsystemBase() {
         }
 
     /** The reading range in which the feeder will run */
-    private val RUN_RANGE = 0.2..1.0
+    private val RUN_RANGE = FEEDER_MIN_DISTANCE..FEEDER_MAX_DISTANCE
 
     enum class State {
         EMPTY, READY, FEEDING, SHOOTING, INTAKING
@@ -77,8 +81,8 @@ object Feed : SubsystemBase() {
                     state = EMPTY
                     return
                 }
-                vector.set(1.0)  // TODO speed
-                feederMotor.set(1.0)
+                vector.set(FEEDER_VECTOR_SPEED)
+                feederMotor.set(FEEDER_SPEED)
             }
             INTAKING -> {
                 DriverDashboard.string("Feeder State", "Feeding")
@@ -93,7 +97,7 @@ object Feed : SubsystemBase() {
                     return
                 }
 
-                vector.set(1.0)  // TODO speed
+                vector.set(FEEDER_VECTOR_SPEED)
                 feederMotor.set(0.0)
 
                 if (distance < RUN_RANGE.endInclusive) {
@@ -108,9 +112,8 @@ object Feed : SubsystemBase() {
                 DriverDashboard.string("Feeder State", "Ready")
             }
             SHOOTING -> {
-                // TODO speeds
-                vector.set(1.0)
-                feederMotor.set(1.0)
+                vector.set(FEEDER_VECTOR_SPEED)
+                feederMotor.set(FEEDER_SPEED)
 
                 // if it's been in the shooting state for long enough switch to empty
                 // will switch again if there's another ball

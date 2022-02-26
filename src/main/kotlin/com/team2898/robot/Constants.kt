@@ -52,17 +52,14 @@ object Constants {
         ElevatorFeedforward(0.0, 0.0, 0.0, 0.0),
         TrapezoidProfile.Constraints(0.0, 0.0)
     )
-    const val INTAKE_BUTTON = 0 // Intake Button on Joystick
 
 
     // TODO: Difference between current and target RPM that must be reached before shooter lock is removed
     const val SHOOTER_THRESHOLD = 5
     const val TIME_TO_SHOOT = 1.0 // TODO: Time it takes to shoot (approx, should be reasonably similar each time)
-    const val SHOOT_BUTTON = 1 // TODO: Shooter Button
 
-    const val FEEDER_BALL_DETECTOR_1 = 10 // TODO
-    const val TOP_SPEED = 1.0 // TODO
-    const val BOTTOM_SPEED = 1.0 // TODO
+    const val FEEDER_VECTOR_SPEED = 0.3
+    const val FEEDER_SPEED = 0.5
     const val FEEDER_MIN_DISTANCE = 2.0 // TODO: Distance at which ball is in shooter
     const val FEEDER_MAX_DISTANCE = 5.0 // TODO: Primary LaserShark distance threshold that corresponds to no ball in feeder
 
@@ -72,9 +69,6 @@ object Constants {
         FORZA
     }
     val DRIVER_MAP = DriverMap.DEFAULT
-    const val OPEN_INTAKE_BUTTON = 0 // TODO: Open Intake Button on Joystick
-    const val RUN_INTAKE_BUTTON = 0 // TODO: Run Intake Button on Joystick
-
 
     val DUMP_SPEED = Shooter.ShooterSpeeds(RPM(0.0), RPM(0.0)) //TODO: values
 }

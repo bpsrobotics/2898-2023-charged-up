@@ -9,6 +9,8 @@ import com.team2898.robot.RobotMap.INTAKE_L_REVERSE
 import com.team2898.robot.RobotMap.INTAKE_R_FORWARD
 import com.team2898.robot.RobotMap.INTAKE_R_REVERSE
 import edu.wpi.first.wpilibj.DoubleSolenoid
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value.kForward
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value.kReverse
 import edu.wpi.first.wpilibj.PneumaticsModuleType.REVPH
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import java.lang.Double.max
@@ -26,8 +28,8 @@ object Intake : SubsystemBase() {
 //
 //    var state = IntakeStates.IDLE
     fun setOpenState(state: Boolean) {
-        piston1.set(if (state) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
-        piston2.set(if (state) DoubleSolenoid.Value.kForward else DoubleSolenoid.Value.kReverse)
+        piston1.set(if (state) kForward else kReverse)
+        piston2.set(if (state) kForward else kReverse)
     }
 
     fun setIntake(state: Boolean) {
@@ -68,7 +70,7 @@ object Intake : SubsystemBase() {
 //                setOpenState(true)
 //            }
 //        }
-        DriverDashboard.boolean("Intake Open", piston1.get() == DoubleSolenoid.Value.kForward)
+        DriverDashboard.boolean("Intake Open", piston1.get() == kForward)
         DriverDashboard.boolean("Intake Running", abs(controller.get() - 0.0) <= 0.2)
     }
 }

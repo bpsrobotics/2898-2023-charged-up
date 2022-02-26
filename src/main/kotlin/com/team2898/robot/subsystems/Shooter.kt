@@ -16,10 +16,12 @@ import kotlin.math.max
 object Shooter : SubsystemBase() {
     private val shooterMotor = CANSparkMax(SHOOTER_FLYWHEEL, kBrushless)
     private val spinnerMotor = CANSparkMax(SHOOTER_SPINNER, kBrushless)
-    private var shooterGoal = 0.0.RPM
-    private var spinnerGoal = 0.0.RPM
+    private var shooterGoal = 0.RPM
+    private var spinnerGoal = 0.RPM
     private var lastShotTime = 0.0
-    private var overrideMeters = 0.0.m
+
+    private var overrideMeters = 0.m
+    private var overridePower = ShooterSpeeds(0.RPM, 0.RPM)
 
     data class ShooterSpeeds(val top: RPM, val bottom: RPM)
 
@@ -34,6 +36,7 @@ object Shooter : SubsystemBase() {
 
     fun spinUp() {
         overrideMeters = 0.0.m
+        overridePower = ShooterSpeeds(0.RPM, 0.RPM)
         lastShotTime = Timer.getFPGATimestamp()
         state = ShooterStates.SPINUP
         val speeds = Interpolation.getRPMs()
@@ -42,9 +45,18 @@ object Shooter : SubsystemBase() {
 
     fun spinUp(distance: Meters) {
         overrideMeters = distance
+        overridePower = ShooterSpeeds(0.RPM, 0.RPM)
         lastShotTime = Timer.getFPGATimestamp()
         state = ShooterStates.SPINUP
         val speeds = Interpolation.getRPMs(distance)
+        setGoals(speeds)
+    }
+
+    fun spinUp(speeds: ShooterSpeeds) {
+        overridePower = speeds
+        overrideMeters = 0.m
+        lastShotTime = Timer.getFPGATimestamp()
+        state = ShooterStates.SPINUP
         setGoals(speeds)
     }
 
@@ -112,6 +124,8 @@ object Shooter : SubsystemBase() {
             ShooterStates.SPINUP -> {
                 val speeds = if (overrideMeters.value >= 0.1) {
                     Interpolation.getRPMs(overrideMeters)
+                } else if (overridePower.top.value != 0.0 || overridePower.bottom.value != 0.0) {
+                    overridePower
                 } else {
                     Interpolation.getRPMs()
                 }
@@ -131,6 +145,8 @@ object Shooter : SubsystemBase() {
             ShooterStates.READY -> {
                 val speeds = if (overrideMeters.value >= 0.1) {
                     Interpolation.getRPMs(overrideMeters)
+                } else if (overridePower.top.value != 0.0 || overridePower.bottom.value != 0.0) {
+                    overridePower
                 } else {
                     Interpolation.getRPMs()
                 }
