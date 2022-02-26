@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMax
 import com.revrobotics.CANSparkMax.ControlType
 import com.revrobotics.CANSparkMaxLowLevel
 import com.team2898.robot.Constants
+import com.team2898.robot.DriverDashboard
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import kotlin.math.absoluteValue
@@ -102,7 +103,9 @@ object Shooter : SubsystemBase() {
         }
 
         when (state) {
-            ShooterStates.IDLE -> {}
+            ShooterStates.IDLE -> {
+                DriverDashboard.string("Shooter State", "Idle")
+            }
             ShooterStates.SPINUP -> {
                 val speeds = if (overrideMeters.value >= 0.1) {
                     Interpolation.getRPMs(overrideMeters)
@@ -120,6 +123,7 @@ object Shooter : SubsystemBase() {
                 if (lastShotTime < Timer.getFPGATimestamp() - 5.0) {
                     state = ShooterStates.IDLE
                 }
+                DriverDashboard.string("Shooter State", "Spinup")
             }
             ShooterStates.READY -> {
                 val speeds = if (overrideMeters.value >= 0.1) {
@@ -138,12 +142,19 @@ object Shooter : SubsystemBase() {
                 if (lastShotTime < Timer.getFPGATimestamp() - 5.0) {
                     state = ShooterStates.IDLE
                 }
+                DriverDashboard.string("Shooter State", "Ready")
             }
             ShooterStates.DUMP -> {
                 if (lastShotTime < Timer.getFPGATimestamp() - 5.0) {
                     state = ShooterStates.IDLE
                 }
+                DriverDashboard.string("Shooter State", "Dump")
             }
         }
+        DriverDashboard.number("Shooter Target", shooterGoal)
+        DriverDashboard.number("Spinner Target", spinnerGoal)
+        DriverDashboard.number("Shooter Speed", getRPM().first.value)
+        DriverDashboard.number("Spinner Speed", getRPM().second.value)
+        DriverDashboard.boolean("Shooter up to speed", state == ShooterStates.READY)
     }
 }

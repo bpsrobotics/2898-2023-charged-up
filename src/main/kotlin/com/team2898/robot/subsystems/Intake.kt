@@ -3,6 +3,7 @@ package com.team2898.robot.subsystems
 import com.revrobotics.CANSparkMax
 import com.revrobotics.CANSparkMaxLowLevel
 import com.team2898.robot.Constants.INTAKE_MOTOR
+import com.team2898.robot.DriverDashboard
 import edu.wpi.first.wpilibj.DoubleSolenoid
 import edu.wpi.first.wpilibj.PneumaticsModuleType
 import edu.wpi.first.wpilibj2.command.SubsystemBase
@@ -61,5 +62,7 @@ object Intake : SubsystemBase() {
 //                setOpenState(true)
 //            }
 //        }
+        DriverDashboard.boolean("Intake Open", piston1.get() == DoubleSolenoid.Value.kForward)
+        DriverDashboard.boolean("Intake Running", abs(controller.get() - 0.0) <= 0.2)
     }
 }

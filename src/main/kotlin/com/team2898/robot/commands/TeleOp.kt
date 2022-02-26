@@ -32,9 +32,6 @@ class TeleOp : CommandBase() {
         }
 
         Drivetrain.stupidDrive(`M/s`(speeds.left * 2), `M/s`(speeds.right * 2))
-//        Intake.setOpenState(OI.openIntake)
-//        Intake.setIntake(OI.runIntake)
-//        Pneumatics.testSolenoid.set(if (OI.testSolenoidButton) kForward else kReverse)
         val climbVolts = Volts(OI.manualClimb * 2.0)
         Climb.openLoop(climbVolts)
 
