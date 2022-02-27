@@ -7,7 +7,7 @@ import com.team2898.robot.subsystems.Odometry
 import com.team2898.robot.subsystems.Shooter
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.wpilibj2.command.CommandBase
-import java.lang.Double.max
+import kotlin.math.max
 
 class FireHighBall(private val location: Pose2d) : CommandBase() {
     private var startedShooter = false
