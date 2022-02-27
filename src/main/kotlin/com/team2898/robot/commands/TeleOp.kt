@@ -31,8 +31,6 @@ class TeleOp : CommandBase() {
         }
 
         Drivetrain.stupidDrive(`M/s`(speeds.left * 2), `M/s`(speeds.right * 2))
-        val climbVolts = Volts(OI.climbMove * 2.0)
-        Climb.openLoop(climbVolts)
     }
 
     // Called once the command ends or is interrupted.

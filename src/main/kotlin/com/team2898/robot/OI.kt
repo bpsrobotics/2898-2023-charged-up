@@ -3,6 +3,7 @@ package com.team2898.robot
 import com.bpsrobotics.engine.async.AsyncLooper
 import com.bpsrobotics.engine.utils.Millis
 import com.bpsrobotics.engine.utils.Sugar.clamp
+import com.bpsrobotics.engine.utils.Volts
 import com.bpsrobotics.engine.utils.seconds
 import com.team2898.robot.Constants.DRIVER_MAP
 import com.team2898.robot.OI.Ramp.ramp
@@ -204,6 +205,7 @@ object OI : SubsystemBase() {
     }
 
     val climbMode by Toggle { operatorController.getRawButton(8) }
+    val climbModeTrigger = Trigger { climbMode }
 
     val climbMove get() = if (climbMode) operatorController.y else 0.0
     val climbPistonForward = Trigger { if (climbMode) operatorController.getRawButtonPressed(9) else false }
@@ -212,6 +214,7 @@ object OI : SubsystemBase() {
     init {
         climbPistonForward.whenActive({ Climb.pistons(DoubleSolenoid.Value.kForward) }, Climb)
         climbPistonReverse.whenActive({ Climb.pistons(DoubleSolenoid.Value.kReverse) }, Climb)
+        climbModeTrigger.whileActiveContinuous({ Climb.openLoop(Volts(climbMove * 2.0)) }, Climb)
     }
 
 //    val intakeDown by Toggle { operatorController.getRawButton(1234) }
