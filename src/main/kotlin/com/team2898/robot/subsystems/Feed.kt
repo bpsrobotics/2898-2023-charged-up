@@ -2,9 +2,11 @@ package com.team2898.robot.subsystems
 
 import com.bpsrobotics.engine.utils.minus
 import com.bpsrobotics.engine.utils.seconds
+import com.ctre.phoenix.motorcontrol.NeutralMode
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX
 import com.cuforge.libcu.Lasershark
 import com.revrobotics.CANSparkMax
+import com.revrobotics.CANSparkMax.IdleMode.kBrake
 import com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless
 import com.team2898.robot.Constants.FEEDER_MAX_DISTANCE
 import com.team2898.robot.Constants.FEEDER_MIN_DISTANCE
@@ -61,7 +63,10 @@ object Feed : SubsystemBase() {
     init {
         listOf(vectorLeft, vectorRight).forEach {
             it.setSmartCurrentLimit(10, 10)
+            it.idleMode = kBrake
         }
+        feederMotor.configFactoryDefault()
+        feederMotor.setNeutralMode(NeutralMode.Brake)
         feederMotor.configContinuousCurrentLimit(10)
     }
 

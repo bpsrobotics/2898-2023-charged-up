@@ -5,6 +5,7 @@ import com.bpsrobotics.engine.utils.Millis
 import com.bpsrobotics.engine.utils.volts
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.PowerDistribution
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType.kRev
 import java.io.File
 
 object BatteryLogger {
@@ -14,7 +15,7 @@ object BatteryLogger {
     } else {
         baseDir.resolve("noncomp").apply { mkdir() }.run { (listFiles() ?: emptyArray()).maxByOrNull { it.nameWithoutExtension.toIntOrNull() ?: 0 } ?: resolve("0.txt") }
     }
-    private val pdp = PowerDistribution()
+    private val pdp = PowerDistribution(60, kRev)
     private val startVoltage = pdp.voltage.volts
     private var minVoltage = startVoltage
     private var maxCurrent = Amps(0.0)
