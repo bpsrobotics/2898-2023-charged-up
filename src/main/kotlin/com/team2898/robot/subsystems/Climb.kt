@@ -2,10 +2,8 @@ package com.team2898.robot.subsystems
 
 import com.bpsrobotics.engine.controls.Controller
 import com.bpsrobotics.engine.controls.Controller.PID
-import com.bpsrobotics.engine.utils.Meters
-import com.bpsrobotics.engine.utils.Volts
-import com.bpsrobotics.engine.utils.minus
-import com.bpsrobotics.engine.utils.seconds
+import com.bpsrobotics.engine.controls.StallDetection
+import com.bpsrobotics.engine.utils.*
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX
 import com.team2898.robot.RobotMap.CLIMBER_LEFT_ENCODER_A
 import com.team2898.robot.RobotMap.CLIMBER_LEFT_ENCODER_B
@@ -49,8 +47,6 @@ object Climb : SubsystemBase() {
         leftArm.openLoop(value)
         rightArm.openLoop(value)
     }
-
-    // TODO: stall detection
 
     private val leftArm = Arm(
         listOf(leftArmMain, leftArmSecondary),
@@ -100,6 +96,7 @@ object Climb : SubsystemBase() {
             TrapezoidProfile(unloaded.constraints, State(0.0, 0.0), State(0.0, 0.0))
         private var startTime = 0.seconds
         private var lastLimitSwitchValue = false
+        private val stallDetector = StallDetection(Millis(1000))
 
         enum class Mode {
             CLOSED_LOOP, OPEN_LOOP
@@ -129,6 +126,11 @@ object Climb : SubsystemBase() {
         }
 
         fun update() {
+            if (stallDetector.isStalled(motors.first().motorOutputPercent, encoder.distance)) {
+                motors.forEach { it.set(0.0) }
+                throw RuntimeException("Climb stalled!")
+            }
+
             val limitSwitchValue = limitSwitch.get()
             val leadingEdge = limitSwitchValue && !lastLimitSwitchValue
             lastLimitSwitchValue = limitSwitchValue
