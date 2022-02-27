@@ -6,15 +6,13 @@ import com.bpsrobotics.engine.utils.Sugar.clamp
 import com.bpsrobotics.engine.utils.seconds
 import com.team2898.robot.Constants.DRIVER_MAP
 import com.team2898.robot.OI.Ramp.ramp
+import com.team2898.robot.subsystems.Climb
 import com.team2898.robot.subsystems.Feed
 import com.team2898.robot.subsystems.Intake
 import com.team2898.robot.subsystems.Shooter
 import com.team2898.robot.subsystems.Shooter.ShooterStates.READY
-import edu.wpi.first.wpilibj.GenericHID
+import edu.wpi.first.wpilibj.*
 import edu.wpi.first.wpilibj.GenericHID.RumbleType.kLeftRumble
-import edu.wpi.first.wpilibj.Joystick
-import edu.wpi.first.wpilibj.Timer
-import edu.wpi.first.wpilibj.XboxController
 import edu.wpi.first.wpilibj.XboxController.Button.*
 import edu.wpi.first.wpilibj2.command.StartEndCommand
 import edu.wpi.first.wpilibj2.command.SubsystemBase
@@ -208,8 +206,13 @@ object OI : SubsystemBase() {
     val climbMode by Toggle { operatorController.getRawButton(8) }
 
     val climbMove get() = if (climbMode) operatorController.y else 0.0
-    val climbPistonForward get() = if (climbMode) operatorController.getRawButton(9) else false
-    val climbPistonReverse get() = if (climbMode) operatorController.getRawButton(12) else false
+    val climbPistonForward = Trigger { if (climbMode) operatorController.getRawButtonPressed(9) else false }
+    val climbPistonReverse = Trigger { if (climbMode) operatorController.getRawButtonPressed(12) else false }
+
+    init {
+        climbPistonForward.whenActive({ Climb.pistons(DoubleSolenoid.Value.kForward) }, Climb)
+        climbPistonReverse.whenActive({ Climb.pistons(DoubleSolenoid.Value.kReverse) }, Climb)
+    }
 
 //    val intakeDown by Toggle { operatorController.getRawButton(1234) }
 //    val intakeDown = JoystickButton(operatorController, 1234)
