@@ -5,7 +5,6 @@ import com.bpsrobotics.engine.utils.`M/s`
 import com.team2898.robot.OI
 import com.team2898.robot.subsystems.Climb
 import com.team2898.robot.subsystems.Drivetrain
-import com.team2898.robot.subsystems.Pneumatics
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value.*
 import edu.wpi.first.wpilibj2.command.CommandBase
 import edu.wpi.first.wpilibj.drive.DifferentialDrive.curvatureDriveIK
