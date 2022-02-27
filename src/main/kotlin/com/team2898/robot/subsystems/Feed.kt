@@ -58,7 +58,12 @@ object Feed : SubsystemBase() {
         if (state == INTAKING) state = EMPTY  // switches to the right one automatically
     }
 
-    // TODO: current limits
+    init {
+        listOf(vectorLeft, vectorRight).forEach {
+            it.setSmartCurrentLimit(10, 10)
+        }
+        feederMotor.configContinuousCurrentLimit(10)
+    }
 
     override fun periodic() {
         val distance = mainLasershark.distanceMeters
