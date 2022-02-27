@@ -135,4 +135,8 @@ object Feed : SubsystemBase() {
             state = SHOOTING
         }
     }
+
+    fun forceShoot() {
+        state = SHOOTING
+    }
 }
