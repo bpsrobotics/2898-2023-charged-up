@@ -240,7 +240,7 @@ object OI : SubsystemBase() {
         spinUpButton.whileActiveContinuous(Shooter::spinUp)
         dumpSpinUpButton.whileActiveContinuous(Shooter::spinUp)
 //        cancelButton.whileActiveContinuous(Shooter::stopShooter)
-        shootButton.whileActiveContinuous(Feed::shoot)
+        shootButton.whenActive(Feed::shoot)
         rumbleTrigger.whileActiveOnce(
             StartEndCommand(
                 { driverController.setRumble(kLeftRumble, 1.0) },
