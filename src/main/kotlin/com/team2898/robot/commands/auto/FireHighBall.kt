@@ -18,7 +18,7 @@ class FireHighBall(private val location: Pose2d) : CommandBase() {
 
     override fun execute() {
         if (!startedShooter && currentDistance.value < 2.0) {
-            Shooter.spinUp(Meters(centerField.translation.getDistance(location.translation)))
+//            Shooter.spinUp(Meters(centerField.translation.getDistance(location.translation)))
             startedShooter = true
         } else if (
             startedShooter &&
@@ -27,7 +27,7 @@ class FireHighBall(private val location: Pose2d) : CommandBase() {
         ) {
             Feed.shoot()
         } else if (startedShooter && currentDistance.value > 3.0) {
-            Shooter.stopShooter()
+//            Shooter.stopShooter()
             completed = true
         }
     }

@@ -21,6 +21,12 @@ object Intake : SubsystemBase() {
     private val piston2 = DoubleSolenoid(REVPH, INTAKE_R_FORWARD, INTAKE_R_REVERSE)
     private val controller = CANSparkMax(INTAKE_MOTOR, kBrushless)
 
+    init {
+        controller.restoreFactoryDefaults()
+        controller.idleMode = CANSparkMax.IdleMode.kBrake
+        controller.setSmartCurrentLimit(20)
+    }
+
 //    enum class IntakeStates {
 //        IDLE,
 //        RUNNING

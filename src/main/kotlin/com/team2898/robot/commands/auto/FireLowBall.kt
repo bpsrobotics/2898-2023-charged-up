@@ -9,7 +9,7 @@ class FireLowBall(private val ballCount: Int) : CommandBase() {
     private val timer = Timer()
 
     override fun initialize() {
-        Shooter.dumpSpinUp()
+        Shooter.spinUp()
         timer.reset()
     }
 
@@ -19,9 +19,5 @@ class FireLowBall(private val ballCount: Int) : CommandBase() {
 
     override fun isFinished(): Boolean {
         return if (ballCount == 2) timer.hasElapsed(3.0) else timer.hasElapsed(2.0)
-    }
-
-    override fun end(interrupted: Boolean) {
-        Shooter.stopShooter()
     }
 }

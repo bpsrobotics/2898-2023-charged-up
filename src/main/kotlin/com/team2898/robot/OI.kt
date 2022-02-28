@@ -12,7 +12,6 @@ import com.team2898.robot.subsystems.Climb
 import com.team2898.robot.subsystems.Feed
 import com.team2898.robot.subsystems.Intake
 import com.team2898.robot.subsystems.Shooter
-import com.team2898.robot.subsystems.Shooter.ShooterStates.READY
 import edu.wpi.first.wpilibj.*
 import edu.wpi.first.wpilibj.GenericHID.RumbleType.kLeftRumble
 import edu.wpi.first.wpilibj.XboxController.Button.*
@@ -235,12 +234,12 @@ object OI : SubsystemBase() {
     val cancelButton = JoystickButton(driverController, kX.value)
     val shootButton = JoystickButton(driverController, kB.value)
 
-    val rumbleTrigger = Trigger { Shooter.state == READY }
+    val rumbleTrigger = Trigger { Shooter.ready }
 
     init {
         spinUpButton.whileActiveContinuous(Shooter::spinUp)
-        dumpSpinUpButton.whileActiveContinuous(Shooter::dumpSpinUp)
-        cancelButton.whileActiveContinuous(Shooter::stopShooter)
+        dumpSpinUpButton.whileActiveContinuous(Shooter::spinUp)
+//        cancelButton.whileActiveContinuous(Shooter::stopShooter)
         shootButton.whileActiveContinuous(Feed::shoot)
         rumbleTrigger.whileActiveOnce(
             StartEndCommand(

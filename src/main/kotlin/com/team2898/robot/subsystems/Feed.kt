@@ -12,6 +12,7 @@ import com.team2898.robot.Constants.FEEDER_MAX_DISTANCE
 import com.team2898.robot.Constants.FEEDER_MIN_DISTANCE
 import com.team2898.robot.Constants.FEEDER_SPEED
 import com.team2898.robot.Constants.FEEDER_VECTOR_SPEED
+import com.team2898.robot.Constants.TIME_TO_SHOOT
 import com.team2898.robot.DriverDashboard
 import com.team2898.robot.RobotMap.FEEDER_LASERSHARK
 import com.team2898.robot.RobotMap.FEEDER_LEFT_VECTOR
@@ -127,7 +128,7 @@ object Feed : SubsystemBase() {
 
                 // if it's been in the shooting state for long enough switch to empty
                 // will switch again if there's another ball
-                if ((Timer.getFPGATimestamp().seconds - stateStartTime).value > 0.5) {  // TODO: constant
+                if ((Timer.getFPGATimestamp().seconds - stateStartTime).value > TIME_TO_SHOOT) {
                     state = EMPTY
                     DriverDashboard.string("Feeder State", "Shooting")
                 }
