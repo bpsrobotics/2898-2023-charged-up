@@ -7,6 +7,7 @@ import com.bpsrobotics.engine.utils.Volts
 import com.bpsrobotics.engine.utils.seconds
 import com.team2898.robot.Constants.DRIVER_MAP
 import com.team2898.robot.OI.Ramp.ramp
+import com.team2898.robot.commands.TargetAlign
 import com.team2898.robot.subsystems.Climb
 import com.team2898.robot.subsystems.Feed
 import com.team2898.robot.subsystems.Intake
@@ -247,6 +248,12 @@ object OI : SubsystemBase() {
                 { driverController.setRumble(kLeftRumble, 0.0) }
             )
         )
+    }
+
+    val targetAlignButton = JoystickButton(driverController, kLeftBumper.value).and(JoystickButton(driverController, kRightBumper.value))
+
+    init {
+        targetAlignButton.whenActive(TargetAlign().until(targetAlignButton.negate()))
     }
 
     val manualShoot by object {
