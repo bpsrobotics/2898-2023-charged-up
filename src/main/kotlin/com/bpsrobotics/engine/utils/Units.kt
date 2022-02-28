@@ -263,8 +263,6 @@ inline val Int.hz get() = Hertz(toDouble())
 inline val Int.RPM get() = RPM(toDouble())
 inline val Double.RPM get() = RPM(this)
 
-inline operator fun Seconds.minus(other: Seconds) = (value - other.value).seconds
-
 inline operator fun Volts.plus(other: Volts) = (value + other.value).volts
 
 inline operator fun Radians.plus(other: Radians) = (value + other.value).rad

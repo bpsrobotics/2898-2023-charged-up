@@ -39,20 +39,7 @@ object Constants {
     const val DRIVETRAIN_RAMSETE_B = 6.0  // Higher values make it more aggressively stick to the trajectory. 0 < B
     const val DRIVETRAIN_RAMSETE_Z = 0.7  // Higher values give it more dampening. 0 < Z < 1
 
-    val CLIMBER_LOADED = Climb.ClimbControllerSpec(
-        0.0,
-        0.0, 0.0, 0.0,
-        ElevatorFeedforward(0.0, 0.0, 0.0, 0.0),
-        TrapezoidProfile.Constraints(0.0, 0.0)
-    )
-
-    val CLIMBER_UNLOADED = Climb.ClimbControllerSpec(
-        0.0,
-        0.0, 0.0, 0.0,
-        ElevatorFeedforward(0.0, 0.0, 0.0, 0.0),
-        TrapezoidProfile.Constraints(0.0, 0.0)
-    )
-
+    const val CLIMBER_ENDSTOP = 4096
 
     // TODO: Difference between current and target RPM that must be reached before shooter lock is removed
     const val SHOOTER_THRESHOLD = 5
