@@ -97,6 +97,7 @@ object Climb : SubsystemBase() {
         private var startTime = 0.seconds
         private var lastLimitSwitchValue = false
         private val stallDetector = StallDetection(Millis(1000))
+        private var stallTimeout = 0.seconds
 
         enum class Mode {
             CLOSED_LOOP, OPEN_LOOP
@@ -127,8 +128,12 @@ object Climb : SubsystemBase() {
 
         fun update() {
             if (stallDetector.isStalled(motors.first().motorOutputPercent, encoder.distance)) {
+                stallTimeout = Timer.getFPGATimestamp().seconds + 5.seconds
+            }
+
+            if (Timer.getFPGATimestamp() < stallTimeout.value) {
                 motors.forEach { it.set(0.0) }
-                throw RuntimeException("Climb stalled!")
+                return
             }
 
             val limitSwitchValue = limitSwitch.get()

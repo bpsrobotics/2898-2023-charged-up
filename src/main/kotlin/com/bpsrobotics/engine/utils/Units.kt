@@ -283,6 +283,10 @@ inline operator fun RPM.plus(other: RPM) = (value + other.value).RPM
 
 inline operator fun RPM.minus(other: RPM) = (value - other.value).RPM
 
+inline operator fun Seconds.plus(other: Seconds) = (value + other.value).seconds
+
+inline operator fun Seconds.minus(other: Seconds) = (value - other.value).seconds
+
 @JvmInline
 value class RGBA(val packed: UInt) {
     constructor(r: UByte, g: UByte, b: UByte, a: UByte = 255.toUByte()) : this(r.toUInt() or (g.toUInt() shl 8) or (b.toUInt() shl 16) or (a.toUInt() shl 24))
