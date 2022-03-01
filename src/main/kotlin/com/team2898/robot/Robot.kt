@@ -9,9 +9,8 @@ package com.team2898.robot
 
 import com.bpsrobotics.engine.async.BatteryLogger
 import com.team2898.robot.commands.TeleOp
+import com.team2898.robot.subsystems.*
 //import com.team2898.robot.subsystems.Odometry
-import com.team2898.robot.subsystems.Drivetrain
-import com.team2898.robot.subsystems.Odometry
 import edu.wpi.first.cameraserver.CameraServer
 import edu.wpi.first.wpilibj.RobotBase
 import edu.wpi.first.wpilibj.TimedRobot
@@ -49,8 +48,16 @@ class Robot : TimedRobot() {
 
         // initialize battery logger
         if (RobotBase.isReal()) {
-            BatteryLogger
+//            BatteryLogger
         }
+
+        Climb
+        Drivetrain
+        Feed
+        Intake
+        Odometry
+        Shooter
+        Vision
     }
 
     /**

@@ -18,20 +18,20 @@ object RobotMap {
     const val DRIVETRAIN_RIGHT_MAIN       = 2
     const val DRIVETRAIN_RIGHT_SECONDARY  = 4
 
-    const val CLIMBER_LEFT_MAIN           = 5
-    const val CLIMBER_LEFT_SECONDARY      = 6
+    const val CLIMBER_LEFT_MAIN           = 6
+    const val CLIMBER_LEFT_SECONDARY      = 7
 
-    const val CLIMBER_RIGHT_MAIN          = 7
-    const val CLIMBER_RIGHT_SECONDARY     = 8
+    const val CLIMBER_RIGHT_MAIN          = 8
+    const val CLIMBER_RIGHT_SECONDARY     = 9
 
-    const val SHOOTER_FLYWHEEL            = 9
-    const val SHOOTER_SPINNER             = 10
+    const val SHOOTER_FLYWHEEL            = 10
+    const val SHOOTER_SPINNER             = 11
 
-    const val INTAKE_MOTOR                = 11
+    const val INTAKE_MOTOR                = 12
 
-    const val FEEDER_LEFT_VECTOR          = 12
-    const val FEEDER_RIGHT_VECTOR         = 13
-    const val FEEDER_UPPER                = 14
+    const val FEEDER_LEFT_VECTOR          = 13
+    const val FEEDER_RIGHT_VECTOR         = 14
+    const val FEEDER_UPPER                = 15
 
     // DIO
     const val DRIVETRAIN_LEFT_ENCODER_A   = 0
