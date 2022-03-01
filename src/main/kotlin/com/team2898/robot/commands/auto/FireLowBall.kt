@@ -1,6 +1,6 @@
 package com.team2898.robot.commands.auto
 
-import com.team2898.robot.subsystems.Feed
+import com.team2898.robot.subsystems.Feeder
 import com.team2898.robot.subsystems.Shooter
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj2.command.CommandBase
@@ -14,7 +14,7 @@ class FireLowBall(private val ballCount: Int) : CommandBase() {
     }
 
     override fun execute() {
-        Feed.forceShoot()
+        Feeder.forceShoot()
     }
 
     override fun isFinished(): Boolean {

@@ -9,7 +9,7 @@ import com.team2898.robot.Constants.DRIVER_MAP
 import com.team2898.robot.OI.Ramp.ramp
 import com.team2898.robot.commands.TargetAlign
 import com.team2898.robot.subsystems.Climb
-import com.team2898.robot.subsystems.Feed
+import com.team2898.robot.subsystems.Feeder
 import com.team2898.robot.subsystems.Intake
 import com.team2898.robot.subsystems.Shooter
 import edu.wpi.first.wpilibj.*
@@ -240,7 +240,7 @@ object OI : SubsystemBase() {
         spinUpButton.whileActiveContinuous(Shooter::spinUp)
         dumpSpinUpButton.whileActiveContinuous(Shooter::spinUp)
 //        cancelButton.whileActiveContinuous(Shooter::stopShooter)
-        shootButton.whenActive(Feed::shoot)
+        shootButton.whenActive(Feeder::shoot)
         rumbleTrigger.whileActiveOnce(
             StartEndCommand(
                 { driverController.setRumble(kLeftRumble, 1.0) },

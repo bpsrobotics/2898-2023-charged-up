@@ -1,7 +1,10 @@
 package com.team2898.robot.subsystems
 
 import com.bpsrobotics.engine.controls.StallDetection
-import com.bpsrobotics.engine.utils.*
+import com.bpsrobotics.engine.utils.Millis
+import com.bpsrobotics.engine.utils.Volts
+import com.bpsrobotics.engine.utils.plus
+import com.bpsrobotics.engine.utils.seconds
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX
 import com.team2898.robot.Constants.CLIMBER_ENDSTOP
 import com.team2898.robot.RobotMap.CLIMBER_LEFT_ENCODER_A
@@ -18,6 +21,7 @@ import com.team2898.robot.RobotMap.CLIMB_L_FORWARD
 import com.team2898.robot.RobotMap.CLIMB_L_REVERSE
 import com.team2898.robot.RobotMap.CLIMB_R_FORWARD
 import com.team2898.robot.RobotMap.CLIMB_R_REVERSE
+import edu.wpi.first.util.sendable.SendableBuilder
 import edu.wpi.first.wpilibj.*
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 
@@ -67,8 +71,8 @@ object Climb : SubsystemBase() {
 
     private class Arm(
         private val motors: List<WPI_TalonSRX>,
-        private val encoder: Encoder,
-        private val limitSwitch: DigitalInput,
+        internal val encoder: Encoder,
+        internal val limitSwitch: DigitalInput,
         private val endStop: Int
     ) {
         private var lastLimitSwitchValue = false
@@ -115,5 +119,13 @@ object Climb : SubsystemBase() {
     override fun periodic() {
         leftArm.update()
         rightArm.update()
+    }
+
+    override fun initSendable(builder: SendableBuilder) {
+        builder.setSmartDashboardType("Subsystem")
+        builder.addDoubleProperty("left encoder", leftArm.encoder::getDistance) {}
+        builder.addDoubleProperty("right encoder", rightArm.encoder::getDistance) {}
+        builder.addBooleanProperty("left limit switch", leftArm.limitSwitch::get) {}
+        builder.addBooleanProperty("right limit switch", rightArm.limitSwitch::get) {}
     }
 }

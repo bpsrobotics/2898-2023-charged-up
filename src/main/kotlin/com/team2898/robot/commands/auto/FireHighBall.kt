@@ -1,10 +1,8 @@
 package com.team2898.robot.commands.auto
 
 import com.bpsrobotics.engine.utils.Meters
-import com.bpsrobotics.engine.utils.TrajectoryUtils.centerField
-import com.team2898.robot.subsystems.Feed
+import com.team2898.robot.subsystems.Feeder
 import com.team2898.robot.subsystems.Odometry
-import com.team2898.robot.subsystems.Shooter
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.wpilibj2.command.CommandBase
 import kotlin.math.max
@@ -25,7 +23,7 @@ class FireHighBall(private val location: Pose2d) : CommandBase() {
             currentDistance.value < 1.0 &&
             max(Odometry.vels.leftMetersPerSecond, Odometry.vels.rightMetersPerSecond) < 0.25
         ) {
-            Feed.shoot()
+            Feeder.shoot()
         } else if (startedShooter && currentDistance.value > 3.0) {
 //            Shooter.stopShooter()
             completed = true

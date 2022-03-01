@@ -7,10 +7,8 @@
 
 package com.team2898.robot
 
-import com.bpsrobotics.engine.async.BatteryLogger
 import com.team2898.robot.commands.TeleOp
 import com.team2898.robot.subsystems.*
-//import com.team2898.robot.subsystems.Odometry
 import edu.wpi.first.cameraserver.CameraServer
 import edu.wpi.first.wpilibj.RobotBase
 import edu.wpi.first.wpilibj.TimedRobot
@@ -41,8 +39,6 @@ class Robot : TimedRobot() {
         robotContainer = RobotContainer()
         // Automatically grab auto command to ensure m_autonomousCommand is defined before teleopInit is run
         autoCommand = robotContainer.getAutonomousCommand()
-        Drivetrain
-        SmartDashboard.putData("odometry", Odometry)
 
         CameraServer.startAutomaticCapture()
 
@@ -51,13 +47,13 @@ class Robot : TimedRobot() {
 //            BatteryLogger
         }
 
-        Climb
-        Drivetrain
-        Feed
         Intake
-        Odometry
-        Shooter
         Vision
+
+        SmartDashboard.putData("odometry", Odometry)
+        SmartDashboard.putData("climb", Climb)
+        SmartDashboard.putData("feeder", Feeder)
+        SmartDashboard.putData("shooter", Shooter)
     }
 
     /**

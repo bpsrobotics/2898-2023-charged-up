@@ -18,12 +18,13 @@ import com.team2898.robot.RobotMap.FEEDER_LASERSHARK
 import com.team2898.robot.RobotMap.FEEDER_LEFT_VECTOR
 import com.team2898.robot.RobotMap.FEEDER_RIGHT_VECTOR
 import com.team2898.robot.RobotMap.FEEDER_UPPER
-import com.team2898.robot.subsystems.Feed.State.*
+import com.team2898.robot.subsystems.Feeder.State.*
+import edu.wpi.first.util.sendable.SendableBuilder
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 
-object Feed : SubsystemBase() {
+object Feeder : SubsystemBase() {
     private val mainLasershark = Lasershark(FEEDER_LASERSHARK)
 
     // unused at the moment
@@ -144,5 +145,11 @@ object Feed : SubsystemBase() {
 
     fun forceShoot() {
         state = SHOOTING
+    }
+
+    override fun initSendable(builder: SendableBuilder) {
+        builder.setSmartDashboardType("Subsystem")
+        builder.addDoubleProperty("lasershark distance", mainLasershark::getDistanceMeters) {}
+        builder.addStringProperty("state", { state.toString() }) {}
     }
 }
