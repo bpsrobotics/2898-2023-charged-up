@@ -104,6 +104,7 @@ class Robot : TimedRobot() {
         // continue until interrupted by another command, remove
         // this line or comment it out.
         autoCommand.let { autoCommand.cancel() }
+        Climb.ignoreLimits()
     }
 
     /**

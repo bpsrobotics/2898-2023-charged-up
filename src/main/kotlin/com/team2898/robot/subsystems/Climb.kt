@@ -43,6 +43,11 @@ object Climb : SubsystemBase() {
         rightArmSecondary.inverted = true
     }
 
+    fun ignoreLimits() {
+        leftArm.isZeroed = false
+        rightArm.isZeroed = false
+    }
+
     fun openLoop(value: Volts) {
         leftArm.openLoop(value)
         rightArm.openLoop(value)
@@ -83,8 +88,8 @@ object Climb : SubsystemBase() {
         private var lastLimitSwitchValue = false
         private val stallDetector = StallDetection(Millis(1000))
         private var stallTimeout = 0.seconds
-        internal val limitSwitchv get() = if (invertedLimitSwitch) !limitSwitch.get() else limitSwitch.get()
-        private var isZeroed = false
+        internal val limitSwitchv get() = /*if (invertedLimitSwitch) !limitSwitch.get() else limitSwitch.get()*/ false
+        internal var isZeroed = false
 
         fun openLoop(value: Volts) {
             motors.forEach { it.setVoltage(value.value.run {
@@ -111,7 +116,7 @@ object Climb : SubsystemBase() {
             lastLimitSwitchValue = limitSwitchValue
 
             if (leadingEdge) {
-                isZeroed = true
+//                isZeroed = true
                 encoder.reset()
             }
 
