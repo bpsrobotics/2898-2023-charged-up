@@ -225,10 +225,11 @@ object OI : SubsystemBase() {
         intakeTrigger.whenActive(Intake::startIntake).whenInactive(Intake::stopIntake)
     }
 
-    val intakeDown = Trigger { operatorController.pov != -1 }
+    val intakeDownToggle by Toggle { operatorController.pov != -1 }
+    val intakeDown = Trigger { intakeDownToggle }
 
     init {
-        intakeDown.toggleWhenActive(StartEndCommand(Intake::openIntake, Intake::closeIntake, Intake))
+        intakeDown.whenActive(Intake::openIntake).whenInactive(Intake::closeIntake)
     }
 
     val spinUpButton = JoystickButton(driverController, kY.value).or(JoystickButton(operatorController, 7))
