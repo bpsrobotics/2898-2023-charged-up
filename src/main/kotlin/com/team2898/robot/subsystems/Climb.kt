@@ -37,8 +37,10 @@ object Climb : SubsystemBase() {
             it.configFactoryDefault()
             it.configContinuousCurrentLimit(10)
             it.configPeakCurrentLimit(30, 50)
-            it.enableVoltageCompensation(true)
+//            it.enableVoltageCompensation(true)
         }
+        rightArmMain.inverted = true
+        rightArmSecondary.inverted = true
     }
 
     fun openLoop(value: Volts) {
@@ -48,7 +50,7 @@ object Climb : SubsystemBase() {
 
     private val leftArm = Arm(
         listOf(leftArmMain, leftArmSecondary),
-        Encoder(CLIMBER_LEFT_ENCODER_A, CLIMBER_LEFT_ENCODER_B),
+        Encoder(CLIMBER_LEFT_ENCODER_A, CLIMBER_LEFT_ENCODER_B).apply { this.setReverseDirection(true) },
         DigitalInput(CLIMBER_LEFT_LIMIT_SWITCH),
         CLIMBER_ENDSTOP,
         true
@@ -56,7 +58,7 @@ object Climb : SubsystemBase() {
 
     private val rightArm = Arm(
         listOf(rightArmMain, rightArmSecondary),
-        Encoder(CLIMBER_RIGHT_ENCODER_A, CLIMBER_RIGHT_ENCODER_B),
+        Encoder(CLIMBER_RIGHT_ENCODER_A, CLIMBER_RIGHT_ENCODER_B).apply { this.setReverseDirection(true) },
         DigitalInput(CLIMBER_RIGHT_LIMIT_SWITCH),
         CLIMBER_ENDSTOP,
         true

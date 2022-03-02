@@ -34,7 +34,7 @@ class TeleOp : CommandBase() {
             else -> curvatureDriveIK(OI.throttle, OI.turn, false)
         }
 
-        Drivetrain.stupidDrive(`M/s`(speeds.left * 2), `M/s`(speeds.right * 2))
+        Drivetrain.stupidDrive(`M/s`(speeds.left * 5), `M/s`(speeds.right * 5))
     }
 
     // Called once the command ends or is interrupted.

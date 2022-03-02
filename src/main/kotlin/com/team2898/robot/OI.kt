@@ -214,7 +214,7 @@ object OI : SubsystemBase() {
     init {
         climbPistonForward.whenActive({ Climb.pistons(DoubleSolenoid.Value.kForward) }, Climb)
         climbPistonReverse.whenActive({ Climb.pistons(DoubleSolenoid.Value.kReverse) }, Climb)
-        climbModeTrigger.whileActiveContinuous({ Climb.openLoop(Volts(-climbMove * 1.0)) }, Climb)
+        climbModeTrigger.whileActiveContinuous({ Climb.openLoop(Volts(-climbMove * 2.0)) }, Climb)
     }
 
     val intakeTrigger = JoystickButton(operatorController, 1)
@@ -241,12 +241,12 @@ object OI : SubsystemBase() {
         dumpSpinUpButton.whileActiveContinuous(Shooter::spinUp)
 //        cancelButton.whileActiveContinuous(Shooter::stopShooter)
         shootButton.whenActive(Feeder::shoot)
-        rumbleTrigger.whileActiveOnce(
-            StartEndCommand(
-                { driverController.setRumble(kLeftRumble, 1.0) },
-                { driverController.setRumble(kLeftRumble, 0.0) }
-            )
-        )
+//        rumbleTrigger.whileActiveOnce(
+//            StartEndCommand(
+//                { driverController.setRumble(kLeftRumble, 0.2) },
+//                { driverController.setRumble(kLeftRumble, 0.0) }
+//            ).withTimeout(1.0)
+//        )
     }
 
     val targetAlignButton = JoystickButton(driverController, kLeftBumper.value).and(JoystickButton(driverController, kRightBumper.value))
