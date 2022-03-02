@@ -14,6 +14,7 @@ import edu.wpi.first.util.sendable.SendableBuilder
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import kotlin.math.absoluteValue
+import kotlin.math.min
 
 object Shooter : SubsystemBase() {
     private val flywheelController = CANSparkMax(SHOOTER_FLYWHEEL, kBrushless)
@@ -21,7 +22,8 @@ object Shooter : SubsystemBase() {
     private var spunUpTime = 0.seconds
     val ready get() =
         (flywheelController.encoder.velocity - target.flywheel.value).absoluteValue < 10 &&
-                (spinnerController.encoder.velocity - target.spinner.value).absoluteValue < 10
+                (spinnerController.encoder.velocity - target.spinner.value).absoluteValue < 10 &&
+                min(flywheelController.encoder.velocity, spinnerController.encoder.velocity) > 50
     var target = ShooterSpeeds(0.RPM, 0.RPM)
 
     data class ShooterSpeeds(val flywheel: RPM, val spinner: RPM)
@@ -48,6 +50,10 @@ object Shooter : SubsystemBase() {
     fun spinUp(speeds: ShooterSpeeds = DUMP_SPEED) {
         spunUpTime = Timer.getFPGATimestamp().seconds + 5.seconds
         target = speeds
+    }
+
+    fun stopShooter() {
+        spunUpTime = Timer.getFPGATimestamp().seconds
     }
 
     override fun periodic() {

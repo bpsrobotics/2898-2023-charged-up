@@ -239,14 +239,14 @@ object OI : SubsystemBase() {
     init {
         spinUpButton.whileActiveContinuous(Shooter::spinUp)
         dumpSpinUpButton.whileActiveContinuous(Shooter::spinUp)
-//        cancelButton.whileActiveContinuous(Shooter::stopShooter)
+        cancelButton.whileActiveContinuous(Shooter::stopShooter)
         shootButton.whenActive(Feeder::shoot)
-//        rumbleTrigger.whileActiveOnce(
-//            StartEndCommand(
-//                { driverController.setRumble(kLeftRumble, 0.2) },
-//                { driverController.setRumble(kLeftRumble, 0.0) }
-//            ).withTimeout(1.0)
-//        )
+        rumbleTrigger.whileActiveOnce(
+            StartEndCommand(
+                { driverController.setRumble(kLeftRumble, 0.2) },
+                { driverController.setRumble(kLeftRumble, 0.0) }
+            ).withTimeout(1.0)
+        )
     }
 
     val targetAlignButton = JoystickButton(driverController, kLeftBumper.value).and(JoystickButton(driverController, kRightBumper.value))
