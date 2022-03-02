@@ -49,6 +49,7 @@ class Robot : TimedRobot() {
 
         Intake
         Vision
+        Drivetrain.defaultCommand = TeleOp()
 
         SmartDashboard.putData("odometry", Odometry)
         SmartDashboard.putData("climb", Climb)
@@ -103,7 +104,6 @@ class Robot : TimedRobot() {
         // continue until interrupted by another command, remove
         // this line or comment it out.
         autoCommand.let { autoCommand.cancel() }
-        Drivetrain.defaultCommand = TeleOp()
     }
 
     /**

@@ -208,13 +208,13 @@ object OI : SubsystemBase() {
     val climbModeTrigger = Trigger { climbMode }
 
     val climbMove get() = if (climbMode) operatorController.y else 0.0
-    val climbPistonForward = Trigger { if (climbMode) operatorController.getRawButtonPressed(9) else false }
+    val climbPistonForward = Trigger { if (climbMode) operatorController.getRawButtonPressed(11) else false }
     val climbPistonReverse = Trigger { if (climbMode) operatorController.getRawButtonPressed(12) else false }
 
     init {
         climbPistonForward.whenActive({ Climb.pistons(DoubleSolenoid.Value.kForward) }, Climb)
         climbPistonReverse.whenActive({ Climb.pistons(DoubleSolenoid.Value.kReverse) }, Climb)
-        climbModeTrigger.whileActiveContinuous({ Climb.openLoop(Volts(climbMove * 2.0)) }, Climb)
+        climbModeTrigger.whileActiveContinuous({ Climb.openLoop(Volts(-climbMove * 1.0)) }, Climb)
     }
 
     val intakeDown = JoystickButton(operatorController, 1)

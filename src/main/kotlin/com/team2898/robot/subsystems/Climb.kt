@@ -50,14 +50,16 @@ object Climb : SubsystemBase() {
         listOf(leftArmMain, leftArmSecondary),
         Encoder(CLIMBER_LEFT_ENCODER_A, CLIMBER_LEFT_ENCODER_B),
         DigitalInput(CLIMBER_LEFT_LIMIT_SWITCH),
-        CLIMBER_ENDSTOP
+        CLIMBER_ENDSTOP,
+        true
     )
 
     private val rightArm = Arm(
         listOf(rightArmMain, rightArmSecondary),
         Encoder(CLIMBER_RIGHT_ENCODER_A, CLIMBER_RIGHT_ENCODER_B),
         DigitalInput(CLIMBER_RIGHT_LIMIT_SWITCH),
-        CLIMBER_ENDSTOP
+        CLIMBER_ENDSTOP,
+        true
     )
 
     private val piston1 = DoubleSolenoid(PneumaticsModuleType.REVPH, CLIMB_L_FORWARD, CLIMB_L_REVERSE)
@@ -72,17 +74,20 @@ object Climb : SubsystemBase() {
     private class Arm(
         private val motors: List<WPI_TalonSRX>,
         internal val encoder: Encoder,
-        internal val limitSwitch: DigitalInput,
-        private val endStop: Int
+        private val limitSwitch: DigitalInput,
+        private val endStop: Int,
+        private val invertedLimitSwitch: Boolean = false
     ) {
         private var lastLimitSwitchValue = false
         private val stallDetector = StallDetection(Millis(1000))
         private var stallTimeout = 0.seconds
+        internal val limitSwitchv get() = if (invertedLimitSwitch) !limitSwitch.get() else limitSwitch.get()
+        private var isZeroed = false
 
         fun openLoop(value: Volts) {
             motors.forEach { it.setVoltage(value.value.run {
                 when {
-                    limitSwitch.get() || encoder.get() <= 0.0 -> coerceAtLeast(0.0)
+                    limitSwitchv || (encoder.get() <= 0.0 && isZeroed) -> coerceAtLeast(0.0)
                     encoder.get() >= endStop -> coerceAtMost(0.0)
                     else -> this
                 }
@@ -99,15 +104,16 @@ object Climb : SubsystemBase() {
                 return
             }
 
-            val limitSwitchValue = limitSwitch.get()
+            val limitSwitchValue = limitSwitchv
             val leadingEdge = limitSwitchValue && !lastLimitSwitchValue
             lastLimitSwitchValue = limitSwitchValue
 
             if (leadingEdge) {
+                isZeroed = true
                 encoder.reset()
             }
 
-            if ((limitSwitchValue || encoder.get() <= 0.0) && motors.first().motorOutputPercent < 0) {
+            if ((limitSwitchValue || (encoder.get() <= 0.0 && isZeroed)) && motors.first().motorOutputPercent < 0) {
                 motors.forEach { it.set(0.0) }
             }
             if (encoder.get() >= endStop && motors.first().motorOutputPercent > 0) {
@@ -125,7 +131,7 @@ object Climb : SubsystemBase() {
         builder.setSmartDashboardType("Subsystem")
         builder.addDoubleProperty("left encoder", leftArm.encoder::getDistance) {}
         builder.addDoubleProperty("right encoder", rightArm.encoder::getDistance) {}
-        builder.addBooleanProperty("left limit switch", leftArm.limitSwitch::get) {}
-        builder.addBooleanProperty("right limit switch", rightArm.limitSwitch::get) {}
+        builder.addBooleanProperty("left limit switch", leftArm::limitSwitchv) {}
+        builder.addBooleanProperty("right limit switch", rightArm::limitSwitchv) {}
     }
 }

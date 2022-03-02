@@ -31,6 +31,7 @@ object Shooter : SubsystemBase() {
             it.restoreFactoryDefaults()
             it.setSmartCurrentLimit(20)
             it.idleMode = kCoast
+            it.inverted = true
         }
 
         flywheelController.pidController.ff = 0.0

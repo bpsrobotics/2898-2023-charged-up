@@ -13,7 +13,7 @@ object RobotMap {
     const val CLIMB_R_REVERSE  = 3
 
     // Motor IDs
-    const val DRIVETRAIN_LEFT_MAIN        = 1
+    const val DRIVETRAIN_LEFT_MAIN        = 5
     const val DRIVETRAIN_LEFT_SECONDARY   = 3
     const val DRIVETRAIN_RIGHT_MAIN       = 2
     const val DRIVETRAIN_RIGHT_SECONDARY  = 4
