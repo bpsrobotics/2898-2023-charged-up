@@ -217,16 +217,16 @@ object OI : SubsystemBase() {
         climbModeTrigger.whileActiveContinuous({ Climb.openLoop(Volts(-climbMove * 1.0)) }, Climb)
     }
 
-    val intakeDown = JoystickButton(operatorController, 1)
-
-    init {
-        intakeDown.toggleWhenPressed(StartEndCommand(Intake::openIntake, Intake::closeIntake, Intake))
-    }
-
-    val intakeTrigger = Trigger { operatorController.pov != -1 }
+    val intakeTrigger = JoystickButton(operatorController, 1)
 
     init {
         intakeTrigger.whenActive(Intake::startIntake).whenInactive(Intake::stopIntake)
+    }
+
+    val intakeDown = Trigger { operatorController.pov != -1 }
+
+    init {
+        intakeDown.toggleWhenActive(StartEndCommand(Intake::openIntake, Intake::closeIntake, Intake))
     }
 
     val spinUpButton = JoystickButton(driverController, kY.value)

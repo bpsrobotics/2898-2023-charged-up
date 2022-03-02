@@ -29,6 +29,7 @@ import com.team2898.robot.RobotMap.DRIVETRAIN_RIGHT_ENCODER_B
 import com.team2898.robot.RobotMap.DRIVETRAIN_RIGHT_MAIN
 import com.team2898.robot.RobotMap.DRIVETRAIN_RIGHT_SECONDARY
 import com.team2898.robot.Constants.DRIVETRAIN_TRACK_WIDTH
+import com.team2898.robot.DriverDashboard
 import edu.wpi.first.math.controller.SimpleMotorFeedforward
 import edu.wpi.first.math.trajectory.Trajectory
 import edu.wpi.first.wpilibj.Encoder
@@ -199,5 +200,7 @@ object Drivetrain : SubsystemBase() {
                 rawDrive(/*l + */lf, /*r + */rf)
             }
         }
+        DriverDashboard.number("left encoder", Odometry.leftVel.value)
+        DriverDashboard.number("right encoder", Odometry.rightVel.value)
     }
 }
