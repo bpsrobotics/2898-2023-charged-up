@@ -11,6 +11,10 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive.curvatureDriveIK
 
 class TeleOp : CommandBase() {
 
+    init {
+        addRequirements(Drivetrain)
+    }
+
     // Called when the command is started.
     override fun initialize() {
         Drivetrain.mode = Drivetrain.Mode.OPEN_LOOP
