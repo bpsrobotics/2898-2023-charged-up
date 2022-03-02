@@ -214,7 +214,7 @@ object OI : SubsystemBase() {
     init {
         climbPistonForward.whenActive({ Climb.pistons(DoubleSolenoid.Value.kForward) }, Climb)
         climbPistonReverse.whenActive({ Climb.pistons(DoubleSolenoid.Value.kReverse) }, Climb)
-        climbModeTrigger.whileActiveContinuous({ Climb.openLoop(Volts(-climbMove * 2.0)) }, Climb)
+        climbModeTrigger.whileActiveContinuous({ Climb.openLoop(Volts(-climbMove * 8.0)) }, Climb)
     }
 
     val intakeTrigger = JoystickButton(operatorController, 1)
