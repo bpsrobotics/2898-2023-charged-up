@@ -208,8 +208,10 @@ object OI : SubsystemBase() {
     val climbModeTrigger = Trigger { climbMode }
 
     val climbMove get() = if (climbMode) operatorController.y else 0.0
-    val climbPistonForward = Trigger { if (climbMode) operatorController.getRawButtonPressed(11) else false }
-    val climbPistonReverse = Trigger { if (climbMode) operatorController.getRawButtonPressed(12) else false }
+//    val climbPistonForward = Trigger { if (climbMode) operatorController.getRawButtonPressed(11) else false }
+//    val climbPistonReverse = Trigger { if (climbMode) operatorController.getRawButtonPressed(12) else false }
+    val climbPistonForward = JoystickButton(operatorController, 11).and(climbModeTrigger)
+    val climbPistonReverse = JoystickButton(operatorController, 12).and(climbModeTrigger)
 
     init {
         climbPistonForward.whenActive({ Climb.pistons(DoubleSolenoid.Value.kForward) }, Climb)
@@ -229,10 +231,10 @@ object OI : SubsystemBase() {
         intakeDown.toggleWhenActive(StartEndCommand(Intake::openIntake, Intake::closeIntake, Intake))
     }
 
-    val spinUpButton = JoystickButton(driverController, kY.value)
-    val dumpSpinUpButton = JoystickButton(driverController, kA.value)
+    val spinUpButton = JoystickButton(driverController, kY.value).or(JoystickButton(operatorController, 7))
+    val dumpSpinUpButton = JoystickButton(driverController, kA.value).or(JoystickButton(operatorController, 9))
     val cancelButton = JoystickButton(driverController, kX.value)
-    val shootButton = JoystickButton(driverController, kB.value)
+    val shootButton = JoystickButton(driverController, kB.value).or(JoystickButton(operatorController, 10))
 
     val rumbleTrigger = Trigger { Shooter.ready }
 
