@@ -16,7 +16,7 @@ class HideAuto : CommandBase() {
     private val field = Field2d()
 
     override fun initialize() {
-        var firstPath: Trajectory = PathPlanner.loadPath("HideAuto", 8.0, 1.5) // TODO: Max Viable Speed
+        var firstPath: Trajectory = PathPlanner.loadPath("HideAuto", 8.0, 1.5, true) // TODO: Max Viable Speed
         val alliance = DriverStation.Alliance.Blue
 //
 //        if (alliance == DriverStation.Alliance.Red) {
