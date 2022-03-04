@@ -32,11 +32,11 @@ object Climb : SubsystemBase() {
     init {
         listOf(leftArmMain, leftArmSecondary, rightArmMain, rightArmSecondary).forEach {
             it.configFactoryDefault()
-            it.configContinuousCurrentLimit(10)
+            it.configContinuousCurrentLimit(20)
             it.configPeakCurrentLimit(30, 50)
 //            it.enableVoltageCompensation(true)
         }
-//        rightArmMain.inverted = true
+        rightArmMain.inverted = true
         rightArmSecondary.inverted = true
     }
 
@@ -52,7 +52,7 @@ object Climb : SubsystemBase() {
 
     private val leftArm = Arm(
         listOf(leftArmMain, leftArmSecondary),
-        Encoder(CLIMBER_LEFT_ENCODER_A, CLIMBER_LEFT_ENCODER_B).apply { this.setReverseDirection(true) },
+        Encoder(CLIMBER_LEFT_ENCODER_A, CLIMBER_LEFT_ENCODER_B).apply { this.setReverseDirection(false) },
         DigitalInput(CLIMBER_LEFT_LIMIT_SWITCH),
         CLIMBER_ENDSTOP_L,
         true
@@ -87,11 +87,13 @@ object Climb : SubsystemBase() {
         private var stallTimeout = 0.seconds
         internal val limitSwitchv get() = if (invertedLimitSwitch) !limitSwitch.get() else limitSwitch.get()
         internal var isZeroed = false
+        var isResetting = false
 
         fun openLoop(value: Volts) {
+            isResetting = false
             motors.forEach { it.setVoltage(value.value.run {
                 when {
-                    limitSwitchv || (encoder.get() <= 0.0 && isZeroed) -> coerceAtLeast(0.0)
+                    limitSwitchv /*|| (encoder.get() <= 0.0 && isZeroed)*/ -> coerceAtLeast(0.0)
                     encoder.get() >= endStop -> coerceAtMost(0.0)
                     else -> this
                 }
@@ -113,19 +115,22 @@ object Climb : SubsystemBase() {
             lastLimitSwitchValue = limitSwitchValue
 
             if (leadingEdge) {
-//                isZeroed = true
+                isZeroed = true
                 encoder.reset()
             }
 
-            if ((limitSwitchValue || (encoder.get() <= 0.0 && isZeroed)) && motors.first().motorOutputPercent < 0) {
-                motors.forEach { it.set(0.0) }
-            }
-            if (encoder.get() >= endStop && motors.first().motorOutputPercent > 0) {
-                motors.forEach { it.set(0.0) }
+            if (!isResetting) {
+                if ((limitSwitchValue /*|| (encoder.get() <= 0.0 && isZeroed)*/) && motors.first().motorOutputPercent < 0) {
+                    motors.forEach { it.set(0.0) }
+                }
+                if (encoder.get() >= endStop && motors.first().motorOutputPercent > 0) {
+                    motors.forEach { it.set(0.0) }
+                }
             }
         }
 
         fun resetClimb() {
+            isResetting = true
             motors.forEach { it.set(-0.2) }
         }
     }

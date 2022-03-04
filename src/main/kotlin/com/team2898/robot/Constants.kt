@@ -39,8 +39,8 @@ object Constants {
     const val DRIVETRAIN_RAMSETE_B = 6.0  // Higher values make it more aggressively stick to the trajectory. 0 < B
     const val DRIVETRAIN_RAMSETE_Z = 0.7  // Higher values give it more dampening. 0 < Z < 1
 
-    const val CLIMBER_ENDSTOP_L = 100000
-    const val CLIMBER_ENDSTOP_R = 100000
+    const val CLIMBER_ENDSTOP_L = 4600
+    const val CLIMBER_ENDSTOP_R = 4600 * 4
 
     // TODO: Difference between current and target RPM that must be reached before shooter lock is removed
     const val SHOOTER_THRESHOLD = 5
