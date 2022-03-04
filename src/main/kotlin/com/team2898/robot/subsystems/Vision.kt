@@ -21,25 +21,25 @@ object Vision {
     var distance = 0.m
     var angle = 0.rad
 
-//    init {
-//        distanceEntry.addListener({
-//            // every time the vision values are updated, copy them to the class fields
-//            // synchronized for thread safety
-//            synchronized(Vision) {
-//                internalLastUpdated = Timer.getFPGATimestamp().seconds
-//                internalDistance = it.value.double.m
-//                internalAngle = angleEntry.value.double.rad
-//            }
-//        }, 0)
-//    }
+    init {
+        distanceEntry.addListener({
+            // every time the vision values are updated, copy them to the class fields
+            // synchronized for thread safety
+            synchronized(Vision) {
+                internalLastUpdated = Timer.getFPGATimestamp().seconds
+                internalDistance = it.value.double.m
+                internalAngle = angleEntry.value.double.rad
+            }
+        }, 0)
+    }
 
     fun periodic() {
         // copy the grabbed values to the public fields
-//        synchronized(Vision) {
-//            lastUpdated = internalLastUpdated
-//            distance = internalDistance
-//            angle = internalAngle
-//        }
+        synchronized(Vision) {
+            lastUpdated = internalLastUpdated
+            distance = internalDistance
+            angle = internalAngle
+        }
         distance = distanceEntry.getDouble(0.0).m
         angle = angleEntry.getDouble(0.0).rad
     }

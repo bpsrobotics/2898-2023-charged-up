@@ -10,6 +10,7 @@ package com.team2898.robot
 import com.team2898.robot.commands.TeleOp
 import com.team2898.robot.subsystems.*
 import edu.wpi.first.cameraserver.CameraServer
+import edu.wpi.first.wpilibj.PowerDistribution
 import edu.wpi.first.wpilibj.RobotBase
 import edu.wpi.first.wpilibj.TimedRobot
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
@@ -79,7 +80,10 @@ class Robot : TimedRobot() {
     override fun disabledInit() {
     }
 
+    val pdp = PowerDistribution(60, PowerDistribution.ModuleType.kRev)
+
     override fun disabledPeriodic() {
+        pdp.switchableChannel = false
     }
 
     /**

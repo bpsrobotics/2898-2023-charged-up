@@ -36,12 +36,12 @@ object Shooter : SubsystemBase() {
             it.inverted = true
         }
 
-//        flywheelController.pidController.ff = 0.0
+//        flywheelController.pidController.ff = 0.13213 / 12
 //        flywheelController.pidController.p = 0.0
 //        flywheelController.pidController.i = 0.0
 //        flywheelController.pidController.d = 0.0
 //
-//        spinnerController.pidController.ff = 0.0
+//        spinnerController.pidController.ff = 0.12945 / 12
 //        spinnerController.pidController.p = 0.0
 //        spinnerController.pidController.i = 0.0
 //        spinnerController.pidController.d = 0.0
@@ -58,10 +58,10 @@ object Shooter : SubsystemBase() {
 
     override fun periodic() {
         if (Timer.getFPGATimestamp() < spunUpTime.value) {
-//            flywheelController.set(0.3)
-//            spinnerController.set(0.1)
-            flywheelController.pidController.setReference(target.flywheel.value, kVelocity)
-            spinnerController.pidController.setReference(target.spinner.value, kVelocity)
+            flywheelController.set(0.3)
+            spinnerController.set(0.1)
+//            flywheelController.pidController.setReference(target.flywheel.value, kVelocity)
+//            spinnerController.pidController.setReference(target.spinner.value, kVelocity)
         } else {
             flywheelController.set(0.0)
             spinnerController.set(0.0)

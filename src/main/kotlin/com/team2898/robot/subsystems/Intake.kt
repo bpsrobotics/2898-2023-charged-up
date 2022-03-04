@@ -4,10 +4,10 @@ import com.revrobotics.CANSparkMax
 import com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless
 import com.team2898.robot.RobotMap.INTAKE_MOTOR
 import com.team2898.robot.DriverDashboard
-import com.team2898.robot.RobotMap.INTAKE_L_FORWARD
-import com.team2898.robot.RobotMap.INTAKE_L_REVERSE
-import com.team2898.robot.RobotMap.INTAKE_R_FORWARD
-import com.team2898.robot.RobotMap.INTAKE_R_REVERSE
+import com.team2898.robot.RobotMap.INTAKE_FORWARD
+import com.team2898.robot.RobotMap.INTAKE_REVERSE
+//import com.team2898.robot.RobotMap.INTAKE_R_FORWARD
+//import com.team2898.robot.RobotMap.INTAKE_R_REVERSE
 import edu.wpi.first.wpilibj.DoubleSolenoid
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value.kForward
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value.kReverse
@@ -17,8 +17,8 @@ import java.lang.Double.max
 import kotlin.math.abs
 
 object Intake : SubsystemBase() {
-    private val piston1 = DoubleSolenoid(REVPH, INTAKE_L_FORWARD, INTAKE_L_REVERSE)
-    private val piston2 = DoubleSolenoid(REVPH, INTAKE_R_FORWARD, INTAKE_R_REVERSE)
+    private val piston = DoubleSolenoid(REVPH, INTAKE_FORWARD, INTAKE_REVERSE)
+//    private val piston2 = DoubleSolenoid(REVPH, INTAKE_R_FORWARD, INTAKE_R_REVERSE)
     private val controller = CANSparkMax(INTAKE_MOTOR, kBrushless)
 
     init {
@@ -34,15 +34,15 @@ object Intake : SubsystemBase() {
 //
 //    var state = IntakeStates.IDLE
     fun setOpenState(state: Boolean) {
-        piston1.set(if (state) kForward else kReverse)
-        piston2.set(if (state) kForward else kReverse)
+        piston.set(if (state) kForward else kReverse)
+//        piston2.set(if (state) kForward else kReverse)
     }
 
     fun setIntake(state: Boolean) {
         if (state) {
             Feeder.intake()
             val drivetrainSpeed = max(Odometry.vels.leftMetersPerSecond, Odometry.vels.rightMetersPerSecond)
-            controller.set(abs(drivetrainSpeed / 10).coerceIn(0.3, 0.5))
+            controller.set(abs(drivetrainSpeed / 10).coerceIn(0.4, 0.5))
         } else {
             Feeder.stopIntaking()
             controller.set(0.0)
@@ -76,7 +76,7 @@ object Intake : SubsystemBase() {
 //                setOpenState(true)
 //            }
 //        }
-        DriverDashboard.boolean("Intake Open", piston1.get() == kForward)
+        DriverDashboard.boolean("Intake Open", piston.get() == kForward)
         DriverDashboard.boolean("Intake Running", abs(controller.get() - 0.0) <= 0.2)
     }
 }

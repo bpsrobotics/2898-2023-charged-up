@@ -47,8 +47,11 @@ object Constants {
 
     const val FEEDER_VECTOR_SPEED = 0.3
     const val FEEDER_SPEED = 0.5
-    const val FEEDER_MIN_DISTANCE = 2.0 // TODO: Distance at which ball is in shooter
-    const val FEEDER_MAX_DISTANCE = 5.0 // TODO: Primary LaserShark distance threshold that corresponds to no ball in feeder
+
+    // Distance at which ball is in shooter
+    const val FEEDER_MIN_DISTANCE = 0.35
+    // Primary LaserShark distance threshold that corresponds to no ball in feeder
+    const val FEEDER_MAX_DISTANCE = 0.5
 
     // Control Scheme Constants
     enum class DriverMap {
@@ -57,5 +60,5 @@ object Constants {
     }
     val DRIVER_MAP = DriverMap.DEFAULT
 
-    val DUMP_SPEED = Shooter.ShooterSpeeds(RPM(0.0), RPM(0.0)) //TODO: values
+    val DUMP_SPEED = Shooter.ShooterSpeeds(RPM(100.0), RPM(100.0)) //TODO: values
 }

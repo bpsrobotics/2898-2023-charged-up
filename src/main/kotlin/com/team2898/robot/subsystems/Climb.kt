@@ -17,10 +17,10 @@ import com.team2898.robot.RobotMap.CLIMBER_RIGHT_ENCODER_B
 import com.team2898.robot.RobotMap.CLIMBER_RIGHT_LIMIT_SWITCH
 import com.team2898.robot.RobotMap.CLIMBER_RIGHT_MAIN
 import com.team2898.robot.RobotMap.CLIMBER_RIGHT_SECONDARY
-import com.team2898.robot.RobotMap.CLIMB_L_FORWARD
-import com.team2898.robot.RobotMap.CLIMB_L_REVERSE
-import com.team2898.robot.RobotMap.CLIMB_R_FORWARD
-import com.team2898.robot.RobotMap.CLIMB_R_REVERSE
+//import com.team2898.robot.RobotMap.CLIMB_L_FORWARD
+//import com.team2898.robot.RobotMap.CLIMB_L_REVERSE
+//import com.team2898.robot.RobotMap.CLIMB_R_FORWARD
+//import com.team2898.robot.RobotMap.CLIMB_R_REVERSE
 import edu.wpi.first.util.sendable.SendableBuilder
 import edu.wpi.first.wpilibj.*
 import edu.wpi.first.wpilibj2.command.SubsystemBase
@@ -69,12 +69,12 @@ object Climb : SubsystemBase() {
         true
     )
 
-    private val piston1 = DoubleSolenoid(PneumaticsModuleType.REVPH, CLIMB_L_FORWARD, CLIMB_L_REVERSE)
-    private val piston2 = DoubleSolenoid(PneumaticsModuleType.REVPH, CLIMB_R_FORWARD, CLIMB_R_REVERSE)
+//    private val piston1 = DoubleSolenoid(PneumaticsModuleType.REVPH, CLIMB_L_FORWARD, CLIMB_L_REVERSE)
+//    private val piston2 = DoubleSolenoid(PneumaticsModuleType.REVPH, CLIMB_R_FORWARD, CLIMB_R_REVERSE)
 
     fun pistons(value: DoubleSolenoid.Value) {
-        piston1.set(value)
-        piston2.set(value)
+//        piston1.set(value)
+//        piston2.set(value)
         Intake.openIntake()
     }
 
@@ -88,7 +88,7 @@ object Climb : SubsystemBase() {
         private var lastLimitSwitchValue = false
         private val stallDetector = StallDetection(Millis(1000))
         private var stallTimeout = 0.seconds
-        internal val limitSwitchv get() = /*if (invertedLimitSwitch) !limitSwitch.get() else limitSwitch.get()*/ false
+        internal val limitSwitchv get() = if (invertedLimitSwitch) !limitSwitch.get() else limitSwitch.get()
         internal var isZeroed = false
 
         fun openLoop(value: Volts) {
