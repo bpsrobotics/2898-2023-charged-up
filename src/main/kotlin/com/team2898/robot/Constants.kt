@@ -16,7 +16,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile
  */
 object Constants {
     // Drivetrain info
-    const val DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT = 10
+    const val DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT = 30
     const val DRIVETRAIN_PEAK_CURRENT_LIMIT = 50
     const val DRIVETRAIN_PEAK_CURRENT_LIMIT_DURATION = 50
 

@@ -34,8 +34,8 @@ class RobotContainer {
      * The container for the robot.  Contains subsystems, OI devices, and commands.
      */
     init {
-        autoCommandChooser.setDefaultOption("Do Nothing Auto", noopAutoCommand)
-        autoCommandChooser.addOption("Leading Auto", leadingAutoCommand)
+        autoCommandChooser.setDefaultOption("Leading Auto", leadingAutoCommand)
+        autoCommandChooser.addOption("Do Nothing Auto", noopAutoCommand)
         autoCommandChooser.addOption("Five Ball Auto", fiveBallAutoCommand)
         autoCommandChooser.addOption("Non-Leading Auto", nonLeadingAutoCommand)
         autoCommandChooser.addOption("Hide Auto", hideAutoCommand)
