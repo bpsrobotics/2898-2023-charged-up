@@ -124,11 +124,20 @@ object Climb : SubsystemBase() {
                 motors.forEach { it.set(0.0) }
             }
         }
+
+        fun resetClimb() {
+            motors.forEach { it.set(-0.2) }
+        }
     }
 
     override fun periodic() {
         leftArm.update()
         rightArm.update()
+    }
+
+    fun resetClimb() {
+        leftArm.resetClimb()
+        rightArm.resetClimb()
     }
 
     override fun initSendable(builder: SendableBuilder) {

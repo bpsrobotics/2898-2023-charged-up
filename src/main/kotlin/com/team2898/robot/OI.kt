@@ -15,6 +15,7 @@ import com.team2898.robot.subsystems.Shooter
 import edu.wpi.first.wpilibj.*
 import edu.wpi.first.wpilibj.GenericHID.RumbleType.kLeftRumble
 import edu.wpi.first.wpilibj.XboxController.Button.*
+import edu.wpi.first.wpilibj2.command.PerpetualCommand
 import edu.wpi.first.wpilibj2.command.StartEndCommand
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.button.JoystickButton
@@ -212,11 +213,18 @@ object OI : SubsystemBase() {
 //    val climbPistonReverse = Trigger { if (climbMode) operatorController.getRawButtonPressed(12) else false }
     val climbPistonForward = JoystickButton(operatorController, 11).and(climbModeTrigger)
     val climbPistonReverse = JoystickButton(operatorController, 12).and(climbModeTrigger)
+    val climbReset get() = operatorController.getRawButton(3)
 
     init {
         climbPistonForward.whenActive({ Climb.pistons(DoubleSolenoid.Value.kForward) }, Climb)
         climbPistonReverse.whenActive({ Climb.pistons(DoubleSolenoid.Value.kReverse) }, Climb)
-        climbModeTrigger.whileActiveContinuous({ Climb.openLoop(Volts(-climbMove * 8.0)) }, Climb)
+        climbModeTrigger.whileActiveContinuous({
+            if (climbReset) {
+                Climb.resetClimb()
+            } else {
+                Climb.openLoop(Volts(-climbMove * 8.0))
+            }
+        }, Climb)
     }
 
     val intakeTrigger = JoystickButton(operatorController, 1)
