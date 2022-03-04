@@ -6,8 +6,10 @@ import com.team2898.robot.OI
 import com.team2898.robot.subsystems.Climb
 import com.team2898.robot.subsystems.Drivetrain
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value.*
+import edu.wpi.first.wpilibj.drive.DifferentialDrive
 import edu.wpi.first.wpilibj2.command.CommandBase
 import edu.wpi.first.wpilibj.drive.DifferentialDrive.curvatureDriveIK
+import kotlin.math.absoluteValue
 
 class TeleOp : CommandBase() {
 
@@ -22,16 +24,17 @@ class TeleOp : CommandBase() {
 
     // Called every time the scheduler runs while the command is scheduled.
     override fun execute() {
+        val turn = OI.turn.run { if (OI.throttle < 0.0) -this else this }.run { this * absoluteValue } * 0.5
         val speeds = when {
             // Quickturn buttons means turn in place
-            OI.quickTurnRight - OI.quickTurnLeft != 0.0 -> curvatureDriveIK(
-                OI.throttle,
+            OI.quickTurnRight - OI.quickTurnLeft != 0.0 -> DifferentialDrive.arcadeDriveIK(
+                0.0,
                 OI.quickTurnRight - OI.quickTurnLeft,
-                true
+                false
             )
 
             // Otherwise, drive and turn normally
-            else -> curvatureDriveIK(OI.throttle, OI.turn, false)
+            else -> curvatureDriveIK(OI.throttle, turn, true)
         }
 
         Drivetrain.stupidDrive(`M/s`(speeds.left * 5), `M/s`(speeds.right * 5))
