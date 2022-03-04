@@ -24,7 +24,6 @@ object Intake : SubsystemBase() {
     init {
         controller.restoreFactoryDefaults()
         controller.idleMode = CANSparkMax.IdleMode.kBrake
-        controller.setSmartCurrentLimit(20)
     }
 
 //    enum class IntakeStates {
