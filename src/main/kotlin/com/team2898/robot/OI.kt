@@ -226,7 +226,7 @@ object OI : SubsystemBase() {
     }
 
     val intakeDownToggle by Toggle { operatorController.pov != -1 }
-    val intakeDown = Trigger { intakeDownToggle }
+    val intakeDown = Trigger { intakeDownToggle }.and(climbModeTrigger.negate())
 
     init {
         intakeDown.whenActive(Intake::openIntake).whenInactive(Intake::closeIntake)
