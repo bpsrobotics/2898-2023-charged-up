@@ -27,11 +27,11 @@ class TargetAlign : CommandBase() {
     override fun execute() {
         val translation = Odometry.pose.translation.minus(centerField.translation)
         rotation = Rotation2d(atan2(translation.y, translation.x))
-        controller.setpoint = rotation.radians
         val speeds = if ((Timer.getFPGATimestamp() - Vision.lastUpdated.value) < 0.1) {
             controller.setpoint = 0.0
             controller.calculate(Vision.angle.radiansValue())
         } else {
+            controller.setpoint = rotation.radians
             controller.calculate(Odometry.pose.rotation.radians)
         }
         Drivetrain.stupidDrive(`M/s`(speeds), `M/s`(-speeds))

@@ -36,7 +36,7 @@ object Climb : SubsystemBase() {
             it.configPeakCurrentLimit(30, 50)
 //            it.enableVoltageCompensation(true)
         }
-        rightArmMain.inverted = true
+//        rightArmMain.inverted = true
         rightArmSecondary.inverted = true
     }
 

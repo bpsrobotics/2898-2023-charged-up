@@ -7,10 +7,7 @@
 
 package com.team2898.robot
 
-import com.team2898.robot.commands.FiveBallAuto
-import com.team2898.robot.commands.HideAuto
-import com.team2898.robot.commands.LeadingAuto
-import com.team2898.robot.commands.NonLeadingAuto
+import com.team2898.robot.commands.*
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
@@ -27,6 +24,7 @@ class RobotContainer {
     private val fiveBallAutoCommand: Command = FiveBallAuto()
     private val nonLeadingAutoCommand: Command = NonLeadingAuto()
     private val hideAutoCommand: Command = HideAuto()
+    private val noopAutoCommand: Command = NoopAuto()
 
     // A chooser for which command to use for auto, i.e. one for right, middle, left, red, blue, etc
     private var autoCommandChooser: SendableChooser<Command> = SendableChooser()
@@ -36,7 +34,8 @@ class RobotContainer {
      * The container for the robot.  Contains subsystems, OI devices, and commands.
      */
     init {
-        autoCommandChooser.setDefaultOption("Leading Auto", leadingAutoCommand)
+        autoCommandChooser.setDefaultOption("Do Nothing Auto", noopAutoCommand)
+        autoCommandChooser.addOption("Leading Auto", leadingAutoCommand)
         autoCommandChooser.addOption("Five Ball Auto", fiveBallAutoCommand)
         autoCommandChooser.addOption("Non-Leading Auto", nonLeadingAutoCommand)
         autoCommandChooser.addOption("Hide Auto", hideAutoCommand)
