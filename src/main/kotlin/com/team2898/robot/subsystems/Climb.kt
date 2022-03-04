@@ -6,7 +6,8 @@ import com.bpsrobotics.engine.utils.Volts
 import com.bpsrobotics.engine.utils.plus
 import com.bpsrobotics.engine.utils.seconds
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX
-import com.team2898.robot.Constants.CLIMBER_ENDSTOP
+import com.team2898.robot.Constants.CLIMBER_ENDSTOP_L
+import com.team2898.robot.Constants.CLIMBER_ENDSTOP_R
 import com.team2898.robot.RobotMap.CLIMBER_LEFT_ENCODER_A
 import com.team2898.robot.RobotMap.CLIMBER_LEFT_ENCODER_B
 import com.team2898.robot.RobotMap.CLIMBER_LEFT_LIMIT_SWITCH
@@ -17,10 +18,6 @@ import com.team2898.robot.RobotMap.CLIMBER_RIGHT_ENCODER_B
 import com.team2898.robot.RobotMap.CLIMBER_RIGHT_LIMIT_SWITCH
 import com.team2898.robot.RobotMap.CLIMBER_RIGHT_MAIN
 import com.team2898.robot.RobotMap.CLIMBER_RIGHT_SECONDARY
-//import com.team2898.robot.RobotMap.CLIMB_L_FORWARD
-//import com.team2898.robot.RobotMap.CLIMB_L_REVERSE
-//import com.team2898.robot.RobotMap.CLIMB_R_FORWARD
-//import com.team2898.robot.RobotMap.CLIMB_R_REVERSE
 import edu.wpi.first.util.sendable.SendableBuilder
 import edu.wpi.first.wpilibj.*
 import edu.wpi.first.wpilibj2.command.SubsystemBase
@@ -57,7 +54,7 @@ object Climb : SubsystemBase() {
         listOf(leftArmMain, leftArmSecondary),
         Encoder(CLIMBER_LEFT_ENCODER_A, CLIMBER_LEFT_ENCODER_B).apply { this.setReverseDirection(true) },
         DigitalInput(CLIMBER_LEFT_LIMIT_SWITCH),
-        CLIMBER_ENDSTOP,
+        CLIMBER_ENDSTOP_L,
         true
     )
 
@@ -65,7 +62,7 @@ object Climb : SubsystemBase() {
         listOf(rightArmMain, rightArmSecondary),
         Encoder(CLIMBER_RIGHT_ENCODER_A, CLIMBER_RIGHT_ENCODER_B).apply { this.setReverseDirection(true) },
         DigitalInput(CLIMBER_RIGHT_LIMIT_SWITCH),
-        CLIMBER_ENDSTOP,
+        CLIMBER_ENDSTOP_R,
         true
     )
 
