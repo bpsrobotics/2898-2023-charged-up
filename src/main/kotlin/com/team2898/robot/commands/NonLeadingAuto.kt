@@ -18,11 +18,11 @@ class NonLeadingAuto : CommandBase() {
 
     override fun initialize() {
         var firstPath: Trajectory = PathPlanner.loadPath("NonLeadingAuto", 8.0, 1.5) // TODO: Max Viable Speed
-        val alliance = DriverStation.getAlliance()
+        val alliance = DriverStation.Alliance.Blue
 
-        if (alliance == DriverStation.Alliance.Red) {
-            firstPath = invertTrajectory(firstPath)
-        }
+//        if (alliance == DriverStation.Alliance.Red) {
+//            firstPath = invertTrajectory(firstPath)
+//        }
 
         field.getObject("traj").setTrajectory(firstPath)
         field.robotPose = firstPath.initialPose

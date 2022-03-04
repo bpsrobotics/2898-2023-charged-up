@@ -19,12 +19,12 @@ class LeadingAuto : CommandBase() {
     override fun initialize() {
         var firstPath: Trajectory = PathPlanner.loadPath("LeadingAutoP1", 8.0, 1.5) // TODO: Max Viable Speed
         var secondPath: Trajectory = PathPlanner.loadPath("LeadingAutoP2", 8.0, 1.5) // TODO: Max Viable Speed
-        val alliance = DriverStation.getAlliance()
+        val alliance = DriverStation.Alliance.Blue
 
-        if (alliance == DriverStation.Alliance.Red) {
-            firstPath = invertTrajectory(firstPath)
-            secondPath = invertTrajectory(secondPath)
-        }
+//        if (alliance == DriverStation.Alliance.Red) {
+//            firstPath = invertTrajectory(firstPath)
+//            secondPath = invertTrajectory(secondPath)
+//        }
         field.getObject("traj").setTrajectory(firstPath.concatenate(secondPath))
         field.robotPose = firstPath.initialPose
         SmartDashboard.putData(field)

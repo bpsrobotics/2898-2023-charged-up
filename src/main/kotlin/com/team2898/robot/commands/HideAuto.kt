@@ -17,11 +17,11 @@ class HideAuto : CommandBase() {
 
     override fun initialize() {
         var firstPath: Trajectory = PathPlanner.loadPath("HideAuto", 8.0, 1.5) // TODO: Max Viable Speed
-        val alliance = DriverStation.getAlliance()
-
-        if (alliance == DriverStation.Alliance.Red) {
-            firstPath = invertTrajectory(firstPath)
-        }
+        val alliance = DriverStation.Alliance.Blue
+//
+//        if (alliance == DriverStation.Alliance.Red) {
+//            firstPath = invertTrajectory(firstPath)
+//        }
         field.getObject("traj").setTrajectory(firstPath)
         field.robotPose = firstPath.initialPose
         SmartDashboard.putData(field)
