@@ -34,11 +34,11 @@ class RobotContainer {
      * The container for the robot.  Contains subsystems, OI devices, and commands.
      */
     init {
-        autoCommandChooser.setDefaultOption("Leading Auto", leadingAutoCommand)
+        autoCommandChooser.setDefaultOption("Hide Auto", hideAutoCommand)
         autoCommandChooser.addOption("Do Nothing Auto", noopAutoCommand)
         autoCommandChooser.addOption("Five Ball Auto", fiveBallAutoCommand)
         autoCommandChooser.addOption("Non-Leading Auto", nonLeadingAutoCommand)
-        autoCommandChooser.addOption("Hide Auto", hideAutoCommand)
+        autoCommandChooser.addOption("Leading Auto", leadingAutoCommand)
         // Send the auto chooser
         SmartDashboard.putData("Auto mode", autoCommandChooser)
     }
