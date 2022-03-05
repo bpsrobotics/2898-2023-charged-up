@@ -1,8 +1,10 @@
 package com.team2898.robot.commands
 
 import com.bpsrobotics.engine.utils.TrajectoryUtils.invertTrajectory
+import com.bpsrobotics.engine.utils.`M/s`
 import com.pathplanner.lib.PathPlanner
 import com.team2898.robot.commands.auto.FollowPath
+import com.team2898.robot.subsystems.Drivetrain
 import com.team2898.robot.subsystems.Odometry
 import edu.wpi.first.math.trajectory.Trajectory
 import edu.wpi.first.wpilibj.DriverStation
@@ -26,14 +28,16 @@ class HideAuto : CommandBase() {
         field.robotPose = firstPath.initialPose
         SmartDashboard.putData(field)
 
-        moveCommandGroup = FollowPath(firstPath, true)
-
-        moveCommandGroup.schedule()
+//        moveCommandGroup = FollowPath(firstPath, true)
+//
+//        moveCommandGroup.schedule()
     }
 
     override fun execute() {
         field.robotPose = Odometry.pose
         SmartDashboard.putData(field)
+
+        Drivetrain.stupidDrive(`M/s`(-0.25), `M/s`(-0.25))
     }
 
     override fun isFinished(): Boolean {
@@ -41,6 +45,6 @@ class HideAuto : CommandBase() {
     }
 
     override fun end(interrupted: Boolean) {
-        moveCommandGroup.end(interrupted)
+//        moveCommandGroup.end(interrupted)
     }
 }
