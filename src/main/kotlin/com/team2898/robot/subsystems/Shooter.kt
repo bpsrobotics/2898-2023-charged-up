@@ -13,6 +13,7 @@ import com.team2898.robot.RobotMap.SHOOTER_SPINNER
 import edu.wpi.first.util.sendable.SendableBuilder
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import kotlin.math.abs
 import kotlin.math.absoluteValue
 import kotlin.math.min
 
@@ -23,7 +24,7 @@ object Shooter : SubsystemBase() {
     val ready get() =
         (flywheelController.encoder.velocity - target.flywheel.value).absoluteValue < 10 &&
                 (spinnerController.encoder.velocity - target.spinner.value).absoluteValue < 10 &&
-                min(flywheelController.encoder.velocity, spinnerController.encoder.velocity) > 50
+                min(abs(flywheelController.encoder.velocity), abs(spinnerController.encoder.velocity)) > 10
     var target = ShooterSpeeds(0.RPM, 0.RPM)
 
     data class ShooterSpeeds(val flywheel: RPM, val spinner: RPM)

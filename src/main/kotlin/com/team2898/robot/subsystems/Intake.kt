@@ -49,6 +49,10 @@ object Intake : SubsystemBase() {
         }
     }
 
+    fun backDriveIntake() {
+        controller.set(-1.0)
+    }
+
     fun startIntake() {
         setIntake(true)
     }

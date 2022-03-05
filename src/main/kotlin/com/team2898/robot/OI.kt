@@ -229,9 +229,11 @@ object OI : SubsystemBase() {
     }
 
     val intakeTrigger = JoystickButton(operatorController, 1)
+    val intakeBackdrive = JoystickButton(operatorController, 4)
 
     init {
         intakeTrigger.whenActive(Intake::startIntake).whenInactive(Intake::stopIntake)
+        intakeBackdrive.whenActive(Intake::backDriveIntake).whenInactive(Intake::stopIntake)
     }
 
     val intakeDownToggle by Toggle { operatorController.pov != -1 }
@@ -257,7 +259,7 @@ object OI : SubsystemBase() {
         overrideShootButton.whenActive(Feeder::forceShoot)
         rumbleTrigger.whileActiveOnce(
             StartEndCommand(
-                { driverController.setRumble(kLeftRumble, 0.2) },
+                { driverController.setRumble(kLeftRumble, 0.5) },
                 { driverController.setRumble(kLeftRumble, 0.0) }
             ).withTimeout(1.0)
         )
