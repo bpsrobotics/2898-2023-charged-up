@@ -44,7 +44,7 @@ class HideAuto : CommandBase() {
         SmartDashboard.putData(field)
 
         if (timer.hasElapsed(2.0)) {
-            Drivetrain.rawDrive(-0.1, -0.1)
+            Drivetrain.rawDrive(0.1, 0.1)
         }
     }
 
