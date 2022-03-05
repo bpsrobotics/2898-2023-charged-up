@@ -8,6 +8,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase
 class FireLowBall(private val ballCount: Int) : CommandBase() {
     private val timer = Timer()
 
+    init {
+        addRequirements(Shooter)
+    }
+
     override fun initialize() {
         Shooter.spinUp()
         timer.reset()

@@ -3,6 +3,7 @@ package com.team2898.robot.commands.auto
 import com.bpsrobotics.engine.utils.Meters
 import com.team2898.robot.subsystems.Feeder
 import com.team2898.robot.subsystems.Odometry
+import com.team2898.robot.subsystems.Shooter
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.wpilibj2.command.CommandBase
 import kotlin.math.max
@@ -10,6 +11,10 @@ import kotlin.math.max
 class FireHighBall(private val location: Pose2d) : CommandBase() {
     private var startedShooter = false
     private var completed = false
+
+    init {
+        addRequirements(Shooter)
+    }
 
     /** Current distance from optimal shot point. */
     private val currentDistance get() = Meters(location.translation.getDistance(Odometry.pose.translation))

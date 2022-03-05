@@ -20,6 +20,10 @@ class FollowPath(private val path: Trajectory, private val resetOdometry: Boolea
     private var leftStart = false
     var startTime = 0.0
 
+    init {
+        addRequirements(Drivetrain)
+    }
+
     override fun initialize() {
         if (resetOdometry) {
             Odometry.reset(path.initialPose.x.m, path.initialPose.y.m, (-path.initialPose.rotation.degrees).deg)
