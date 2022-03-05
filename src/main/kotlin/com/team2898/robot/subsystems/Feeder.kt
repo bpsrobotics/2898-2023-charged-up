@@ -64,9 +64,11 @@ object Feeder : SubsystemBase() {
 
     init {
         listOf(vectorLeft, vectorRight).forEach {
+            it.restoreFactoryDefaults()
             it.setSmartCurrentLimit(10, 10)
             it.idleMode = kBrake
         }
+        vectorRight.inverted = true
         feederMotor.configFactoryDefault()
         feederMotor.setNeutralMode(NeutralMode.Brake)
         feederMotor.configContinuousCurrentLimit(10)
