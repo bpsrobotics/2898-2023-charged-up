@@ -124,6 +124,10 @@ object Feeder : SubsystemBase() {
 
                 // has no automatic transition
                 DriverDashboard.string("Feeder State", "Ready")
+
+                if (distance in RUN_RANGE) {
+                    state = FEEDING
+                }
             }
             SHOOTING -> {
                 vector.set(FEEDER_VECTOR_SPEED)
