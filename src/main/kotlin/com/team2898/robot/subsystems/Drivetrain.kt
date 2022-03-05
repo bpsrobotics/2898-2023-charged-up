@@ -202,5 +202,6 @@ object Drivetrain : SubsystemBase() {
         }
         DriverDashboard.number("left encoder", Odometry.leftVel.value)
         DriverDashboard.number("right encoder", Odometry.rightVel.value)
+        differentialDrive.feed()
     }
 }
