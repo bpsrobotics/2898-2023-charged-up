@@ -36,6 +36,7 @@ class HideAuto : CommandBase() {
         moveCommandGroup.schedule()
 
         timer.reset()
+        timer.start()
     }
 
     override fun execute() {
