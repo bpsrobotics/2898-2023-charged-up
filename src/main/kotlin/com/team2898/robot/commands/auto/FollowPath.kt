@@ -16,7 +16,7 @@ import kotlin.math.abs
  * @param path: Path Planner Trajectory to be run
  * @param resetOdometry: Reset Odometry to path initial state
  */
-class FollowPath(private val path: Trajectory, private val resetOdometry: Boolean = false) : CommandBase() {
+class FollowPath(private val path: Trajectory, private val resetOdometry: Boolean) : CommandBase() {
     private var leftStart = false
     var startTime = 0.0
 

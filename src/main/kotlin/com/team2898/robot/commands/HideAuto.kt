@@ -34,7 +34,7 @@ class HideAuto : CommandBase() {
 
         moveCommandGroup = SequentialCommandGroup(
             FireLowBall(1),
-            FollowPath(firstPath)
+        //    FollowPath(firstPath)
         )
 
         moveCommandGroup.schedule()
@@ -47,9 +47,9 @@ class HideAuto : CommandBase() {
         field.robotPose = Odometry.pose
         SmartDashboard.putData(field)
 
-//        if (timer.hasElapsed(2.0)) {
-//            Drivetrain.rawDrive(0.1, 0.1)
-//        }
+        if (timer.hasElapsed(2.0)) {
+            Drivetrain.rawDrive(0.1, 0.1)
+        }
     }
 
     override fun isFinished(): Boolean {

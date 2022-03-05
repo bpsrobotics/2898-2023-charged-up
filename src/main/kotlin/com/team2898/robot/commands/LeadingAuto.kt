@@ -48,7 +48,7 @@ class LeadingAuto : CommandBase() {
             ),
             FireLowBall(2),
             ParallelCommandGroup(
-                FollowPath(secondPath),
+                FollowPath(secondPath, false),
                 RunIntake(
                     when (alliance) {
                         DriverStation.Alliance.Red -> RunIntake.Ball.RED_1
