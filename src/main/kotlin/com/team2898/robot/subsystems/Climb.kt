@@ -5,6 +5,7 @@ import com.bpsrobotics.engine.utils.Millis
 import com.bpsrobotics.engine.utils.Volts
 import com.bpsrobotics.engine.utils.plus
 import com.bpsrobotics.engine.utils.seconds
+import com.ctre.phoenix.motorcontrol.NeutralMode
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX
 import com.team2898.robot.Constants.CLIMBER_ENDSTOP_L
 import com.team2898.robot.Constants.CLIMBER_ENDSTOP_R
@@ -34,6 +35,7 @@ object Climb : SubsystemBase() {
             it.configFactoryDefault()
             it.configContinuousCurrentLimit(20)
             it.configPeakCurrentLimit(30, 50)
+            it.setNeutralMode(NeutralMode.Brake)
 //            it.enableVoltageCompensation(true)
         }
         rightArmMain.inverted = true
@@ -94,16 +96,17 @@ object Climb : SubsystemBase() {
             motors.forEach { it.setVoltage(value.value.run {
                 when {
                     limitSwitchv /*|| (encoder.get() <= 0.0 && isZeroed)*/ -> coerceAtLeast(0.0)
-                    encoder.get() >= endStop -> coerceAtMost(0.0)
+//                    encoder.get() >= endStop -> coerceAtMost(0.0)
                     else -> this
                 }
             }) }
         }
 
         fun update() {
-            if (stallDetector.isStalled(motors.first().motorOutputPercent, encoder.distance)) {
-                stallTimeout = Timer.getFPGATimestamp().seconds + 5.seconds
-            }
+//            if (stallDetector.isStalled(motors.first().motorOutputPercent, encoder.distance)) {
+//                System.err.println("STALLED CLIMB, DISABLING FOR 5 SECONDS")
+//                stallTimeout = Timer.getFPGATimestamp().seconds + 5.seconds
+//            }
 
             if (Timer.getFPGATimestamp() < stallTimeout.value) {
                 motors.forEach { it.set(0.0) }
@@ -123,9 +126,9 @@ object Climb : SubsystemBase() {
                 if ((limitSwitchValue /*|| (encoder.get() <= 0.0 && isZeroed)*/) && motors.first().motorOutputPercent < 0) {
                     motors.forEach { it.set(0.0) }
                 }
-                if (encoder.get() >= endStop && motors.first().motorOutputPercent > 0) {
-                    motors.forEach { it.set(0.0) }
-                }
+//                if (encoder.get() >= endStop && motors.first().motorOutputPercent > 0) {
+//                    motors.forEach { it.set(0.0) }
+//                }
             }
         }
 
