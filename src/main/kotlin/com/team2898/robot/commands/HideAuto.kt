@@ -21,7 +21,7 @@ class HideAuto : CommandBase() {
     val timer = Timer()
 
     override fun initialize() {
-        var firstPath: Trajectory = PathPlanner.loadPath("HideAuto", 8.0, 1.5, true) // TODO: Max Viable Speed
+        var firstPath: Trajectory = PathPlanner.loadPath("HideAuto", 5.0, 1.5) // TODO: Max Viable Speed
         val alliance = DriverStation.Alliance.Blue
 //
 //        if (alliance == DriverStation.Alliance.Red) {
@@ -31,7 +31,7 @@ class HideAuto : CommandBase() {
         field.robotPose = firstPath.initialPose
         SmartDashboard.putData(field)
 
-        moveCommandGroup = FireLowBall(1)
+        moveCommandGroup = FollowPath(firstPath, true)
 
         moveCommandGroup.schedule()
 
@@ -43,9 +43,9 @@ class HideAuto : CommandBase() {
         field.robotPose = Odometry.pose
         SmartDashboard.putData(field)
 
-        if (timer.hasElapsed(2.0)) {
-            Drivetrain.rawDrive(0.1, 0.1)
-        }
+//        if (timer.hasElapsed(2.0)) {
+//            Drivetrain.rawDrive(0.1, 0.1)
+//        }
     }
 
     override fun isFinished(): Boolean {
