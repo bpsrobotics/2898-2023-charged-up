@@ -47,7 +47,7 @@ class HideAuto : CommandBase() {
         field.robotPose = Odometry.pose
         SmartDashboard.putData(field)
 
-        if (timer.hasElapsed(2.0)) {
+        if (timer.hasElapsed(1.0)) {
             Drivetrain.rawDrive(0.1, 0.1)
         }
     }

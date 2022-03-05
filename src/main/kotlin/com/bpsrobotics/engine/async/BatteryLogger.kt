@@ -21,6 +21,7 @@ object BatteryLogger {
     private var maxCurrent = Amps(0.0)
 
     init {
+        pdp.clearStickyFaults()
         AsyncLooper.loop(Millis(1000L / 50), "min voltage") {
             if (pdp.voltage < minVoltage.value) minVoltage = pdp.voltage.volts
             if (pdp.totalCurrent > maxCurrent.value) maxCurrent = Amps(pdp.totalCurrent)
