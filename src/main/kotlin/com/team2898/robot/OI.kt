@@ -244,7 +244,8 @@ object OI : SubsystemBase() {
     val spinUpButton = JoystickButton(driverController, kY.value).or(JoystickButton(operatorController, 7))
     val dumpSpinUpButton = JoystickButton(driverController, kA.value).or(JoystickButton(operatorController, 9))
     val cancelButton = JoystickButton(driverController, kX.value)
-    val shootButton = JoystickButton(driverController, kB.value).or(JoystickButton(operatorController, 10))
+    val shootButton = JoystickButton(driverController, kB.value)
+    val overrideShootButton = JoystickButton(operatorController, 10)
 
     val rumbleTrigger = Trigger { Shooter.ready }
 
@@ -253,6 +254,7 @@ object OI : SubsystemBase() {
         dumpSpinUpButton.whileActiveContinuous(Shooter::spinUp)
         cancelButton.whileActiveContinuous(Shooter::stopShooter)
         shootButton.whenActive(Feeder::shoot)
+        overrideShootButton.whenActive(Feeder::forceShoot)
         rumbleTrigger.whileActiveOnce(
             StartEndCommand(
                 { driverController.setRumble(kLeftRumble, 0.2) },
