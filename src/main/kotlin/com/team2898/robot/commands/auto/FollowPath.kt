@@ -33,16 +33,18 @@ class FollowPath(private val path: Trajectory, private val resetOdometry: Boolea
     }
 
     override fun isFinished(): Boolean {
-        return if (leftStart) {
-            path.endPose.translation.getDistance(Odometry.pose.translation) < 0.25 ||
-                    Timer.getFPGATimestamp() - startTime > path.totalTimeSeconds
-        }
-        else {
-            if (path.initialPose.translation.getDistance(Odometry.pose.translation) > 0.25) {
-                leftStart = true
-            }
-            false
-        }
+//        return if (leftStart) {
+//            path.endPose.translation.getDistance(Odometry.pose.translation) < 0.25 ||
+//                    Timer.getFPGATimestamp() - startTime > path.totalTimeSeconds
+//        }
+//        else {
+//            if (path.initialPose.translation.getDistance(Odometry.pose.translation) > 0.25) {
+//                leftStart = true
+//            }
+//            false
+//        }
+
+        return path.totalTimeSeconds < Timer.getFPGATimestamp() - startTime
     }
 
     override fun end(interrupted: Boolean) {

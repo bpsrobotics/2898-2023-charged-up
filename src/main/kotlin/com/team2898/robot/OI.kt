@@ -190,7 +190,7 @@ object OI : SubsystemBase() {
     }
 
     class Toggle(private val lambda: () -> Boolean) {
-        private var value = false
+        var value = false
         private var lastValue = false
 
         operator fun getValue(thisRef: Any?, property: KProperty<*>): Boolean {
@@ -205,7 +205,8 @@ object OI : SubsystemBase() {
         }
     }
 
-    val climbMode by Toggle { operatorController.getRawButton(8) }
+    val climbModeToggle = Toggle { operatorController.getRawButton(8) }
+    val climbMode by climbModeToggle
     val climbModeTrigger = Trigger { climbMode }
 
     val climbMove get() = if (climbMode) operatorController.y else 0.0

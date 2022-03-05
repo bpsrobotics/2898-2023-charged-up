@@ -110,6 +110,7 @@ class Robot : TimedRobot() {
         autoCommand.let { autoCommand.cancel() }
         Climb.ignoreLimits()
         Drivetrain.defaultCommand = TeleOp()
+        OI.climbModeToggle.value = false
     }
 
     /**
