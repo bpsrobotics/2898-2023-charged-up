@@ -12,9 +12,9 @@ import kotlin.math.abs
  */
 class RunIntake(private val location: Translation2d) : CommandBase() {
 
-    init {
-        addRequirements(Intake)
-    }
+//    init {
+//        addRequirements(Intake)
+//    }
 
     /**
      * Numbering from top to bottom of field (see map)
