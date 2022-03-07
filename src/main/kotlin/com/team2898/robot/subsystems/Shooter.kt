@@ -59,8 +59,8 @@ object Shooter : SubsystemBase() {
 
     override fun periodic() {
         if (Timer.getFPGATimestamp() < spunUpTime.value) {
-            flywheelController.set(0.3)
-            spinnerController.set(0.15)
+            flywheelController.set(0.28)
+            spinnerController.set(0.2)
 //            flywheelController.pidController.setReference(target.flywheel.value, kVelocity)
 //            spinnerController.pidController.setReference(target.spinner.value, kVelocity)
         } else {

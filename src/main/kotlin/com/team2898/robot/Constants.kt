@@ -50,7 +50,7 @@ object Constants {
     const val FEEDER_SPEED = 0.3
 
     // Distance at which ball is in shooter
-    const val FEEDER_MIN_DISTANCE = 0.35
+    const val FEEDER_MIN_DISTANCE = 0.40
     // Primary LaserShark distance threshold that corresponds to no ball in feeder
     const val FEEDER_MAX_DISTANCE = 0.63
 

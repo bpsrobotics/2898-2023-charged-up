@@ -19,13 +19,13 @@ class FireLowBall(private val ballCount: Int) : CommandBase() {
     }
 
     override fun execute() {
-        if (timer.hasElapsed(1.0)) {
+        if (timer.hasElapsed(1.5)) {
             Feeder.forceShoot()
         }
 
     }
 
     override fun isFinished(): Boolean {
-        return if (ballCount == 2) timer.hasElapsed(3.0) else timer.hasElapsed(2.0)
+        return if (ballCount == 2) timer.hasElapsed(3.0) else timer.hasElapsed(3.0)
     }
 }
