@@ -1,5 +1,6 @@
 package com.team2898.robot.subsystems
 
+import com.bpsrobotics.engine.utils.Interpolation
 import com.bpsrobotics.engine.utils.RPM
 import com.bpsrobotics.engine.utils.plus
 import com.bpsrobotics.engine.utils.seconds
@@ -48,9 +49,13 @@ object Shooter : SubsystemBase() {
 //        spinnerController.pidController.d = 0.0
     }
 
-    fun spinUp(speeds: ShooterSpeeds = DUMP_SPEED) {
+    fun spinUp(speeds: ShooterSpeeds = Interpolation.getRPMs()) {
         spunUpTime = Timer.getFPGATimestamp().seconds + 5.seconds
         target = speeds
+    }
+
+    fun dumpSpinUp() {
+        spinUp(DUMP_SPEED)
     }
 
     fun stopShooter() {

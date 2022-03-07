@@ -1,6 +1,7 @@
 package com.team2898.robot
 
 import com.bpsrobotics.engine.async.AsyncLooper
+import com.bpsrobotics.engine.utils.Interpolation
 import com.bpsrobotics.engine.utils.Millis
 import com.bpsrobotics.engine.utils.Sugar.clamp
 import com.bpsrobotics.engine.utils.Volts
@@ -12,12 +13,13 @@ import com.team2898.robot.subsystems.Climb
 import com.team2898.robot.subsystems.Feeder
 import com.team2898.robot.subsystems.Intake
 import com.team2898.robot.subsystems.Shooter
-import edu.wpi.first.wpilibj.*
+import edu.wpi.first.wpilibj.DoubleSolenoid
 import edu.wpi.first.wpilibj.GenericHID.RumbleType.kLeftRumble
+import edu.wpi.first.wpilibj.Joystick
+import edu.wpi.first.wpilibj.Timer
+import edu.wpi.first.wpilibj.XboxController
 import edu.wpi.first.wpilibj.XboxController.Button.*
-import edu.wpi.first.wpilibj2.command.PerpetualCommand
-import edu.wpi.first.wpilibj2.command.StartEndCommand
-import edu.wpi.first.wpilibj2.command.SubsystemBase
+import edu.wpi.first.wpilibj2.command.*
 import edu.wpi.first.wpilibj2.command.button.JoystickButton
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import kotlin.math.abs
@@ -76,7 +78,8 @@ object OI : SubsystemBase() {
 
     // conflicts with the other definition, name it something else after compilation
     @JvmName("process1")
-    fun Double.process(deadzone: Boolean = false, square: Boolean = false, cube: Boolean = false) = process(this, deadzone, square, cube)
+    fun Double.process(deadzone: Boolean = false, square: Boolean = false, cube: Boolean = false) =
+        process(this, deadzone, square, cube)
 
     private val driverController = XboxController(0)
     private val operatorController = Joystick(1)
@@ -157,11 +160,12 @@ object OI : SubsystemBase() {
         } else {
             process(-driverController.leftY, deadzone = true)
         }
-    val turn get() = if (DRIVER_MAP == Constants.DriverMap.FORZA) {
-        process(driverController.leftX, deadzone = true, square = true)
-    } else {
-        process(driverController.rightX, deadzone = true, square = true)
-    }
+    val turn
+        get() = if (DRIVER_MAP == Constants.DriverMap.FORZA) {
+            process(driverController.leftX, deadzone = true, square = true)
+        } else {
+            process(driverController.rightX, deadzone = true, square = true)
+        }
 
     /*
     * POV stick to run intake wheels, mystery button to deploy/retract intake
@@ -253,7 +257,13 @@ object OI : SubsystemBase() {
 
     init {
         spinUpButton.whileActiveContinuous(Shooter::spinUp)
-        dumpSpinUpButton.whileActiveContinuous(Shooter::spinUp)
+        spinUpButton.whenActive(
+            ParallelCommandGroup(
+                PerpetualCommand(TargetAlign()),
+                RunCommand({ if (Interpolation.isAligned && Shooter.ready) Feeder.shoot() }, Feeder) // anti-defense
+            ).withInterrupt(spinUpButton.negate())
+        )
+        dumpSpinUpButton.whileActiveContinuous(Shooter::dumpSpinUp)
         cancelButton.whileActiveContinuous(Shooter::stopShooter)
         shootButton.whenActive(Feeder::shoot)
         overrideShootButton.whenActive(Feeder::forceShoot)
