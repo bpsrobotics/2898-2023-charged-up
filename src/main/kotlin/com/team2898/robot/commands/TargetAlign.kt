@@ -27,7 +27,7 @@ class TargetAlign : CommandBase() {
     override fun execute() {
         val translation = Odometry.pose.translation.minus(centerField.translation)
         rotation = Rotation2d(atan2(translation.y, translation.x))
-        val speeds = if ((Timer.getFPGATimestamp() - Vision.lastUpdated.value) < 0.1) {
+        val speeds = if ((Timer.getFPGATimestamp() - Vision.lastUpdated.value) < 0.25) {
             controller.setpoint = 0.0
             controller.calculate(Vision.angle.radiansValue())
         } else {
@@ -38,6 +38,10 @@ class TargetAlign : CommandBase() {
     }
 
     override fun isFinished(): Boolean {
-        return abs(rotation.radians - Odometry.pose.rotation.radians) < 0.02
+        return if ((Timer.getFPGATimestamp() - Vision.lastUpdated.value) < 0.25) {
+            abs(controller.setpoint - Vision.angle.radiansValue()) < 0.02
+        } else {
+            abs(rotation.radians - Odometry.pose.rotation.radians) < 0.02
+        }
     }
 }
