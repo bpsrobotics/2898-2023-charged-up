@@ -1,5 +1,6 @@
 package com.team2898.robot.commands
 
+import com.bpsrobotics.engine.utils.Interpolation
 import com.bpsrobotics.engine.utils.TrajectoryUtils.centerField
 import com.bpsrobotics.engine.utils.`M/s`
 import com.team2898.robot.subsystems.Drivetrain
@@ -38,10 +39,6 @@ class TargetAlign : CommandBase() {
     }
 
     override fun isFinished(): Boolean {
-        return if ((Timer.getFPGATimestamp() - Vision.lastUpdated.value) < 0.25) {
-            abs(controller.setpoint - Vision.angle.radiansValue()) < 0.02
-        } else {
-            abs(rotation.radians - Odometry.pose.rotation.radians) < 0.02
-        }
+        return Interpolation.isAligned
     }
 }
