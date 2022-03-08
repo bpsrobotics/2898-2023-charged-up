@@ -247,9 +247,9 @@ object OI : SubsystemBase() {
         intakeDown.whenActive(Intake::openIntake).whenInactive(Intake::closeIntake)
     }
 
-    val spinUpButton = JoystickButton(driverController, kY.value).or(JoystickButton(operatorController, 7))
+    val spinUpButton = JoystickButton(driverController, kY.value)
     val dumpSpinUpButton = JoystickButton(driverController, kA.value).or(JoystickButton(operatorController, 9))
-    val cancelButton = JoystickButton(driverController, kX.value)
+    val cancelButton = JoystickButton(driverController, kX.value).or(JoystickButton(operatorController, 7))
     val shootButton = JoystickButton(driverController, kB.value)
     val overrideShootButton = JoystickButton(operatorController, 10)
 
@@ -257,12 +257,12 @@ object OI : SubsystemBase() {
 
     init {
         spinUpButton.whileActiveContinuous(Shooter::spinUp)
-        spinUpButton.whenActive(
-            ParallelCommandGroup(
-                PerpetualCommand(TargetAlign()),
-                RunCommand({ if (Interpolation.isAligned && Shooter.ready) Feeder.shoot() }, Feeder) // anti-defense
-            ).withInterrupt(spinUpButton.negate())
-        )
+//        spinUpButton.whenActive(
+//            ParallelCommandGroup(
+//                PerpetualCommand(TargetAlign()),
+//                RunCommand({ if (Interpolation.isAligned && Shooter.ready) Feeder.shoot() }, Feeder) // anti-defense
+//            ).withInterrupt(spinUpButton.negate())
+//        )
         dumpSpinUpButton.whileActiveContinuous(Shooter::dumpSpinUp)
         cancelButton.whileActiveContinuous(Shooter::stopShooter)
         shootButton.whenActive(Feeder::shoot)

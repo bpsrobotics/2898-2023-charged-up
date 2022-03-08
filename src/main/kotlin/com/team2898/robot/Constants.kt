@@ -63,5 +63,5 @@ object Constants {
 
     val DUMP_SPEED = Shooter.ShooterSpeeds(RPM(100.0), RPM(100.0)) //TODO: values
 
-    val SHOOT_DISTANCE = 0.0 // TODO: values
+    val SHOOT_DISTANCE = 3.0 // TODO: values
 }
