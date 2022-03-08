@@ -62,4 +62,6 @@ object Constants {
     val DRIVER_MAP = DriverMap.DEFAULT
 
     val DUMP_SPEED = Shooter.ShooterSpeeds(RPM(100.0), RPM(100.0)) //TODO: values
+
+    val SHOOT_DISTANCE = 0.0 // TODO: values
 }

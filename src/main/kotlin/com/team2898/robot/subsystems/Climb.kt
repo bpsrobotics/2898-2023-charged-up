@@ -79,7 +79,7 @@ object Climb : SubsystemBase() {
 
     private class Arm(
         private val motors: List<WPI_TalonSRX>,
-        internal val encoder: Encoder,
+        val encoder: Encoder,
         private val limitSwitch: DigitalInput,
         private val endStop: Int,
         private val invertedLimitSwitch: Boolean = false
@@ -87,8 +87,8 @@ object Climb : SubsystemBase() {
         private var lastLimitSwitchValue = false
         private val stallDetector = StallDetection(Millis(1000))
         private var stallTimeout = 0.seconds
-        internal val limitSwitchv get() = if (invertedLimitSwitch) !limitSwitch.get() else limitSwitch.get()
-        internal var isZeroed = false
+        val limitSwitchv get() = if (invertedLimitSwitch) !limitSwitch.get() else limitSwitch.get()
+        var isZeroed = false
         var isResetting = false
 
         fun openLoop(value: Volts) {
