@@ -17,7 +17,7 @@ import kotlin.math.atan2
 
 class TargetAlign : CommandBase() {
     val controller = PIDController(1.0, 0.0, 0.0)
-    val distanceController = PIDController(1.0, 0.0, 0.0)
+    val distanceController = PIDController(0.0, 0.0, 0.0)
     lateinit var rotation: Rotation2d
 
     init {
@@ -39,7 +39,7 @@ class TargetAlign : CommandBase() {
                 controller.setpoint = rotation.radians
                 controller.calculate(Odometry.pose.rotation.radians)
             }
-            Drivetrain.stupidDrive(`M/s`(speeds), `M/s`(-speeds))
+            Drivetrain.stupidDrive(`M/s`(-speeds), `M/s`(speeds))
         }else{
             if ((Timer.getFPGATimestamp() - Vision.lastUpdated.value) < 0.25){
                 distanceController.setpoint = Constants.SHOOT_DISTANCE
