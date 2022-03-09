@@ -42,7 +42,7 @@ object Intake : SubsystemBase() {
             Feeder.intake()
             val drivetrainSpeed = max(Odometry.vels.leftMetersPerSecond, Odometry.vels.rightMetersPerSecond)
 //            controller.set(abs(drivetrainSpeed / 10).coerceIn(0.4, 0.5))
-            controller.set(1.0)
+            controller.set(0.5)
         } else {
             Feeder.stopIntaking()
             controller.set(0.0)

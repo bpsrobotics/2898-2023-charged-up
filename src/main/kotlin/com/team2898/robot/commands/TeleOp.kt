@@ -5,6 +5,7 @@ import com.bpsrobotics.engine.utils.`M/s`
 import com.team2898.robot.OI
 import com.team2898.robot.subsystems.Climb
 import com.team2898.robot.subsystems.Drivetrain
+import com.team2898.robot.subsystems.Intake
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value.*
 import edu.wpi.first.wpilibj.drive.DifferentialDrive
 import edu.wpi.first.wpilibj2.command.CommandBase
@@ -20,6 +21,8 @@ class TeleOp : CommandBase() {
     // Called when the command is started.
     override fun initialize() {
         Drivetrain.mode = Drivetrain.Mode.OPEN_LOOP
+        Intake.closeIntake()
+        Intake.stopIntake()
     }
 
     // Called every time the scheduler runs while the command is scheduled.

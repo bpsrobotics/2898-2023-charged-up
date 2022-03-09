@@ -72,6 +72,8 @@ class Robot : TimedRobot() {
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run()
         Odometry.update()
+//        pdp.switchableChannel = isEnabled
+        pdp.switchableChannel = true
     }
 
     /**
@@ -82,9 +84,7 @@ class Robot : TimedRobot() {
 
     val pdp = PowerDistribution(60, PowerDistribution.ModuleType.kRev)
 
-    override fun disabledPeriodic() {
-        pdp.switchableChannel = false
-    }
+    override fun disabledPeriodic() {}
 
     /**
      * This autonomous runs the autonomous command selected by your {@link RobotContainer} class.

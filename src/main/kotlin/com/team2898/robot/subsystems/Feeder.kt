@@ -84,6 +84,11 @@ object Feeder : SubsystemBase() {
                 if (distance in RUN_RANGE) {
                     state = FEEDING
                 }
+
+//                if (distance < RUN_RANGE.start) {
+//                    state = READY
+//                }
+
                 DriverDashboard.string("Feeder State", "Empty")
             }
             FEEDING -> {

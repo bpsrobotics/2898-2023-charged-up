@@ -13,6 +13,7 @@ import com.team2898.robot.subsystems.Climb
 import com.team2898.robot.subsystems.Feeder
 import com.team2898.robot.subsystems.Intake
 import com.team2898.robot.subsystems.Shooter
+import edu.wpi.first.math.MathUtil
 import edu.wpi.first.wpilibj.DoubleSolenoid
 import edu.wpi.first.wpilibj.GenericHID.RumbleType.kLeftRumble
 import edu.wpi.first.wpilibj.Joystick
@@ -41,7 +42,7 @@ object OI : SubsystemBase() {
      * Threshold below which [process] will return 0.
      * 0.1 historically used, but optimal value unknown.
      */
-    private const val DEADZONE_THRESHOLD = 0.05
+    private const val DEADZONE_THRESHOLD = 0.1
     private const val TRIG_DEADZONE_THRESHOLD = 0.05
 
     /**
@@ -56,11 +57,7 @@ object OI : SubsystemBase() {
         var output = 0.0
 
         if (deadzone) {
-            output = if (abs(input) < DEADZONE_THRESHOLD) {
-                0.0
-            } else {
-                input
-            }
+            output = MathUtil.applyDeadband(input, DEADZONE_THRESHOLD)
         }
 
         if (square) {

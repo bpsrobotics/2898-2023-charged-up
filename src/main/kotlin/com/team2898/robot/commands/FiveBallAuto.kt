@@ -7,6 +7,7 @@ import com.team2898.robot.commands.auto.FireHighBall
 import com.team2898.robot.commands.auto.FireLowBall
 import com.team2898.robot.commands.auto.FollowPath
 import com.team2898.robot.commands.auto.RunIntake
+import com.team2898.robot.subsystems.Intake
 import com.team2898.robot.subsystems.Odometry
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Rotation2d
@@ -78,5 +79,7 @@ class FiveBallAuto : CommandBase() {
 
     override fun end(interrupted: Boolean) {
         moveCommandGroup.end(interrupted)
+        Intake.closeIntake()
+        Intake.stopIntake()
     }
 }
