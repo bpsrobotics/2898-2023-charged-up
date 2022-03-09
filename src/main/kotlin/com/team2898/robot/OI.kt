@@ -216,6 +216,7 @@ object OI : SubsystemBase() {
     val climbPistonForward = JoystickButton(operatorController, 11).and(climbModeTrigger)
     val climbPistonReverse = JoystickButton(operatorController, 12).and(climbModeTrigger)
     val climbReset get() = operatorController.getRawButton(3)
+    val clearBlock = JoystickButton(operatorController, 2)
 
     init {
         climbPistonForward.whenActive({ Climb.pistons(DoubleSolenoid.Value.kForward) }, Climb)
@@ -227,6 +228,7 @@ object OI : SubsystemBase() {
                 Climb.openLoop(Volts(-climbMove * 8.0))
             }
         }, Climb)
+        clearBlock.whenActive(Shooter::maxSpeed).whenInactive(Shooter::notMaxSpeed)
     }
 
     val intakeTrigger = JoystickButton(operatorController, 1)
