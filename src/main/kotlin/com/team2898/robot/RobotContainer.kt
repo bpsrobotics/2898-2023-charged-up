@@ -23,6 +23,7 @@ class RobotContainer {
     private val leadingAutoCommand: Command = LeadingAuto()
     private val fiveBallAutoCommand: Command = FiveBallAuto()
     private val nonLeadingAutoCommand: Command = NonLeadingAuto()
+    private val nonLeadingHighAutoCommand: Command = NonLeadingHighAuto()
     private val hideAutoCommand: Command = HideAuto()
     private val noopAutoCommand: Command = NoopAuto()
 
@@ -38,6 +39,7 @@ class RobotContainer {
         autoCommandChooser.addOption("Do Nothing Auto", noopAutoCommand)
         autoCommandChooser.addOption("Five Ball Auto", fiveBallAutoCommand)
         autoCommandChooser.addOption("Non-Leading Auto", nonLeadingAutoCommand)
+        autoCommandChooser.addOption("Non-Leading High Auto", nonLeadingHighAutoCommand)
         autoCommandChooser.addOption("Leading Auto", leadingAutoCommand)
         // Send the auto chooser
         SmartDashboard.putData("Auto mode", autoCommandChooser)
