@@ -13,7 +13,7 @@ class FireLowBall(private val ballCount: Int) : CommandBase() {
     }
 
     override fun initialize() {
-        Shooter.spinUp()
+        Shooter.dumpSpinUp()
         timer.reset()
         timer.start()
     }

@@ -1,7 +1,5 @@
 package com.team2898.robot.commands
 
-import com.bpsrobotics.engine.utils.Sugar.degreesToRadians
-import com.bpsrobotics.engine.utils.TrajectoryUtils.invertTrajectory
 import com.pathplanner.lib.PathPlanner
 import com.team2898.robot.commands.auto.FireHighBall
 import com.team2898.robot.commands.auto.FireLowBall
@@ -9,8 +7,7 @@ import com.team2898.robot.commands.auto.FollowPath
 import com.team2898.robot.commands.auto.RunIntake
 import com.team2898.robot.subsystems.Intake
 import com.team2898.robot.subsystems.Odometry
-import edu.wpi.first.math.geometry.Pose2d
-import edu.wpi.first.math.geometry.Rotation2d
+import com.team2898.robot.subsystems.Shooter
 import edu.wpi.first.math.trajectory.Trajectory
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.smartdashboard.Field2d
@@ -60,9 +57,9 @@ class FiveBallAuto : CommandBase() {
                         else -> RunIntake.Ball.BLUE_1
                     }
                 ),
-                FireHighBall(Pose2d(5.96, 3.12, Rotation2d(24.54.degreesToRadians())))
+                FireHighBall(Shooter.ShooterPowers(0.1, 0.8))
             ),
-            FireHighBall(Pose2d(6.10, 6.54, Rotation2d((-43.48).degreesToRadians())))
+            FireHighBall(Shooter.ShooterPowers(0.1, 0.8))
         )
 
         moveCommandGroup.schedule()

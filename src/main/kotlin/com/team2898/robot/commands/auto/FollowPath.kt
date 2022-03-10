@@ -48,8 +48,6 @@ class FollowPath(private val path: Trajectory, private val resetOdometry: Boolea
     }
 
     override fun end(interrupted: Boolean) {
-        if (interrupted) {
-            Drivetrain.stopAuto()
-        }
+        Drivetrain.stopAuto()
     }
 }
