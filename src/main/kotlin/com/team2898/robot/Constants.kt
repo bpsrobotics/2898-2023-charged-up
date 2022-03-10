@@ -29,14 +29,15 @@ object Constants {
 
     // Drivetrain characterization parameters, see [https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-characterization/index.html]
     // These do not carry from robot to robot, even if they're the same design! Characterize each drivetrain.
-    const val DRIVETRAIN_KS = 0.13118 / 12  // Voltage to make the motor start turning
-    const val DRIVETRAIN_KV = 2.3607 / 12  // Coefficient describing the friction proportional to rotation speed
-    const val DRIVETRAIN_KA = 0.82043 / 12 // Describes how much voltage is required for a given amount of acceleration
-    const val DRIVETRAIN_KP = 6.6089 / 12 // Proportional PID component
+    const val DRIVETRAIN_KS = 0.14405 / 12  // Voltage to make the motor start turning
+    const val DRIVETRAIN_KV = 2.4612 / 12  // Coefficient describing the friction proportional to rotation speed
+    const val DRIVETRAIN_KA = 0.57067 / 12 // Describes how much voltage is required for a given amount of acceleration
+    const val DRIVETRAIN_KP = 0.5 / 12 // Proportional PID component
     const val DRIVETRAIN_KD = 0.0 // Derivative PID component (note: no I term is used because it can lead to runaway)
 
     // Ramsete parameters, see [https://file.tavsys.net/control/controls-engineering-in-frc.pdf] page 81
-    const val DRIVETRAIN_RAMSETE_B = 3.0  // Higher values make it more aggressively stick to the trajectory. 0 < B
+    // **DO NOT CHANGE THESE PARAMETERS**
+    const val DRIVETRAIN_RAMSETE_B = 5.0  // Higher values make it more aggressively stick to the trajectory. 0 < B
     const val DRIVETRAIN_RAMSETE_Z = 0.7  // Higher values give it more dampening. 0 < Z < 1
 
     const val CLIMBER_ENDSTOP_L = 4600
@@ -47,10 +48,10 @@ object Constants {
     const val TIME_TO_SHOOT = 1.0 // TODO: Time it takes to shoot (approx, should be reasonably similar each time)
 
     const val FEEDER_VECTOR_SPEED = 0.3
-    const val FEEDER_SPEED = 0.3
+    const val FEEDER_SPEED = 0.5
 
     // Distance at which ball is in shooter
-    const val FEEDER_MIN_DISTANCE = 0.4
+    const val FEEDER_MIN_DISTANCE = 0.42
     // Primary LaserShark distance threshold that corresponds to no ball in feeder
     const val FEEDER_MAX_DISTANCE = 0.6
 
