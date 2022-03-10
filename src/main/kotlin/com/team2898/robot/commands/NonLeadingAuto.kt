@@ -5,6 +5,7 @@ import com.pathplanner.lib.PathPlanner
 import com.team2898.robot.commands.auto.FireLowBall
 import com.team2898.robot.commands.auto.FollowPath
 import com.team2898.robot.commands.auto.RunIntake
+import com.team2898.robot.subsystems.Intake
 import com.team2898.robot.subsystems.Odometry
 import edu.wpi.first.math.trajectory.Trajectory
 import edu.wpi.first.wpilibj.DriverStation
@@ -39,6 +40,9 @@ class NonLeadingAuto : CommandBase() {
                     }
                 )
             ),
+            InstantCommand(Intake::closeIntake),
+            WaitCommand(0.2),
+            InstantCommand(Intake::stopIntake),
             FireLowBall(1)
         )
 
