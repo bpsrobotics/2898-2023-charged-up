@@ -13,14 +13,14 @@ import kotlin.math.atan2
 
 object Interpolation {
     private val targetDistance get() = Meters(centerField.translation.getDistance(Odometry.pose.translation))
-    val isAligned get() = if ((Timer.getFPGATimestamp() - Vision.lastUpdated.value) < 0.25) {
+    val isAligned get() = if (Vision.lastUpdated.get() < 0.25) {
         abs(Vision.angle.radiansValue()) < 0.02
     } else {
         val translation = Odometry.pose.translation.minus(centerField.translation)
         val rotation = Rotation2d(atan2(translation.y, translation.x))
         abs(rotation.radians - Odometry.pose.rotation.radians) < 0.02
     }
-    val isCorrectDistance get() = if ((Timer.getFPGATimestamp() - Vision.lastUpdated.value) < 0.25) {
+    val isCorrectDistance get() = if (Vision.lastUpdated.get() < 0.25) {
         abs(Vision.distance.value - Constants.SHOOT_DISTANCE) < 0.02
     } else {
         val translation = Odometry.pose.translation.minus(centerField.translation)

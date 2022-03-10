@@ -13,20 +13,21 @@ object Vision {
     private val angleEntry = table.getEntry("angle")
 
     // private so they can be used in a threadsafe manner
-    private var internalLastUpdated = 0.seconds
     private var internalDistance = 0.m
     private var internalAngle = 0.rad
 
-    var lastUpdated = 0.seconds
+    // TODO: questionably thread safe
+    val lastUpdated = Timer()
     var distance = 0.m
     var angle = 0.rad
 
     init {
+        lastUpdated.start()
         distanceEntry.addListener({
             // every time the vision values are updated, copy them to the class fields
             // synchronized for thread safety
             synchronized(Vision) {
-                internalLastUpdated = Timer.getFPGATimestamp().seconds
+                lastUpdated.reset()
                 internalDistance = it.value.double.m
                 internalAngle = angleEntry.value.double.rad
             }
@@ -36,7 +37,6 @@ object Vision {
     fun periodic() {
         // copy the grabbed values to the public fields
         synchronized(Vision) {
-            lastUpdated = internalLastUpdated
             distance = internalDistance
             angle = internalAngle
         }

@@ -32,7 +32,7 @@ class TargetAlign : CommandBase() {
         if(!Interpolation.isAligned){
             val translation = Odometry.pose.translation.minus(centerField.translation)
             rotation = Rotation2d(atan2(translation.y, translation.x))
-            val speeds = if ((Timer.getFPGATimestamp() - Vision.lastUpdated.value) < 0.25) {
+            val speeds = if (Vision.lastUpdated.get() < 0.25) {
                 controller.setpoint = 0.0
                 controller.calculate(Vision.angle.radiansValue())
             } else {
@@ -41,7 +41,7 @@ class TargetAlign : CommandBase() {
             }
             Drivetrain.stupidDrive(`M/s`(-speeds), `M/s`(speeds))
         }else{
-            if ((Timer.getFPGATimestamp() - Vision.lastUpdated.value) < 0.25){
+            if (Vision.lastUpdated.get() < 0.25){
                 distanceController.setpoint = Constants.SHOOT_DISTANCE
                 Drivetrain.stupidDrive(`M/s`(distanceController.calculate(Vision.distance.value)), `M/s`(distanceController.calculate(Vision.distance.value)))
             }else{
