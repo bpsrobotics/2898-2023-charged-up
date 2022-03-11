@@ -12,7 +12,11 @@ import kotlin.math.abs
 import kotlin.math.atan2
 
 object Interpolation {
-    private val targetDistance get() = Meters(centerField.translation.getDistance(Odometry.pose.translation))
+    private val targetDistance get() = if (Vision.lastUpdated.get() < 0.25) {
+        Vision.distance
+    } else {
+        Meters(centerField.translation.getDistance(Odometry.pose.translation))
+    }
     val isAligned get() = if (Vision.lastUpdated.get() < 0.25) {
         abs(Vision.angle.radiansValue()) < 0.02
     } else {
@@ -31,6 +35,13 @@ object Interpolation {
         return Shooter.ShooterSpeeds(
             RPM(distance.value * distance.value * 1.18467 + distance.value * 76.6137 + 1136.61) /* Primary Motor */,
             RPM(distance.value * distance.value * 1.18467 + distance.value * 76.6137 + 1136.61) /* Secondary Motor*/
+        )
+    }
+
+    fun getPowers(distance: Meters = targetDistance): Shooter.ShooterPowers {
+        return Shooter.ShooterPowers(
+            (0.3 * distance.value).coerceIn(0.05, 0.3),
+            (0.3 * distance.value + 0.6).coerceIn(0.6, 0.9)
         )
     }
 

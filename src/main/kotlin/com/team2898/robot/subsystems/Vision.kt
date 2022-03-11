@@ -7,7 +7,7 @@ import edu.wpi.first.networktables.NetworkTableInstance
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 
-object Vision {
+object Vision : SubsystemBase() {
     private val table = NetworkTableInstance.getDefault().getTable("vision")
     private val distanceEntry = table.getEntry("distance")
     private val angleEntry = table.getEntry("angle")
@@ -34,7 +34,7 @@ object Vision {
         }, 0)
     }
 
-    fun periodic() {
+    override fun periodic() {
         // copy the grabbed values to the public fields
         synchronized(Vision) {
             distance = internalDistance

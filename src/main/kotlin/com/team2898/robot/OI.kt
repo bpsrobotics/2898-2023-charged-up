@@ -1,7 +1,6 @@
 package com.team2898.robot
 
 import com.bpsrobotics.engine.async.AsyncLooper
-import com.bpsrobotics.engine.utils.Interpolation
 import com.bpsrobotics.engine.utils.Millis
 import com.bpsrobotics.engine.utils.Sugar.clamp
 import com.bpsrobotics.engine.utils.Volts
@@ -23,7 +22,6 @@ import edu.wpi.first.wpilibj.XboxController.Button.*
 import edu.wpi.first.wpilibj2.command.*
 import edu.wpi.first.wpilibj2.command.button.JoystickButton
 import edu.wpi.first.wpilibj2.command.button.Trigger
-import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sign
 import kotlin.reflect.KProperty
@@ -246,7 +244,8 @@ object OI : SubsystemBase() {
         intakeDown.whenActive(Intake::openIntake).whenInactive(Intake::closeIntake)
     }
 
-    val spinUpButton = JoystickButton(driverController, kY.value)
+    val fenderSpinUpButton = JoystickButton(driverController, kY.value)
+    val launchpadSpinUpButton = Trigger { driverController.pov != -1 }
     val dumpSpinUpButton = JoystickButton(driverController, kA.value).or(JoystickButton(operatorController, 9))
     val cancelButton = JoystickButton(driverController, kX.value).or(JoystickButton(operatorController, 7))
     val shootButton = JoystickButton(driverController, kB.value)
@@ -255,7 +254,8 @@ object OI : SubsystemBase() {
     val rumbleTrigger = Trigger { Shooter.ready }
 
     init {
-        spinUpButton.whileActiveContinuous(Shooter::spinUp)
+        fenderSpinUpButton.whileActiveContinuous({ Shooter.spinUp(Shooter.ShooterPowers(0.1, 0.8)) }, Shooter)
+        launchpadSpinUpButton.whileActiveContinuous({ Shooter.spinUp(Shooter.ShooterPowers(0.44, 0.65)) }, Shooter)
 //        spinUpButton.whenActive(
 //            ParallelCommandGroup(
 //                PerpetualCommand(TargetAlign()),
