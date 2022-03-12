@@ -31,7 +31,11 @@ class NonLeadingHighAuto : CommandBase() {
 
         moveCommandGroup = SequentialCommandGroup(
             ParallelDeadlineGroup(
-                FollowPath(firstPath, true),
+                SequentialCommandGroup(
+                    WaitCommand(1.5),
+                    FollowPath(firstPath, true),
+                ),
+                FireHighBall(Shooter.ShooterPowers(0.25, 0.76)),
                 RunIntake(
                     when (alliance) {
                         DriverStation.Alliance.Red -> RunIntake.Ball.RED_3
@@ -42,8 +46,19 @@ class NonLeadingHighAuto : CommandBase() {
             InstantCommand(Intake::closeIntake),
             WaitCommand(0.2),
             InstantCommand(Intake::stopIntake),
-            FireHighBall(Shooter.ShooterPowers(0.1, 0.81)),
+            FireHighBall(Shooter.ShooterPowers(0.08, 0.7))
         )
+
+        /*
+        testing data
+
+        first shot: 0.25, 0.76
+        second shot: 0.08, 0.7
+        1 - both in
+        2 - both in
+        3 - both in
+        4 - first went over
+        */
 
         moveCommandGroup.schedule()
     }
