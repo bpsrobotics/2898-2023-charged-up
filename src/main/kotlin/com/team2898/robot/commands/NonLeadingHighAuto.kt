@@ -42,7 +42,7 @@ class NonLeadingHighAuto : CommandBase() {
             InstantCommand(Intake::closeIntake),
             WaitCommand(0.2),
             InstantCommand(Intake::stopIntake),
-            FireHighBall(Shooter.ShooterPowers(0.12, 0.85))
+            FireHighBall(Shooter.ShooterPowers(0.1, 0.81)),
         )
 
         moveCommandGroup.schedule()
