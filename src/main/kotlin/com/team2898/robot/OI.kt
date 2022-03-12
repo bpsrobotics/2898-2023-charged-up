@@ -244,8 +244,8 @@ object OI : SubsystemBase() {
         intakeDown.whenActive(Intake::openIntake).whenInactive(Intake::closeIntake)
     }
 
-    val fenderSpinUpButton = JoystickButton(driverController, kY.value)
-    val launchpadSpinUpButton = Trigger { driverController.pov != -1 }
+    val fenderSpinUpButton = JoystickButton(driverController, kY.value).or(JoystickButton(operatorController, 12))
+    val launchpadSpinUpButton = Trigger { driverController.pov != -1 }.or(JoystickButton(operatorController, 11))
     val dumpSpinUpButton = JoystickButton(driverController, kA.value).or(JoystickButton(operatorController, 9))
     val cancelButton = JoystickButton(driverController, kX.value).or(JoystickButton(operatorController, 7))
     val shootButton = JoystickButton(driverController, kB.value)
