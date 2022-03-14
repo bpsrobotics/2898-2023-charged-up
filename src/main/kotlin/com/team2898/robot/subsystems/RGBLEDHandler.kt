@@ -92,6 +92,12 @@ object RGBLEDHandler : SubsystemBase() {
             RGBA(0xD4, 0x61, 0xA6),
             RGBA(0xA5, 0x00, 0x62)))
         }),
+        BI({ stripes(RGBAArray.of(
+            RGBA(0xD0, 0x00, 0x70),
+            RGBA(0x8C, 0x47, 0x99),
+            RGBA(0x00, 0x32, 0xA0)))
+        }),
+
 
         // effects that modify existing data in the buffer
         SLIDE_LEFT({
