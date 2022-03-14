@@ -48,12 +48,12 @@ object Constants {
     const val TIME_TO_SHOOT = 1.0 // TODO: Time it takes to shoot (approx, should be reasonably similar each time)
 
     const val FEEDER_VECTOR_SPEED = 0.3
-    const val FEEDER_SPEED = 0.5
+    val FEEDER_SPEED get() = if (Robot.isAutonomous) 0.5 else 0.4
 
     // Distance at which ball is in shooter
     const val FEEDER_MIN_DISTANCE = 0.42
     // Primary LaserShark distance threshold that corresponds to no ball in feeder
-    const val FEEDER_MAX_DISTANCE = 0.6
+    const val FEEDER_MAX_DISTANCE = 0.55
 
     // Control Scheme Constants
     enum class DriverMap {

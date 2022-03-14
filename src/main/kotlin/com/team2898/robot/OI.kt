@@ -4,14 +4,12 @@ import com.bpsrobotics.engine.async.AsyncLooper
 import com.bpsrobotics.engine.utils.Millis
 import com.bpsrobotics.engine.utils.Sugar.clamp
 import com.bpsrobotics.engine.utils.Volts
+import com.bpsrobotics.engine.utils.`M/s`
 import com.bpsrobotics.engine.utils.seconds
 import com.team2898.robot.Constants.DRIVER_MAP
 import com.team2898.robot.OI.Ramp.ramp
 import com.team2898.robot.commands.TargetAlign
-import com.team2898.robot.subsystems.Climb
-import com.team2898.robot.subsystems.Feeder
-import com.team2898.robot.subsystems.Intake
-import com.team2898.robot.subsystems.Shooter
+import com.team2898.robot.subsystems.*
 import edu.wpi.first.math.MathUtil
 import edu.wpi.first.wpilibj.DoubleSolenoid
 import edu.wpi.first.wpilibj.GenericHID.RumbleType.kLeftRumble
@@ -244,17 +242,21 @@ object OI : SubsystemBase() {
         intakeDown.whenActive(Intake::openIntake).whenInactive(Intake::closeIntake)
     }
 
-    val fenderSpinUpButton = JoystickButton(driverController, kY.value).or(JoystickButton(operatorController, 12))
-    val launchpadSpinUpButton = Trigger { driverController.pov != -1 }.or(JoystickButton(operatorController, 11))
+    val fenderSpinUpButton = JoystickButton(driverController, kY.value).or(JoystickButton(operatorController, 11))
+    val launchpadSpinUpButton = Trigger { driverController.pov != -1 }.or(JoystickButton(operatorController, 12))
     val dumpSpinUpButton = JoystickButton(driverController, kA.value).or(JoystickButton(operatorController, 9))
     val cancelButton = JoystickButton(driverController, kX.value).or(JoystickButton(operatorController, 7))
     val shootButton = JoystickButton(driverController, kB.value)
     val overrideShootButton = JoystickButton(operatorController, 10)
+    val backUpButton = Trigger { driverController.rightBumper }
 
     val rumbleTrigger = Trigger { Shooter.ready }
 
     init {
-        fenderSpinUpButton.whileActiveContinuous({ Shooter.spinUp(Shooter.ShooterPowers(0.1, 0.8)) }, Shooter)
+        backUpButton.whenActive(ParallelRaceGroup(RunCommand({
+            Drivetrain.stupidDrive(`M/s`(0.75), `M/s`(0.75))
+        }, Drivetrain), WaitCommand(1.0)))
+        fenderSpinUpButton.whileActiveContinuous({ Shooter.spinUp(Shooter.ShooterPowers(0.09, 0.9)) }, Shooter)
         launchpadSpinUpButton.whileActiveContinuous({ Shooter.spinUp(Shooter.ShooterPowers(0.44, 0.65)) }, Shooter)
 //        spinUpButton.whenActive(
 //            ParallelCommandGroup(

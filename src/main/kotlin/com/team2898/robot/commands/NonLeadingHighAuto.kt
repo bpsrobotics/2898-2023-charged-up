@@ -35,7 +35,7 @@ class NonLeadingHighAuto : CommandBase() {
                     WaitCommand(1.5),
                     FollowPath(firstPath, true),
                 ),
-                FireHighBall(Shooter.ShooterPowers(0.25, 0.76)),
+                FireHighBall(Shooter.ShooterPowers(0.24, 0.75)),
                 RunIntake(
                     when (alliance) {
                         DriverStation.Alliance.Red -> RunIntake.Ball.RED_3
