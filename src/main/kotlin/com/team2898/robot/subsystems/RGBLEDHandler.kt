@@ -97,6 +97,10 @@ object RGBLEDHandler : SubsystemBase() {
             RGBA(0x8C, 0x47, 0x99),
             RGBA(0x00, 0x32, 0xA0)))
         }),
+        UKRAINE({ stripes(RGBAArray.of(
+            RGBA(0x00, 0x5B, 0xBB),
+            RGBA(0xFF, 0xD5, 0x00)))
+        }),
 
 
         // effects that modify existing data in the buffer
