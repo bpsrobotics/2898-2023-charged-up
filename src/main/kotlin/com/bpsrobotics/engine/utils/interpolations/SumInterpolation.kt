@@ -1,4 +1,5 @@
-package com.bpsrobotics.engine.utils
+package com.bpsrobotics.engine.utils.interpolations
+
 
 /**
  * A complex interpolation consisting of the sum of multiple interpolations

@@ -1,4 +1,4 @@
-package com.bpsrobotics.engine.utils
+package com.bpsrobotics.engine.utils.interpolations
 
 /** A Complex Interpolation that takes the product of multiple interpolations
  *

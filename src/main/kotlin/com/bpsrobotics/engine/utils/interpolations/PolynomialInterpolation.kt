@@ -1,4 +1,4 @@
-package com.bpsrobotics.engine.utils
+package com.bpsrobotics.engine.utils.interpolations
 
 class PolynomialInterpolation(val coefficients: List<PolynomialCoefficient>): Interpolation {
     data class PolynomialCoefficient(val coefficient: Double, val exponent: Double){
