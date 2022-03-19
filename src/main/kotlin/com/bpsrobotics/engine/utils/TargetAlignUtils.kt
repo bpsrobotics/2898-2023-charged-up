@@ -31,4 +31,7 @@ object TargetAlignUtils {
         val distance = translation.getDistance(Translation2d()) - Constants.SHOOT_DISTANCE
         abs(distance) < 0.02
     }
+    fun getPowers(): Shooter.ShooterPowers{
+        TODO("Deprecated")
+    }
 }
