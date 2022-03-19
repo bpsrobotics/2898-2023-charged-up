@@ -1,6 +1,6 @@
 package com.team2898.robot.commands
 
-import com.bpsrobotics.engine.utils.Interpolation
+import com.bpsrobotics.engine.utils.TargetAlignUtils
 import com.bpsrobotics.engine.utils.TrajectoryUtils.centerField
 import com.bpsrobotics.engine.utils.`M/s`
 import com.team2898.robot.Constants
@@ -10,9 +10,7 @@ import com.team2898.robot.subsystems.Vision
 import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.geometry.Translation2d
-import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj2.command.CommandBase
-import kotlin.math.abs
 import kotlin.math.atan2
 
 class TargetAlign : CommandBase() {
@@ -29,7 +27,7 @@ class TargetAlign : CommandBase() {
     }
 
     override fun execute() {
-        if(!Interpolation.isAligned){
+        if(!TargetAlignUtils.isAligned){
             val translation = Odometry.pose.translation.minus(centerField.translation)
             rotation = Rotation2d(atan2(translation.y, translation.x))
             val speeds = if (Vision.lastUpdated.get() < 0.25) {
@@ -53,6 +51,6 @@ class TargetAlign : CommandBase() {
     }
 
     override fun isFinished(): Boolean {
-        return Interpolation.isAligned && Interpolation.isCorrectDistance
+        return TargetAlignUtils.isAligned && TargetAlignUtils.isCorrectDistance
     }
 }
