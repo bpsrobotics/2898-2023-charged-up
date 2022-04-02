@@ -1,11 +1,8 @@
 package com.team2898.robot
 
 import com.bpsrobotics.engine.async.AsyncLooper
-import com.bpsrobotics.engine.utils.Millis
+import com.bpsrobotics.engine.utils.*
 import com.bpsrobotics.engine.utils.Sugar.clamp
-import com.bpsrobotics.engine.utils.Volts
-import com.bpsrobotics.engine.utils.`M/s`
-import com.bpsrobotics.engine.utils.seconds
 import com.team2898.robot.Constants.DRIVER_MAP
 import com.team2898.robot.OI.Ramp.ramp
 import com.team2898.robot.commands.TargetAlign
@@ -256,8 +253,8 @@ object OI : SubsystemBase() {
         backUpButton.whenActive(ParallelRaceGroup(RunCommand({
             Drivetrain.stupidDrive(`M/s`(0.75), `M/s`(0.75))
         }, Drivetrain), WaitCommand(1.0)))
-        fenderSpinUpButton.whileActiveContinuous({ Shooter.spinUp(Shooter.ShooterPowers(0.09, 0.9)) }, Shooter)
-        launchpadSpinUpButton.whileActiveContinuous({ Shooter.spinUp(Shooter.ShooterPowers(0.44, 0.65)) }, Shooter)
+        fenderSpinUpButton.whileActiveContinuous({ Shooter.spinUp(Shooter.ShooterSpeeds(60.RPM, 60.RPM)) }, Shooter)
+        launchpadSpinUpButton.whileActiveContinuous({ Shooter.spinUp(Shooter.ShooterSpeeds(0.RPM, 0.RPM)) }, Shooter)
 //        spinUpButton.whenActive(
 //            ParallelCommandGroup(
 //                PerpetualCommand(TargetAlign()),

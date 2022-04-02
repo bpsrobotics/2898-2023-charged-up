@@ -9,6 +9,8 @@ import com.revrobotics.SparkMaxAlternateEncoder
 import com.team2898.robot.Constants.DUMP_SPEED
 import com.team2898.robot.RobotMap.SHOOTER_FLYWHEEL
 import com.team2898.robot.RobotMap.SHOOTER_SPINNER
+import com.team2898.robot.RobotMap.SPINNER_ENCODER_A
+import com.team2898.robot.RobotMap.SPINNER_ENCODER_B
 import edu.wpi.first.math.controller.SimpleMotorFeedforward
 import edu.wpi.first.util.sendable.SendableBuilder
 import edu.wpi.first.wpilibj.Encoder
@@ -34,10 +36,10 @@ object Shooter : SubsystemBase() {
     data class ShooterPowers(val flywheel: Double, val spinner: Double)
 
     private val flywheelEncoder = flywheelController.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, 256)
-    private val spinnerEncoder = Encoder(TODO() as Int, TODO())
+    private val spinnerEncoder = Encoder(SPINNER_ENCODER_A, SPINNER_ENCODER_B)
 
-    private val spinnerPID = Controller.PID(TODO(), TODO())
-    private val spinnerFF = SimpleMotorFeedforward(TODO(), TODO(), TODO())
+    private val spinnerPID = Controller.PID(0.0, 0.0)
+    private val spinnerFF = SimpleMotorFeedforward(0.0, 0.0)
 
     init {
         spinnerEncoder.distancePerPulse = 1.0 / 256
@@ -61,10 +63,10 @@ object Shooter : SubsystemBase() {
         flywheelController.pidController.d  = 0.0
     }
 
-    fun spinUp(speeds: ShooterPowers = TargetAlignUtils.getPowers()) {
+    fun spinUp(speeds: ShooterSpeeds = TargetAlignUtils.speeds()) {
         spunUpTime = Timer.getFPGATimestamp().seconds + 5.seconds
-        shooterPower = speeds
         notMaxSpeed()
+        target = speeds
     }
 
     fun dumpSpinUp() {

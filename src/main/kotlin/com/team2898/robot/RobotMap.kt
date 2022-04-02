@@ -43,10 +43,8 @@ object RobotMap {
     const val CLIMBER_LEFT_LIMIT_SWITCH   = 4
     const val CLIMBER_RIGHT_LIMIT_SWITCH  = 5
 
-    const val CLIMBER_LEFT_ENCODER_A      = 6
-    const val CLIMBER_LEFT_ENCODER_B      = 7
-    const val CLIMBER_RIGHT_ENCODER_A     = 8
-    const val CLIMBER_RIGHT_ENCODER_B     = 9
+    const val SPINNER_ENCODER_A           = 8
+    const val SPINNER_ENCODER_B           = 9
 
     const val FEEDER_LASERSHARK           = 10  // on mxp
 

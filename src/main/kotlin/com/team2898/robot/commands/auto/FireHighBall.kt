@@ -5,7 +5,7 @@ import com.team2898.robot.subsystems.Shooter
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj2.command.CommandBase
 
-class FireHighBall(private val speeds: Shooter.ShooterPowers) : CommandBase() {
+class FireHighBall(private val speeds: Shooter.ShooterSpeeds) : CommandBase() {
     private val timer = Timer()
 
     init {
