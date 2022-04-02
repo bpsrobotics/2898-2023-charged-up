@@ -1,50 +1,41 @@
 package com.team2898.robot.subsystems
 
-import com.bpsrobotics.engine.controls.Controller
-import com.bpsrobotics.engine.utils.*
+import com.bpsrobotics.engine.utils.TargetAlignUtils
+import com.bpsrobotics.engine.utils.RPM
+import com.bpsrobotics.engine.utils.plus
+import com.bpsrobotics.engine.utils.seconds
 import com.revrobotics.CANSparkMax
 import com.revrobotics.CANSparkMax.IdleMode.kCoast
 import com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless
-import com.revrobotics.SparkMaxAlternateEncoder
 import com.team2898.robot.Constants.DUMP_SPEED
 import com.team2898.robot.RobotMap.SHOOTER_FLYWHEEL
 import com.team2898.robot.RobotMap.SHOOTER_SPINNER
-import edu.wpi.first.math.controller.SimpleMotorFeedforward
 import edu.wpi.first.util.sendable.SendableBuilder
-import edu.wpi.first.wpilibj.Encoder
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj2.command.SubsystemBase
-import kotlin.math.abs
-import kotlin.math.absoluteValue
-import kotlin.math.min
 
 object Shooter : SubsystemBase() {
     private val flywheelController = CANSparkMax(SHOOTER_FLYWHEEL, kBrushless)
     private val spinnerController = CANSparkMax(SHOOTER_SPINNER, kBrushless)
     private var spunUpTime = 0.seconds
+    val ready
+        get() =
+            if (shooterPower.flywheel > 0.4 && shooterPower.spinner > 0.6) {
+                flywheelController.encoder.velocity > 2000 || spinnerController.encoder.velocity > 3200 // TODO
+            } else if (shooterPower.flywheel > 0.05 && shooterPower.spinner > 0.75) {
+                flywheelController.encoder.velocity > 300 && spinnerController.encoder.velocity > 4000
+            } else {
+                flywheelController.encoder.velocity > 800 && spinnerController.encoder.velocity > 800
+            }
 
-    val ready get() = (flywheelSpeed - target.flywheel).value.absoluteValue < 10 &&
-                (spinnerSpeed - target.spinner).value.absoluteValue < 10 &&
-                min(abs(flywheelSpeed.value), abs(spinnerSpeed.value)) > 10
-
+//        (flywheelController.encoder.velocity - target.flywheel.value).absoluteValue < 10 &&
+//                (spinnerController.encoder.velocity - target.spinner.value).absoluteValue < 10 &&
+//                min(abs(flywheelController.encoder.velocity), abs(spinnerController.encoder.velocity)) > 10
     var target = ShooterSpeeds(0.RPM, 0.RPM)
     var shooterPower = ShooterPowers(0.0, 0.0)
 
     data class ShooterSpeeds(val flywheel: RPM, val spinner: RPM)
     data class ShooterPowers(val flywheel: Double, val spinner: Double)
-
-    private val flywheelEncoder = flywheelController.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, 256)
-    private val spinnerEncoder = Encoder(TODO() as Int, TODO())
-
-    private val spinnerPID = Controller.PID(TODO(), TODO())
-    private val spinnerFF = SimpleMotorFeedforward(TODO(), TODO(), TODO())
-
-    init {
-        spinnerEncoder.distancePerPulse = 1.0 / 256
-    }
-
-    private val flywheelSpeed get() = flywheelEncoder.velocity.RPM
-    private val spinnerSpeed get() = (spinnerEncoder.rate / 60).RPM
 
     init {
         listOf(flywheelController, spinnerController).forEach {
@@ -53,12 +44,16 @@ object Shooter : SubsystemBase() {
             it.idleMode = kCoast
             it.inverted = true
         }
-        flywheelController.pidController.setFeedbackDevice(flywheelEncoder)
 
-        flywheelController.pidController.ff = 0.0
-        flywheelController.pidController.p  = 0.0
-        flywheelController.pidController.i  = 0.0
-        flywheelController.pidController.d  = 0.0
+//        flywheelController.pidController.ff = 0.13213 / 12
+//        flywheelController.pidController.p = 0.0
+//        flywheelController.pidController.i = 0.0
+//        flywheelController.pidController.d = 0.0
+//
+//        spinnerController.pidController.ff = 0.12945 / 12
+//        spinnerController.pidController.p = 0.0
+//        spinnerController.pidController.i = 0.0
+//        spinnerController.pidController.d = 0.0
     }
 
     fun spinUp(speeds: ShooterPowers = TargetAlignUtils.getPowers()) {
@@ -98,10 +93,12 @@ object Shooter : SubsystemBase() {
             flywheelController.set(1.0)
             spinnerController.set(1.0)
         } else if (Timer.getFPGATimestamp() < spunUpTime.value) {
-            flywheelController.pidController.setReference(target.flywheel.value, CANSparkMax.ControlType.kVelocity)
-            val pid = spinnerPID.calculate(spinnerSpeed.value, target.spinner.value)
-            val ff = spinnerFF.calculate(target.spinner.value)
-            spinnerController.setVoltage((pid + ff) * 12)
+            flywheelController.setVoltage(shooterPower.flywheel * 12)
+            spinnerController.setVoltage(shooterPower.spinner * 12)
+//            flywheelController.setVoltage(0.44 * 12)
+//            spinnerController.setVoltage(0.65 * 12)
+//            flywheelController.pidController.setReference(target.flywheel.value, kVelocity)
+//            spinnerController.pidController.setReference(target.spinner.value, kVelocity)
         } else {
             flywheelController.set(0.0)
             spinnerController.set(0.0)
@@ -110,8 +107,8 @@ object Shooter : SubsystemBase() {
 
     override fun initSendable(builder: SendableBuilder) {
         builder.setSmartDashboardType("Subsystem")
-        builder.addDoubleProperty("shooter RPM", { flywheelSpeed.value }) {}
-        builder.addDoubleProperty("spinner RPM", { spinnerSpeed.value }) {}
+        builder.addDoubleProperty("shooter RPM", { flywheelController.encoder.velocity }) {}
+        builder.addDoubleProperty("spinner RPM", { spinnerController.encoder.velocity }) {}
         builder.addDoubleProperty("shooter target", { target.flywheel.value }) {}
         builder.addDoubleProperty("spinner target", { target.spinner.value }) {}
     }
