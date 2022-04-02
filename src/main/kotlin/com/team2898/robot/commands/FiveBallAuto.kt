@@ -1,6 +1,5 @@
 package com.team2898.robot.commands
 
-import com.bpsrobotics.engine.utils.RPM
 import com.pathplanner.lib.PathPlanner
 import com.team2898.robot.commands.auto.FireHighBall
 import com.team2898.robot.commands.auto.FireLowBall
@@ -58,9 +57,9 @@ class FiveBallAuto : CommandBase() {
                         else -> RunIntake.Ball.BLUE_1
                     }
                 ),
-                FireHighBall(Shooter.ShooterSpeeds(0.1.RPM, 0.8.RPM))
+                FireHighBall(Shooter.ShooterPowers(0.1, 0.8))
             ),
-            FireHighBall(Shooter.ShooterSpeeds(0.1.RPM, 0.8.RPM))
+            FireHighBall(Shooter.ShooterPowers(0.1, 0.8))
         )
 
         moveCommandGroup.schedule()

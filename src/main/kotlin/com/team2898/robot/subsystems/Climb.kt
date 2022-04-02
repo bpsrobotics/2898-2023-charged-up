@@ -9,9 +9,13 @@ import com.ctre.phoenix.motorcontrol.NeutralMode
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX
 import com.team2898.robot.Constants.CLIMBER_ENDSTOP_L
 import com.team2898.robot.Constants.CLIMBER_ENDSTOP_R
+import com.team2898.robot.RobotMap.CLIMBER_LEFT_ENCODER_A
+import com.team2898.robot.RobotMap.CLIMBER_LEFT_ENCODER_B
 import com.team2898.robot.RobotMap.CLIMBER_LEFT_LIMIT_SWITCH
 import com.team2898.robot.RobotMap.CLIMBER_LEFT_MAIN
 import com.team2898.robot.RobotMap.CLIMBER_LEFT_SECONDARY
+import com.team2898.robot.RobotMap.CLIMBER_RIGHT_ENCODER_A
+import com.team2898.robot.RobotMap.CLIMBER_RIGHT_ENCODER_B
 import com.team2898.robot.RobotMap.CLIMBER_RIGHT_LIMIT_SWITCH
 import com.team2898.robot.RobotMap.CLIMBER_RIGHT_MAIN
 import com.team2898.robot.RobotMap.CLIMBER_RIGHT_SECONDARY
@@ -50,7 +54,7 @@ object Climb : SubsystemBase() {
 
     private val leftArm = Arm(
         listOf(leftArmMain, leftArmSecondary),
-//        Encoder(CLIMBER_LEFT_ENCODER_A, CLIMBER_LEFT_ENCODER_B).apply { this.setReverseDirection(false) },
+        Encoder(CLIMBER_LEFT_ENCODER_A, CLIMBER_LEFT_ENCODER_B).apply { this.setReverseDirection(false) },
         DigitalInput(CLIMBER_LEFT_LIMIT_SWITCH),
         CLIMBER_ENDSTOP_L,
         true
@@ -58,7 +62,7 @@ object Climb : SubsystemBase() {
 
     private val rightArm = Arm(
         listOf(rightArmMain, rightArmSecondary),
-//        Encoder(CLIMBER_RIGHT_ENCODER_A, CLIMBER_RIGHT_ENCODER_B).apply { this.setReverseDirection(true) },
+        Encoder(CLIMBER_RIGHT_ENCODER_A, CLIMBER_RIGHT_ENCODER_B).apply { this.setReverseDirection(true) },
         DigitalInput(CLIMBER_RIGHT_LIMIT_SWITCH),
         CLIMBER_ENDSTOP_R,
         true
@@ -75,7 +79,7 @@ object Climb : SubsystemBase() {
 
     private class Arm(
         private val motors: List<WPI_TalonSRX>,
-//        val encoder: Encoder,
+        val encoder: Encoder,
         private val limitSwitch: DigitalInput,
         private val endStop: Int,
         private val invertedLimitSwitch: Boolean = false
@@ -115,7 +119,7 @@ object Climb : SubsystemBase() {
 
             if (leadingEdge) {
                 isZeroed = true
-//                encoder.reset()
+                encoder.reset()
             }
 
             if (!isResetting) {
@@ -146,8 +150,8 @@ object Climb : SubsystemBase() {
 
     override fun initSendable(builder: SendableBuilder) {
         builder.setSmartDashboardType("Subsystem")
-//        builder.addDoubleProperty("left encoder", leftArm.encoder::getDistance) {}
-//        builder.addDoubleProperty("right encoder", rightArm.encoder::getDistance) {}
+        builder.addDoubleProperty("left encoder", leftArm.encoder::getDistance) {}
+        builder.addDoubleProperty("right encoder", rightArm.encoder::getDistance) {}
         builder.addBooleanProperty("left limit switch", leftArm::limitSwitchv) {}
         builder.addBooleanProperty("right limit switch", rightArm::limitSwitchv) {}
     }

@@ -1,6 +1,5 @@
 package com.team2898.robot.commands
 
-import com.bpsrobotics.engine.utils.RPM
 import com.pathplanner.lib.PathPlanner
 import com.team2898.robot.commands.auto.FireHighBall
 import com.team2898.robot.commands.auto.FollowPath
@@ -36,7 +35,7 @@ class NonLeadingHighAuto : CommandBase() {
                     WaitCommand(1.5),
                     FollowPath(firstPath, true),
                 ),
-                FireHighBall(Shooter.ShooterSpeeds(0.24.RPM, 0.75.RPM)),
+                FireHighBall(Shooter.ShooterPowers(0.24, 0.75)),
                 RunIntake(
                     when (alliance) {
                         DriverStation.Alliance.Red -> RunIntake.Ball.RED_3
@@ -47,7 +46,7 @@ class NonLeadingHighAuto : CommandBase() {
             InstantCommand(Intake::closeIntake),
             WaitCommand(0.2),
             InstantCommand(Intake::stopIntake),
-            FireHighBall(Shooter.ShooterSpeeds(0.08.RPM, 0.7.RPM))
+            FireHighBall(Shooter.ShooterPowers(0.08, 0.7))
         )
 
         /*
