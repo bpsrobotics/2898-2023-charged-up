@@ -194,6 +194,8 @@ value class Hertz(override val value: Double) : FrequencyValue {
     }
 }
 
+fun FrequencyValue.toMillis() = Millis(1000 / hertzValue())
+
 @JvmInline
 value class Milliseconds(override val value: Double) : TimeUnit {
     /**
