@@ -71,4 +71,6 @@ object OI : SubsystemBase() {
         get() = process(-driverController.leftY, deadzone = true)
     val turn
         get() = process(driverController.rightX, deadzone = true, square = true)
+    val intakeThrottle
+        get() = process(operatorController.y, deadzone = true)
 }
