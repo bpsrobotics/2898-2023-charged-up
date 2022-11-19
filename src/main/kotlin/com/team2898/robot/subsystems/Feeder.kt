@@ -43,6 +43,9 @@ object Feeder : SubsystemBase() {
         }
     }
     fun startIntaking(){
+        if(state == FeederState.OUTTAKING) {
+            return
+        }
         state = FeederState.INTAKING
         lastSwitchTime = Timer.getFPGATimestamp()
     }

@@ -3,6 +3,7 @@ package com.team2898.robot.commands
 import com.bpsrobotics.engine.utils.`M/s`
 import com.team2898.robot.OI
 import com.team2898.robot.subsystems.Drivetrain
+import com.team2898.robot.subsystems.Feeder
 import com.team2898.robot.subsystems.Intake
 import edu.wpi.first.wpilibj.drive.DifferentialDrive
 import edu.wpi.first.wpilibj2.command.CommandBase
@@ -37,6 +38,9 @@ class TeleOp : CommandBase() {
 
         Drivetrain.stupidDrive(`M/s`(speeds.left * 5), `M/s`(speeds.right * 5))
         Intake.setSpeed(OI.intakeThrottle)
+        if(OI.outtakeButton) {
+            Feeder.startOuttaking()
+        }
     }
 
 

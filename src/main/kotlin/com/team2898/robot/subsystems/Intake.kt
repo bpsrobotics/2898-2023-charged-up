@@ -10,5 +10,8 @@ object Intake : SubsystemBase() {
 
     fun setSpeed(power: Double) {
         intakeMotor.set(TalonSRXControlMode.PercentOutput, power)
+        if (power > 0.0) {
+            Feeder.startIntaking()
+        }
     }
 }
