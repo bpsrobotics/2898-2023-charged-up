@@ -4,10 +4,6 @@
 package com.team2898.robot
 
 import com.bpsrobotics.engine.utils.*
-import com.team2898.robot.subsystems.Climb
-import com.team2898.robot.subsystems.Shooter
-import edu.wpi.first.math.controller.ElevatorFeedforward
-import edu.wpi.first.math.trajectory.TrapezoidProfile
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -39,30 +35,4 @@ object Constants {
     // **DO NOT CHANGE THESE PARAMETERS**
     const val DRIVETRAIN_RAMSETE_B = 5.0  // Higher values make it more aggressively stick to the trajectory. 0 < B
     const val DRIVETRAIN_RAMSETE_Z = 0.7  // Higher values give it more dampening. 0 < Z < 1
-
-    const val CLIMBER_ENDSTOP_L = 4600
-    const val CLIMBER_ENDSTOP_R = 4600 * 4
-
-    // TODO: Difference between current and target RPM that must be reached before shooter lock is removed
-    const val SHOOTER_THRESHOLD = 5
-    const val TIME_TO_SHOOT = 1.0 // TODO: Time it takes to shoot (approx, should be reasonably similar each time)
-
-    const val FEEDER_VECTOR_SPEED = 0.3
-    val FEEDER_SPEED get() = if (Robot.isAutonomous) 0.5 else 0.4
-
-    // Distance at which ball is in shooter
-    const val FEEDER_MIN_DISTANCE = 0.42
-    // Primary LaserShark distance threshold that corresponds to no ball in feeder
-    const val FEEDER_MAX_DISTANCE = 0.55
-
-    // Control Scheme Constants
-    enum class DriverMap {
-        DEFAULT,
-        FORZA
-    }
-    val DRIVER_MAP = DriverMap.DEFAULT
-
-    val DUMP_SPEED = Shooter.ShooterPowers(0.2, 0.2) //TODO: values
-
-    val SHOOT_DISTANCE = 3.0 // TODO: values
 }

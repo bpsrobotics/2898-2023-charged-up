@@ -6,21 +6,20 @@ import com.bpsrobotics.engine.odometry.PoseProvider
 import com.bpsrobotics.engine.utils.MetersPerSecond
 import com.bpsrobotics.engine.utils.Millis
 import com.bpsrobotics.engine.utils.NAVX
-import com.team2898.robot.VisionPoseProvider
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 
-object Odometry : PoseProvider by VisionPoseProvider(DifferentialDrivePoseProvider(
-    Blah.navx,
+object Odometry : PoseProvider by DifferentialDrivePoseProvider(
+    NavxHolder.navx,
     Drivetrain.leftEncoder,
-    Drivetrain.rightEncoder)) {
+    Drivetrain.rightEncoder) {
 
-    object Blah {
+    object NavxHolder {
         val navx = NAVX()
     }
 
     val otherProvider = DifferentialDrivePoseProvider(
-        Blah.navx,
+        NavxHolder.navx,
         Drivetrain.leftEncoder,
         Drivetrain.rightEncoder)
 

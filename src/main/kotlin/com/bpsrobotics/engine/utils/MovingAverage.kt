@@ -8,10 +8,12 @@ class MovingAverage(size: Int) {
     private val buffer = DoubleArray(size)
     private var i = 0
 
-    val average get() = buffer.average()
+    var average = 0.0
+        private set
 
     fun add(v: Double) {
         buffer[i++ % buffer.size] = v
+        average = buffer.average()
     }
 
     inline operator fun getValue(thisRef: Any?, property: KProperty<*>): Double = average

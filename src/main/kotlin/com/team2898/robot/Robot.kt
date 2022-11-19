@@ -10,10 +10,8 @@ package com.team2898.robot
 import com.team2898.robot.commands.TeleOp
 import com.team2898.robot.subsystems.*
 import edu.wpi.first.cameraserver.CameraServer
-import edu.wpi.first.wpilibj.PowerDistribution
 import edu.wpi.first.wpilibj.RobotBase
 import edu.wpi.first.wpilibj.TimedRobot
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 
@@ -48,14 +46,7 @@ object Robot : TimedRobot() {
 //            BatteryLogger
         }
 
-        Intake
-        Vision
         Drivetrain
-
-        SmartDashboard.putData("odometry", Odometry)
-        SmartDashboard.putData("climb", Climb)
-        SmartDashboard.putData("feeder", Feeder)
-        SmartDashboard.putData("shooter", Shooter)
     }
 
     /**
@@ -72,8 +63,6 @@ object Robot : TimedRobot() {
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run()
         Odometry.update()
-//        pdp.switchableChannel = isEnabled
-        pdp.switchableChannel = true
     }
 
     /**
@@ -81,8 +70,6 @@ object Robot : TimedRobot() {
      */
     override fun disabledInit() {
     }
-
-    val pdp = PowerDistribution(60, PowerDistribution.ModuleType.kRev)
 
     override fun disabledPeriodic() {}
 
@@ -108,9 +95,7 @@ object Robot : TimedRobot() {
         // continue until interrupted by another command, remove
         // this line or comment it out.
         autoCommand.let { autoCommand.cancel() }
-        Climb.ignoreLimits()
         Drivetrain.defaultCommand = TeleOp()
-        OI.climbModeToggle.value = false
     }
 
     /**

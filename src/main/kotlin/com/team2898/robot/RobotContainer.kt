@@ -7,10 +7,10 @@
 
 package com.team2898.robot
 
-import com.team2898.robot.commands.*
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
+import edu.wpi.first.wpilibj2.command.InstantCommand
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -19,38 +19,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 class RobotContainer {
-    // The robot's subsystems and commands are defined here...
-    private val leadingAutoCommand: Command = LeadingAuto()
-    private val fiveBallAutoCommand: Command = FiveBallAuto()
-    private val nonLeadingAutoCommand: Command = NonLeadingAuto()
-    private val nonLeadingHighAutoCommand: Command = NonLeadingHighAuto()
-    private val hideAutoCommand: Command = HideAuto()
-    private val noopAutoCommand: Command = NoopAuto()
+    private val noopAutoCommand: Command = InstantCommand({})
 
     // A chooser for which command to use for auto, i.e. one for right, middle, left, red, blue, etc
     private var autoCommandChooser: SendableChooser<Command> = SendableChooser()
 
-
-    /**
-     * The container for the robot.  Contains subsystems, OI devices, and commands.
-     */
     init {
-        autoCommandChooser.setDefaultOption("Hide Auto", hideAutoCommand)
-        autoCommandChooser.addOption("Do Nothing Auto", noopAutoCommand)
-        autoCommandChooser.addOption("Five Ball Auto", fiveBallAutoCommand)
-        autoCommandChooser.addOption("Non-Leading Auto", nonLeadingAutoCommand)
-        autoCommandChooser.addOption("Non-Leading High Auto", nonLeadingHighAutoCommand)
-        autoCommandChooser.addOption("Leading Auto", leadingAutoCommand)
+        autoCommandChooser.setDefaultOption("Do Nothing Auto", noopAutoCommand)
         // Send the auto chooser
         SmartDashboard.putData("Auto mode", autoCommandChooser)
     }
-
-    /**
-     * Use this method to define your button->command mappings.  Buttons can be created by
-     * instantiating a {@link GenericHID} or one of its subclasses ({@link
-     * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling passing it to a
-     * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-     */
 
     fun getAutonomousCommand(): Command {
         // Return the selected command
