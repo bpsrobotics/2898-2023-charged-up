@@ -7,45 +7,48 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 
-object Feeder : SubsystemBase(){
+object Feeder : SubsystemBase() {
     private val feederMotor = TalonSRX(5)
-    private val fred = DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1 )
+    private val gateSolenoid = DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1 )
 
-    private var mode = FeederState.STOPPED
+    private var state = FeederState.STOPPED
     enum class FeederState {
         STOPPED, INTAKING, OUTTAKING
     }
-    var lastTime = 0.0
+
+    var lastSwitchTime = 0.0
+
     override fun periodic() {
-        when (mode) {
+        when (state) {
             FeederState.STOPPED -> {
                 feederMotor.set(TalonSRXControlMode.PercentOutput, 0.0)
-                fred.set(DoubleSolenoid.Value.kForward)
+                gateSolenoid.set(DoubleSolenoid.Value.kForward)
             }
             FeederState.INTAKING -> {
                 feederMotor.set(TalonSRXControlMode.PercentOutput, 1.0)
-                fred.set(DoubleSolenoid.Value.kForward)
-                if(Timer.getFPGATimestamp() - lastTime > 1.0){
-                    mode = FeederState.STOPPED
+                gateSolenoid.set(DoubleSolenoid.Value.kForward)
+
+                if (Timer.getFPGATimestamp() - lastSwitchTime > 1.0) {
+                    state = FeederState.STOPPED
                 }
             }
-
             FeederState.OUTTAKING -> {
                 feederMotor.set(TalonSRXControlMode.PercentOutput, 1.0)
-                fred.set(DoubleSolenoid.Value.kReverse)
-                if(Timer.getFPGATimestamp() - lastTime > 1.0){
-                    mode = FeederState.STOPPED
+                gateSolenoid.set(DoubleSolenoid.Value.kReverse)
+
+                if (Timer.getFPGATimestamp() - lastSwitchTime > 1.0) {
+                    state = FeederState.STOPPED
                 }
             }
-
         }
     }
     fun startIntaking(){
-        mode = FeederState.INTAKING
-        lastTime = Timer.getFPGATimestamp()
+        state = FeederState.INTAKING
+        lastSwitchTime = Timer.getFPGATimestamp()
     }
+
     fun startOuttaking(){
-        mode = FeederState.OUTTAKING
-        lastTime = Timer.getFPGATimestamp()
+        state = FeederState.OUTTAKING
+        lastSwitchTime = Timer.getFPGATimestamp()
     }
 }
