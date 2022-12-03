@@ -8,9 +8,9 @@ object Vision : SubsystemBase() {
     var ydist = 0.0
     var zdist = 0.0
     override fun periodic() {
-        xdist = SmartDashboard.getNumber("VisionX")
-        ydist = SmartDashboard.getNumber("VisionY")
-        zdist = SmartDashboard.getNumber("VisionZ")
+        xdist = SmartDashboard.getNumber("VisionX", 0.0)
+        ydist = SmartDashboard.getNumber("VisionY", 0.0)
+        zdist = SmartDashboard.getNumber("VisionZ", 0.0)
 
 
     }
