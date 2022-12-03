@@ -6,10 +6,12 @@ import com.team2898.robot.subsystems.Drivetrain
 import com.team2898.robot.subsystems.Feeder
 import com.team2898.robot.subsystems.Intake
 import com.team2898.robot.subsystems.Vision.xdist
+import com.team2898.robot.subsystems.Vision.zdist
 import edu.wpi.first.wpilibj.drive.DifferentialDrive
 import edu.wpi.first.wpilibj2.command.CommandBase
 import edu.wpi.first.wpilibj.drive.DifferentialDrive.curvatureDriveIK
 import kotlin.math.absoluteValue
+import kotlin.math.atan2
 
 class TeleOp : CommandBase() {
 
@@ -27,7 +29,7 @@ class TeleOp : CommandBase() {
 
         val turn = OI.turn.run { if (OI.throttle < 0.0) -this else this }.run { this * absoluteValue } * 0.5
         val speeds = when {
-            OI.alignButton -> curvatureDriveIK(OI.throttle, xdist/-10.0, true)
+            OI.alignButton -> curvatureDriveIK(OI.throttle, atan2(xdist, zdist)/-3.0, true)
             // Quickturn buttons means turn in place
             OI.quickTurnRight - OI.quickTurnLeft != 0.0 -> DifferentialDrive.arcadeDriveIK(
                 0.0,
