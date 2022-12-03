@@ -5,6 +5,7 @@ import com.team2898.robot.OI
 import com.team2898.robot.subsystems.Drivetrain
 import com.team2898.robot.subsystems.Feeder
 import com.team2898.robot.subsystems.Intake
+import com.team2898.robot.subsystems.Vision.xdist
 import edu.wpi.first.wpilibj.drive.DifferentialDrive
 import edu.wpi.first.wpilibj2.command.CommandBase
 import edu.wpi.first.wpilibj.drive.DifferentialDrive.curvatureDriveIK
@@ -23,8 +24,10 @@ class TeleOp : CommandBase() {
 
     // Called every time the scheduler runs while the command is scheduled.
     override fun execute() {
+
         val turn = OI.turn.run { if (OI.throttle < 0.0) -this else this }.run { this * absoluteValue } * 0.5
         val speeds = when {
+            OI.alignButton -> curvatureDriveIK(OI.throttle, xdist/10.0, true)
             // Quickturn buttons means turn in place
             OI.quickTurnRight - OI.quickTurnLeft != 0.0 -> DifferentialDrive.arcadeDriveIK(
                 0.0,
