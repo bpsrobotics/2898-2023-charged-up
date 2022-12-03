@@ -27,7 +27,7 @@ class TeleOp : CommandBase() {
 
         val turn = OI.turn.run { if (OI.throttle < 0.0) -this else this }.run { this * absoluteValue } * 0.5
         val speeds = when {
-            OI.alignButton -> curvatureDriveIK(OI.throttle, xdist/10.0, true)
+            OI.alignButton -> curvatureDriveIK(OI.throttle, xdist/-10.0, true)
             // Quickturn buttons means turn in place
             OI.quickTurnRight - OI.quickTurnLeft != 0.0 -> DifferentialDrive.arcadeDriveIK(
                 0.0,
