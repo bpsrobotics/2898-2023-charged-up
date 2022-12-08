@@ -41,10 +41,11 @@ class TeleOp : CommandBase() {
             else -> curvatureDriveIK(OI.throttle, turn, true)
         }
 
-        Drivetrain.stupidDrive(`M/s`(speeds.left * 5), `M/s`(speeds.right * 5))
-        Intake.setSpeed(OI.intakeThrottle)
+        Drivetrain.stupidDrive(`M/s`(1.0), `M/s`(1.0))
+//        Intake.setSpeed(OI.intakeThrottle)
+        println("left: ${Drivetrain.leftEncoder.rate} right: ${Drivetrain.leftEncoder.rate}")
         if(OI.outtakeButton) {
-            Feeder.startOuttaking()
+//            Feeder.startOuttaking()
         }
     }
 
