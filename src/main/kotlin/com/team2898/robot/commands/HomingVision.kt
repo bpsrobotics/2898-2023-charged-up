@@ -7,14 +7,15 @@ import edu.wpi.first.wpilibj2.command.CommandBase
 import com.team2898.robot.subsystems.Vision
 import edu.wpi.first.wpilibj.drive.DifferentialDrive
 import kotlin.math.atan2
+import kotlin.math.log
 
 /** Robot moves within 1 meter of target, assuming Apriltag is within visual range of camera */
 class HomingVision : CommandBase() {
     override fun execute() {
-        // Makes sure the robot is not closer than 1 meter
+        // Makes sure the robot is not closer than 2 meters
         if (Vision.magnitude2D > 2) {
             // Throttle reduces as it gets closer to target
-            val throttle = (Vision.magnitude2D/10).clamp(0.5,1.0) //TODO: Just use log 10 instead of /10
+            val throttle = log(Vision.magnitude2D, 5.0).clamp(0.5,1.0)
             val speeds = DifferentialDrive.curvatureDriveIK(throttle, atan2(Vision.xdist, Vision.zdist) / 3.0, true)
             Drivetrain.stupidDrive(`M/s`(speeds.left * -1), `M/s`(speeds.right * -1))
         } else {
