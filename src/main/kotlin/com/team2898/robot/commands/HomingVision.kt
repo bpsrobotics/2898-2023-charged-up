@@ -15,7 +15,7 @@ class HomingVision : CommandBase() {
         if (Vision.magnitude2D > 1) {
             // Throttle reduces as it gets closer to target
             val throttle = (Vision.magnitude2D/10).clamp(0.5,1.0)
-            val speeds = DifferentialDrive.curvatureDriveIK(throttle, atan2(Vision.xdist, Vision.zdist) / -3.0, true)
+            val speeds = DifferentialDrive.curvatureDriveIK(throttle, atan2(Vision.xdist, Vision.zdist) / 3.0, true)
             Drivetrain.stupidDrive(`M/s`(speeds.left * -5), `M/s`(speeds.right * -5))
         } else {
             Drivetrain.rawDrive(0.0,0.0) // Full stop
