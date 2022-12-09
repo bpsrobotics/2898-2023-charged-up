@@ -14,7 +14,7 @@ object Vision : SubsystemBase() {
     var zdist = 0.0
 
     /** X and Y distance combined (flat plane) in meters */
-    val magnitude2D get() = (xdist.pow(2) + ydist.pow(2)).pow(0.5)
+    val magnitude2D get() = (xdist.pow(2) + zdist.pow(2)).pow(0.5)
     override fun periodic() {
         //Getting values from SmartDashboard
         xdist = SmartDashboard.getNumber("VisionX", 0.0)
