@@ -10,7 +10,6 @@ import com.team2898.robot.subsystems.Vision.zdist
 import edu.wpi.first.wpilibj.drive.DifferentialDrive
 import edu.wpi.first.wpilibj2.command.CommandBase
 import edu.wpi.first.wpilibj.drive.DifferentialDrive.curvatureDriveIK
-import kotlin.math.absoluteValue
 import kotlin.math.atan2
 
 class TeleOp : CommandBase() {
@@ -27,9 +26,14 @@ class TeleOp : CommandBase() {
     // Called every time the scheduler runs while the command is scheduled.
     override fun execute() {
 
-        val turn = OI.turn.run { if (OI.throttle < 0.0) -this else this }.run { this * absoluteValue } * 0.5
+        val turn = OI.turn * 0.5
         val speeds = when {
-            OI.alignButton -> curvatureDriveIK(OI.throttle, atan2(xdist, zdist)/-3.0, true)
+            // When the align button is held, ignore the turn input
+            OI.alignButton -> {
+                val angleToTarget = -atan2(xdist, zdist)
+                val kP = 0.333333
+                curvatureDriveIK(OI.throttle, angleToTarget * kP, true)
+            }
             // Quickturn buttons means turn in place
             OI.quickTurnRight - OI.quickTurnLeft != 0.0 -> DifferentialDrive.arcadeDriveIK(
                 0.0,
@@ -41,9 +45,9 @@ class TeleOp : CommandBase() {
             else -> curvatureDriveIK(OI.throttle, turn, true)
         }
 
-        Drivetrain.stupidDrive(`M/s`(1.0), `M/s`(1.0))
+        Drivetrain.stupidDrive(`M/s`(speeds.left * 5), `M/s`(speeds.right * 5))
 //        Intake.setSpeed(OI.intakeThrottle)
-        println("left: ${Drivetrain.leftEncoder.rate} right: ${Drivetrain.leftEncoder.rate}")
+//        println("left: ${Drivetrain.leftEncoder.rate} right: ${Drivetrain.leftEncoder.rate}")
         if(OI.outtakeButton) {
 //            Feeder.startOuttaking()
         }
