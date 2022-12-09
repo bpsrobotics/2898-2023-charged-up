@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase
 class TestAuto : CommandBase() {
     // Steals path file and makes trajectory
     private var firstPath: Trajectory = PathPlanner.loadPath(
-            "bunnybot-initial-path.path",
+            "bunnybot-initial-path",
             Constants.DRIVETRAIN_MAX_VELOCITY.metersPerSecondValue(),
             Constants.DRIVETRAIN_MAX_ACCELERATION.metersPerSecondSquaredValue()
     )

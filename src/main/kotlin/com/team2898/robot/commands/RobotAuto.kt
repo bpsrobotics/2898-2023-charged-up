@@ -15,6 +15,7 @@ class RobotAuto : CommandBase() {
             TestAuto(),
             HomingVision()
         )
+        moveCommandGroup.schedule()
     }
 
     override fun isFinished(): Boolean {
