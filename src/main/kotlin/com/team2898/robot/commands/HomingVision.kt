@@ -5,12 +5,18 @@ import com.bpsrobotics.engine.utils.Sugar.clamp
 import com.team2898.robot.subsystems.Drivetrain
 import edu.wpi.first.wpilibj2.command.CommandBase
 import com.team2898.robot.subsystems.Vision
+import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.drive.DifferentialDrive
 import kotlin.math.atan2
 import kotlin.math.log
 
 /** Robot moves within 1 meter of target, assuming Apriltag is within visual range of camera */
 class HomingVision : CommandBase() {
+    val timer = Timer()
+    override fun initialize() {
+        timer.reset()
+        timer.start()
+    }
     override fun execute() {
         // Makes sure the robot is not closer than 2 meters
         if (Vision.magnitude2D > 2) {
@@ -25,6 +31,7 @@ class HomingVision : CommandBase() {
     }
 
     override fun isFinished(): Boolean {
+        if (!(timer.hasElapsed(1.0))) { return false }
         return Vision.inCameraRange || (Vision.magnitude2D <= 2) //Checks if it is closer than 2 meters
     }
 

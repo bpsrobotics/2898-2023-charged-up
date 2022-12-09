@@ -8,6 +8,9 @@ import kotlin.math.pow
 
 /** Contains and updates data received from vision */
 object Vision : SubsystemBase() {
+    /*private val last3xDist = mutableListOf<Double>()
+    private val last3yDist = mutableListOf<Double>()
+    private val last3zDist = mutableListOf<Double>()*/
     /** Camera's local X distance to Apriltag in meters */
     var xdist = 0.0
     /** Camera's local Y distance to Apriltag in meters */
@@ -31,7 +34,8 @@ object Vision : SubsystemBase() {
     val magnitude2D get() = (xdist.pow(2) + zdist.pow(2)).pow(0.5)
     override fun periodic() {
         //Getting values from SmartDashboard
-        xdist = SmartDashboard.getNumber("VisionX", 0.0)
+        //last3xDist.add(SmartDashboard.getNumber("VisionX", 0.0)
+        xdist = SmartDashboard.getNumber("VisionX",0.0)
         ydist = SmartDashboard.getNumber("VisionY", 0.0)
         zdist = SmartDashboard.getNumber("VisionZ", 0.0)
     }
