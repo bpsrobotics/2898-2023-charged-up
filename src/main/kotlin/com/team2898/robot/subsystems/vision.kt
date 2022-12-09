@@ -1,5 +1,7 @@
 package com.team2898.robot.subsystems
 
+import edu.wpi.first.networktables.EntryListenerFlags
+import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import kotlin.math.pow
@@ -12,6 +14,15 @@ object Vision : SubsystemBase() {
     var ydist = 0.0
     /** Camera's local Z distance to Apriltag in meters */
     var zdist = 0.0
+
+    var lastGotten = 0.0
+    val timeSinceLastFix get() = Timer.getFPGATimestamp() - lastGotten
+
+    init {
+        SmartDashboard.getEntry("VisionX").addListener({
+                                                       lastGotten = Timer.getFPGATimestamp()
+        }, EntryListenerFlags.kUpdate)
+    }
 
     /** X and Y distance combined (flat plane) in meters */
     val magnitude2D get() = (xdist.pow(2) + zdist.pow(2)).pow(0.5)

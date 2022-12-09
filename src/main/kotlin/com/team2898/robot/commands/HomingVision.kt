@@ -12,21 +12,23 @@ import kotlin.math.atan2
 class HomingVision : CommandBase() {
     override fun execute() {
         // Makes sure the robot is not closer than 1 meter
-        if (Vision.magnitude2D > 1) {
+        if (Vision.magnitude2D > 2) {
             // Throttle reduces as it gets closer to target
             val throttle = (Vision.magnitude2D/10).clamp(0.5,1.0)
             val speeds = DifferentialDrive.curvatureDriveIK(throttle, atan2(Vision.xdist, Vision.zdist) / 3.0, true)
-            Drivetrain.stupidDrive(`M/s`(speeds.left * -5), `M/s`(speeds.right * -5))
+            Drivetrain.stupidDrive(`M/s`(speeds.left * -1), `M/s`(speeds.right * -1))
         } else {
             Drivetrain.rawDrive(0.0,0.0) // Full stop
         }
+        println(Vision.timeSinceLastFix)
     }
 
     override fun isFinished(): Boolean {
-        return Vision.magnitude2D <= 1 //Checks if is closer than 1 meter
+        return (Vision.timeSinceLastFix > 0.25) || (Vision.magnitude2D <= 2) //Checks if it is closer than 1 meter
     }
 
     override fun end(interrupted: Boolean) {
         Drivetrain.rawDrive(0.0,0.0) // Full stop
     }
+
 }
