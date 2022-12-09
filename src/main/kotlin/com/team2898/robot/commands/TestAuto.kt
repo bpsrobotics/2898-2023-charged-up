@@ -18,8 +18,10 @@ class TestAuto : CommandBase() {
     )
 
     override fun initialize() {
+        // Resets Odometry to the start of the first path rather than 0, 0
         val initial = firstPath.initialPose
         Odometry.reset(M(initial.x), M(initial.y), Degrees(initial.rotation.degrees))
+
         Drivetrain.follow(firstPath)
     }
 
