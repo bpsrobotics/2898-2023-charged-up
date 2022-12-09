@@ -14,13 +14,16 @@ object Vision : SubsystemBase() {
     var ydist = 0.0
     /** Camera's local Z distance to Apriltag in meters */
     var zdist = 0.0
-
+    /** Timestamp of last time vision was updated */
     var lastGotten = 0.0
+    /** Time since the distance was updated (in seconds) */
     val timeSinceLastFix get() = Timer.getFPGATimestamp() - lastGotten
+    /** Is true if the Apriltag is (likely) in the camera's picture */
+    val inCameraRange get() = lastGotten < 0.25
 
     init {
         SmartDashboard.getEntry("VisionX").addListener({
-                                                       lastGotten = Timer.getFPGATimestamp()
+            lastGotten = Timer.getFPGATimestamp()
         }, EntryListenerFlags.kUpdate)
     }
 

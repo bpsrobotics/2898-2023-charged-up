@@ -14,7 +14,7 @@ class HomingVision : CommandBase() {
         // Makes sure the robot is not closer than 1 meter
         if (Vision.magnitude2D > 2) {
             // Throttle reduces as it gets closer to target
-            val throttle = (Vision.magnitude2D/10).clamp(0.5,1.0)
+            val throttle = (Vision.magnitude2D/10).clamp(0.5,1.0) //TODO: Just use log 10 instead of /10
             val speeds = DifferentialDrive.curvatureDriveIK(throttle, atan2(Vision.xdist, Vision.zdist) / 3.0, true)
             Drivetrain.stupidDrive(`M/s`(speeds.left * -1), `M/s`(speeds.right * -1))
         } else {
@@ -24,7 +24,7 @@ class HomingVision : CommandBase() {
     }
 
     override fun isFinished(): Boolean {
-        return (Vision.timeSinceLastFix > 0.25) || (Vision.magnitude2D <= 2) //Checks if it is closer than 1 meter
+        return Vision.inCameraRange || (Vision.magnitude2D <= 2) //Checks if it is closer than 2 meters
     }
 
     override fun end(interrupted: Boolean) {
