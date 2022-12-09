@@ -7,6 +7,7 @@
 
 package com.team2898.robot
 
+import com.team2898.robot.commands.RobotAuto
 import com.team2898.robot.commands.TestAuto
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
@@ -33,6 +34,6 @@ class RobotContainer {
 
     fun getAutonomousCommand(): Command {
         // Return the selected command
-        return TestAuto()
+        return RobotAuto()
     }
 }

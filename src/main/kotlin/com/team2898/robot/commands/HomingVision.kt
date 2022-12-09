@@ -8,7 +8,7 @@ import com.team2898.robot.subsystems.Vision
 import edu.wpi.first.wpilibj.drive.DifferentialDrive
 import kotlin.math.atan2
 
-/** Robot moves within 1 meter of target, assuming vision is within visual range of camera */
+/** Robot moves within 1 meter of target, assuming Apriltag is within visual range of camera */
 class HomingVision : CommandBase() {
     override fun execute() {
         // Makes sure the robot is not closer than 1 meter
