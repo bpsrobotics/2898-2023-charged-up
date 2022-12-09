@@ -7,6 +7,7 @@
 
 package com.team2898.robot
 
+import com.team2898.robot.commands.HomingVision
 import com.team2898.robot.commands.RobotAuto
 import com.team2898.robot.commands.TestAuto
 import edu.wpi.first.wpilibj2.command.Command
@@ -34,6 +35,6 @@ class RobotContainer {
 
     fun getAutonomousCommand(): Command {
         // Return the selected command
-        return RobotAuto()
+        return HomingVision()
     }
 }
