@@ -46,13 +46,19 @@ class TeleOp : CommandBase() {
         }
 
         Drivetrain.stupidDrive(`M/s`(speeds.left * 5), `M/s`(speeds.right * 5))
-//        Intake.setSpeed(OI.intakeThrottle)
-//        println("left: ${Drivetrain.leftEncoder.rate} right: ${Drivetrain.leftEncoder.rate}")
 
-//        if(OI.outtakeButton) {Feeder.startOuttaking()}
-//        if (OI.intakeForward) {Intake.setSpeed(0.5)}
-//        else if (OI.intakeBackward) {Intake.setSpeed(-0.5)}
-//        else {Intake.setSpeed(0.0)}
+        when {
+            OI.overrideOpenGate -> Feeder.startOuttaking(true)
+            OI.overrideClosedGate -> Feeder.startIntaking(true)
+            OI.outtakeButton -> Feeder.startOuttaking(false)
+        }
+
+        when {
+            OI.intakeBackward -> Intake.setSpeed(-0.5)
+            OI.intakeForward -> Intake.setSpeed(0.5)
+            else -> Intake.setSpeed(0.0)
+        }
+
     }
 
 

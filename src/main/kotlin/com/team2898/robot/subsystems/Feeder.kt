@@ -2,16 +2,22 @@ package com.team2898.robot.subsystems
 
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode
 import com.ctre.phoenix.motorcontrol.can.TalonSRX
+import com.team2898.robot.RobotMap.LEFT_BEAM_BREAK
+import com.team2898.robot.RobotMap.RIGHT_BEAM_BREAK
+import edu.wpi.first.wpilibj.DigitalInput
 import edu.wpi.first.wpilibj.DoubleSolenoid
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value.*
 import edu.wpi.first.wpilibj.PneumaticsModuleType
 import edu.wpi.first.wpilibj.Timer
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 
 object Feeder : SubsystemBase() {
     private val feederMotor = TalonSRX(5)
     private val gateSolenoid = DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1)
+    private val leftInput = DigitalInput(LEFT_BEAM_BREAK)
+    private val rightInput = DigitalInput(RIGHT_BEAM_BREAK)
 
     private var state = FeederState.STOPPED
     private var countState = CounterState.NOACTIVE
@@ -51,31 +57,36 @@ object Feeder : SubsystemBase() {
                 }
             }
         }
+        SmartDashboard.putNumber("tubeCount", tubeCount.toDouble())
+        updateBeamBreaks(leftInput.get(), rightInput.get())
     }
 
-    fun startIntaking() {
+    fun startIntaking(manual: Boolean) {
         if (state == FeederState.OUTTAKING) {
             return
         }
         state = FeederState.INTAKING
         lastSwitchTime = Timer.getFPGATimestamp()
+        if (manual) {lastSwitchTime -= 0.9}
     }
 
-    fun startOuttaking() {
+    fun startOuttaking(manual: Boolean) {
         state = FeederState.OUTTAKING
         lastSwitchTime = Timer.getFPGATimestamp()
+        tubeCount = 0
+        if (manual) {lastSwitchTime -= 0.9}
     }
 
-    fun updateBeamBreaks(left: Boolean, right: Boolean) {
+    private fun updateBeamBreaks(left: Boolean, right: Boolean) {
         if (left == countState.expectedLeft && right == countState.expectedRight) {
             return
         }
         val num = countState.ordinal + 1
         val nextState = CounterState.values()[num]
-        if (left == nextState.expectedLeft && right == nextState.expectedRight) {
-            countState = nextState
+        countState = if (left == nextState.expectedLeft && right == nextState.expectedRight) {
+            nextState
         } else {
-            countState = CounterState.NOACTIVE
+            CounterState.NOACTIVE
         }
         if (countState == CounterState.COMPLETE) {
             countState = CounterState.NOACTIVE

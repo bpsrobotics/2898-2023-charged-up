@@ -73,7 +73,11 @@ object OI : SubsystemBase() {
         get() = process(driverController.rightX, deadzone = true, square = true)
     val intakeThrottle
         get() = process(operatorController.y, deadzone = true)
-    //val outtakeButton get() = operatorController.trigger
+
+
+    val outtakeButton get() = operatorController.getRawButton(12)
+    val overrideOpenGate get() = operatorController.getRawButton(9)
+    val overrideClosedGate get() = operatorController.getRawButton(10)
 
     val  intakeForward get() = operatorController.trigger
 
