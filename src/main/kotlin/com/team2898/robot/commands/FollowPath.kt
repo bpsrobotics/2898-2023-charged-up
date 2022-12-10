@@ -10,9 +10,11 @@ import com.team2898.robot.subsystems.Odometry
 import edu.wpi.first.math.trajectory.Trajectory
 import edu.wpi.first.wpilibj2.command.CommandBase
 
-class FollowPath(private val pathFile: String) : CommandBase() {
+class FollowPath(pathFile: String,
+                 private val stopTolerance: Double = 0.75,
+                 private val resetOdometry: Boolean = true) : CommandBase() {
     // Steals path file and makes trajectory
-    private var firstPath: Trajectory = PathPlanner.loadPath(
+    private var path: Trajectory = PathPlanner.loadPath(
             pathFile,
             Constants.DRIVETRAIN_MAX_VELOCITY.metersPerSecondValue(),
             Constants.DRIVETRAIN_MAX_ACCELERATION.metersPerSecondSquaredValue()
@@ -20,14 +22,14 @@ class FollowPath(private val pathFile: String) : CommandBase() {
 
     override fun initialize() {
         // Resets Odometry to the start of the first path rather than 0, 0
-        val initial = firstPath.initialPose
-        Odometry.reset(M(initial.x), M(initial.y), Degrees(initial.rotation.degrees))
+        val initial = path.initialPose
+        if(resetOdometry) {Odometry.reset(M(initial.x), M(initial.y), Degrees(initial.rotation.degrees))}
 
-        Drivetrain.follow(firstPath)
+        Drivetrain.follow(path)
     }
 
     override fun isFinished(): Boolean {
-        return firstPath.endPose.translation.getDistance(Odometry.pose.translation) < 0.75
+        return path.endPose.translation.getDistance(Odometry.pose.translation) < stopTolerance
     }
 
     override fun end(interrupted: Boolean) {

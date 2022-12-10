@@ -68,12 +68,9 @@ object OI : SubsystemBase() {
     // Right joystick y-axis.  Controller mapping can be tricky, the best way is to use the driver station to see what buttons and axis are being pressed.
     // Squared for better control on turn, cubed on throttle
     val throttle
-        get() = process(-driverController.leftY, deadzone = true)
+        get() = process(-driverController.leftY, deadzone = true, square = true)
     val turn
         get() = process(driverController.rightX, deadzone = true, square = true)
-    val intakeThrottle
-        get() = process(operatorController.y, deadzone = true)
-
 
     val outtakeButton get() = operatorController.getRawButton(12)
     val overrideOpenGate get() = operatorController.getRawButton(9)

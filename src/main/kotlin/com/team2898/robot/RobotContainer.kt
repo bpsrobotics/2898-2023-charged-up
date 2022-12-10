@@ -7,9 +7,7 @@
 
 package com.team2898.robot
 
-import com.team2898.robot.commands.HomingVision
 import com.team2898.robot.commands.RobotAuto
-import com.team2898.robot.commands.TestAuto
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
