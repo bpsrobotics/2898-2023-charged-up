@@ -18,7 +18,7 @@ object Constants {
 
     // Can't be const because it's an expression
     val DRIVETRAIN_MAX_VELOCITY = `M/s`(2.0)
-    val DRIVETRAIN_MAX_ACCELERATION = MetersPerSecondSquared(0.5)  // placeholder
+    val DRIVETRAIN_MAX_ACCELERATION = MetersPerSecondSquared(2.0)  // placeholder
 
     // Horizontal distance between the centers of the wheels on each side of the drivetrain
     val DRIVETRAIN_TRACK_WIDTH = In(22.75).toMeters()

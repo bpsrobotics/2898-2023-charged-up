@@ -2,6 +2,7 @@ package com.team2898.robot.commands
 
 import com.bpsrobotics.engine.utils.Degrees
 import com.bpsrobotics.engine.utils.M
+import com.bpsrobotics.engine.utils.TrajectoryUtils.endPose
 import com.team2898.robot.Constants
 import com.pathplanner.lib.PathPlanner
 import com.team2898.robot.subsystems.Drivetrain
@@ -25,8 +26,12 @@ class TestAuto : CommandBase() {
         Drivetrain.follow(firstPath)
     }
 
+    /*override fun execute() {
+        println(firstPath.endPose.translation.getDistance(Odometry.pose.translation))
+    }*/
+
     override fun isFinished(): Boolean {
-        return Drivetrain.mode != Drivetrain.Mode.CLOSED_LOOP
+        return firstPath.endPose.translation.getDistance(Odometry.pose.translation) < 0.75
     }
 
     override fun end(interrupted: Boolean) {

@@ -32,10 +32,13 @@ class HomingVision : CommandBase() {
 
     override fun isFinished(): Boolean {
         if (!(timer.hasElapsed(1.0))) { return false }
-        return Vision.inCameraRange || (Vision.magnitude2D <= 2) //Checks if it is closer than 2 meters
+        println("dist: ${Vision.magnitude2D}")
+        return (Vision.inCameraRange) || (Vision.magnitude2D <= 2) //Checks if it is closer than 2 meters
     }
 
     override fun end(interrupted: Boolean) {
+        println("STOPPING ================================================================")
+        Drivetrain.mode = Drivetrain.Mode.OPEN_LOOP
         Drivetrain.rawDrive(0.0,0.0) // Full stop
     }
 

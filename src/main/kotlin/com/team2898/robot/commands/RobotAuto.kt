@@ -19,7 +19,7 @@ class RobotAuto : CommandBase() {
     }
 
     override fun isFinished(): Boolean {
-        return false
+        return moveCommandGroup.isFinished
     }
 
     override fun end(interrupted: Boolean) {
