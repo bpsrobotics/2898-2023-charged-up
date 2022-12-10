@@ -14,6 +14,7 @@ object Feeder : SubsystemBase() {
     private val gateSolenoid = DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1 )
 
     private var state = FeederState.STOPPED
+    private var countState = 0;
     enum class FeederState(val solenoid: Value, val motor: Double) {
         STOPPED(kForward, 0.0),
         INTAKING(kForward, 1.0),
@@ -24,6 +25,7 @@ object Feeder : SubsystemBase() {
     override fun periodic() {
         feederMotor.set(TalonSRXControlMode.PercentOutput, state.motor)
         gateSolenoid.set(state.solenoid)
+
         when (state) {
             FeederState.STOPPED -> {}
             FeederState.INTAKING -> {
@@ -50,5 +52,9 @@ object Feeder : SubsystemBase() {
     fun startOuttaking(){
         state = FeederState.OUTTAKING
         lastSwitchTime = Timer.getFPGATimestamp()
+    }
+
+    fun updateBeamBreaks(a: Boolean, b: Boolean) {
+
     }
 }

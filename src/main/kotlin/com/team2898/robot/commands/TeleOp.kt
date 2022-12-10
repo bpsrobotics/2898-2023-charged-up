@@ -49,10 +49,10 @@ class TeleOp : CommandBase() {
 //        Intake.setSpeed(OI.intakeThrottle)
 //        println("left: ${Drivetrain.leftEncoder.rate} right: ${Drivetrain.leftEncoder.rate}")
 
-        if(OI.outtakeButton) {Feeder.startOuttaking()}
-        if (OI.intakeForward) {Intake.setSpeed(0.5)}
-        else if (OI.intakeBackward) {Intake.setSpeed(-0.5)}
-        else {Intake.setSpeed(0.0)}
+//        if(OI.outtakeButton) {Feeder.startOuttaking()}
+//        if (OI.intakeForward) {Intake.setSpeed(0.5)}
+//        else if (OI.intakeBackward) {Intake.setSpeed(-0.5)}
+//        else {Intake.setSpeed(0.0)}
     }
 
 

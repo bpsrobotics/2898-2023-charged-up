@@ -9,9 +9,9 @@ object RobotMap {
     const val INTAKE_MOTOR                = 5
 
     // DIO
-    const val DRIVETRAIN_LEFT_ENCODER_A   = 6
-    const val DRIVETRAIN_LEFT_ENCODER_B   = 7
+    const val DRIVETRAIN_LEFT_ENCODER_A   = 0
+    const val DRIVETRAIN_LEFT_ENCODER_B   = 1
 
-    const val DRIVETRAIN_RIGHT_ENCODER_A  = 8
-    const val DRIVETRAIN_RIGHT_ENCODER_B  = 9
+    const val DRIVETRAIN_RIGHT_ENCODER_A  = 2
+    const val DRIVETRAIN_RIGHT_ENCODER_B  = 3
 }
