@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import kotlin.math.exp
 
 object Feeder : SubsystemBase() {
     private val feederMotor = TalonSRX(5)
@@ -21,14 +22,19 @@ object Feeder : SubsystemBase() {
 
     private var state = FeederState.STOPPED
     private var countState = CounterState.NOACTIVE
+
+    private var lastSwitchTime = 0.0
     var tubeCount = 0
 
-    enum class CounterState(val expectedLeft: Boolean, val expectedRight: Boolean) {
+
+    enum class CounterState(private val expectedLeft: Boolean, private val expectedRight: Boolean) {
         NOACTIVE(false, false),
         LEFTACTIVE(true, false),
         BOTHACTIVE(true, true),
         RIGHTACTIVE(false, true),
-        COMPLETE(false, false),
+        COMPLETE(false, false);
+        fun matches(left: Boolean, right: Boolean) =
+                left == expectedLeft && right == expectedRight
     }
 
     enum class FeederState(val solenoid: Value, val motor: Double) {
@@ -36,9 +42,6 @@ object Feeder : SubsystemBase() {
         INTAKING(kForward, 1.0),
         OUTTAKING(kReverse, 1.0)
     }
-
-    var lastSwitchTime = 0.0
-
     override fun periodic() {
         feederMotor.set(TalonSRXControlMode.PercentOutput, state.motor)
         gateSolenoid.set(state.solenoid)
@@ -78,16 +81,14 @@ object Feeder : SubsystemBase() {
     }
 
     private fun updateBeamBreaks(left: Boolean, right: Boolean) {
-        if (left == countState.expectedLeft && right == countState.expectedRight) {
-            return
+        val nextState = CounterState.values()[countState.ordinal + 1]
+        countState = when {
+            countState.matches(left,right) -> return
+            nextState.matches(left,right) -> nextState
+            else -> CounterState.NOACTIVE
         }
-        val num = countState.ordinal + 1
-        val nextState = CounterState.values()[num]
-        countState = if (left == nextState.expectedLeft && right == nextState.expectedRight) {
-            nextState
-        } else {
-            CounterState.NOACTIVE
-        }
+
+
         if (countState == CounterState.COMPLETE) {
             countState = CounterState.NOACTIVE
             tubeCount += 1
