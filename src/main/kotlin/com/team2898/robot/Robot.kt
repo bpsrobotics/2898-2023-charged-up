@@ -7,6 +7,7 @@
 
 package com.team2898.robot
 
+import com.bpsrobotics.engine.async.BatteryLogger
 import com.team2898.robot.commands.TeleOp
 import com.team2898.robot.subsystems.*
 import edu.wpi.first.cameraserver.CameraServer
@@ -43,7 +44,7 @@ object Robot : TimedRobot() {
 
         // initialize battery logger
         if (RobotBase.isReal()) {
-//            BatteryLogger
+            BatteryLogger
         }
 
         Drivetrain

@@ -11,9 +11,22 @@ import java.io.File
 object BatteryLogger {
     private val baseDir = File("/home/lvuser/power-logs").apply { mkdir() }
     private val logFile = if (DriverStation.isFMSAttached()) {
-        baseDir.resolve(DriverStation.getEventName() + "-" + DriverStation.getMatchType() + "-match-" + DriverStation.getMatchNumber() + ".txt").apply { createNewFile() }
+        // If we are in comp, we use the "event-matchtype-matchnum-replay-replaynum.txt" format
+        baseDir.resolve("${DriverStation.getEventName()}-" +
+                "${DriverStation.getMatchType()}" +
+                "-${DriverStation.getMatchNumber()}" +
+                "-replay-${DriverStation.getReplayNumber()}.txt")
+            .apply { createNewFile() }
     } else {
-        baseDir.resolve("noncomp").apply { mkdir() }.run { (listFiles() ?: emptyArray()).maxByOrNull { it.nameWithoutExtension.toIntOrNull() ?: 0 } ?: resolve("0.txt") }
+        // If we're not in a comp match, we use the "noncomp" directory
+        // Files are created with the "0.txt", "1.txt", "2.txt" etc naming scheme
+        baseDir.resolve("noncomp")
+            .run {
+                mkdir()
+                (listFiles() ?: emptyArray())
+                    .maxByOrNull { it.nameWithoutExtension.toIntOrNull() ?: 0 }
+                    ?: resolve("0.txt")
+            }
     }
     private val pdp = PowerDistribution(60, kRev)
     private val startVoltage = pdp.voltage.volts
