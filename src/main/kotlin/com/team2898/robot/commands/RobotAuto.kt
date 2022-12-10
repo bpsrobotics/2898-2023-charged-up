@@ -12,7 +12,7 @@ class RobotAuto : CommandBase() {
     override fun initialize() {
 
         moveCommandGroup = SequentialCommandGroup(
-            TestAuto(),
+            FollowPath("bunnybot-initial-path"),
             HomingVision()
         )
         moveCommandGroup.schedule()
