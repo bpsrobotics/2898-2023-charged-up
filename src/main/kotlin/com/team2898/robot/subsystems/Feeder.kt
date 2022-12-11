@@ -46,6 +46,9 @@ object Feeder : SubsystemBase() {
         feederMotor.set(TalonSRXControlMode.PercentOutput, state.motor)
         gateSolenoid.set(state.solenoid)
 
+        SmartDashboard.putBoolean("Left Beam Break", leftInput.get())
+        SmartDashboard.putBoolean("Right Beam Break", rightInput.get())
+
         when (state) {
             FeederState.STOPPED -> {}
             FeederState.INTAKING -> {

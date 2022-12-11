@@ -15,6 +15,6 @@ object RobotMap {
     const val DRIVETRAIN_RIGHT_ENCODER_A  = 2
     const val DRIVETRAIN_RIGHT_ENCODER_B  = 3
 
-    const val LEFT_BEAM_BREAK  = 4;
-    const val RIGHT_BEAM_BREAK = 5;
+    const val LEFT_BEAM_BREAK  = 5;
+    const val RIGHT_BEAM_BREAK = 7;
 }
