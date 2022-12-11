@@ -18,6 +18,11 @@ class HomingVision : CommandBase() {
         timer.start()
     }
     override fun execute() {
+        //Turns to find tag if not in cameras FOV
+        if (!(Vision.inCameraRange)) {
+            Drivetrain.stupidDrive(`M/s`(0.5), `M/s`(-0.5))
+            return
+        }
         // Makes sure the robot is not closer than 2 meters
         if (Vision.magnitude2D > 2) {
             // Throttle reduces as it gets closer to target
@@ -33,7 +38,7 @@ class HomingVision : CommandBase() {
     override fun isFinished(): Boolean {
         if (!(timer.hasElapsed(1.0))) { return false }
         println("dist: ${Vision.magnitude2D}")
-        return (Vision.inCameraRange) || (Vision.magnitude2D <= 2) //Checks if it is closer than 2 meters
+        return  (Vision.magnitude2D <= 2) //Checks if it is closer than 2 meters
     }
 
     override fun end(interrupted: Boolean) {
