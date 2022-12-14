@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.PowerDistribution
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType.kRev
 import java.io.File
 
-object BatteryLogger {
+class BatteryLogger(val pdp: PowerDistribution) {
     private val baseDir = File("/home/lvuser/power-logs").apply { mkdir() }
     private val logFile = if (DriverStation.isFMSAttached()) {
         // If we are in comp, we use the "event-matchtype-matchnum-replay-replaynum.txt" format
@@ -28,7 +28,6 @@ object BatteryLogger {
                     ?: resolve("0.txt")
             }
     }
-    private val pdp = PowerDistribution(60, kRev)
     private val startVoltage = pdp.voltage.volts
     private var minVoltage = startVoltage
     private var maxCurrent = Amps(0.0)

@@ -11,6 +11,8 @@ import com.bpsrobotics.engine.async.BatteryLogger
 import com.team2898.robot.commands.TeleOp
 import com.team2898.robot.subsystems.*
 import edu.wpi.first.cameraserver.CameraServer
+import edu.wpi.first.wpilibj.PowerDistribution
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType
 import edu.wpi.first.wpilibj.RobotBase
 import edu.wpi.first.wpilibj.TimedRobot
 import edu.wpi.first.wpilibj2.command.Command
@@ -43,11 +45,11 @@ object Robot : TimedRobot() {
         Feeder
 
         CameraServer.startAutomaticCapture()
-//
-//        // initialize battery logger
-//        if (RobotBase.isReal()) {
-//            BatteryLogger
-//        }
+
+        // initialize battery logger
+        if (RobotBase.isReal()) {
+            BatteryLogger(PowerDistribution(60, ModuleType.kRev))
+        }
 
         Drivetrain
     }
