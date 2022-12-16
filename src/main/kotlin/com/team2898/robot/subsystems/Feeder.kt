@@ -40,9 +40,9 @@ object Feeder : SubsystemBase() {
     }
 
     enum class FeederState(val solenoid: Value, val motor: Double) {
-        STOPPED(kForward, 0.0),
-        INTAKING(kForward, 1.0),
-        OUTTAKING(kReverse, 1.0)
+        STOPPED(kReverse, 0.0),
+        INTAKING(kReverse, 1.0),
+        OUTTAKING(kForward, 1.0)
     }
     override fun periodic() {
         feederMotor.set(TalonSRXControlMode.PercentOutput, -state.motor)
