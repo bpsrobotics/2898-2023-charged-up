@@ -58,9 +58,7 @@ class TeleOp : CommandBase() {
             OI.intakeForward && Feeder.tubeCount < 3 -> Intake.setSpeed(0.5)
             else -> Intake.setSpeed(0.0)
         }
-
     }
-
 
     // Called once the command ends or is interrupted.
     override fun end(interrupted: Boolean) {

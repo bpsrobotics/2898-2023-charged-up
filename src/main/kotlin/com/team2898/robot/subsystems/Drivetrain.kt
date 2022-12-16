@@ -65,6 +65,7 @@ object Drivetrain : SubsystemBase() {
              file.write("time,leftvel,rightvel,leftgoal,rightgoal,leftpid,rightpid,leftff,rightff\n")
         }
 
+        leftMain.inverted = true
     }
 
     val trajectoryMaker = TrajectoryMaker(DRIVETRAIN_MAX_VELOCITY, DRIVETRAIN_MAX_ACCELERATION)
@@ -196,7 +197,7 @@ object Drivetrain : SubsystemBase() {
                 val lf = leftFF.calculate(leftPid.setpoint)
                 val rf = rightFF.calculate(rightPid.setpoint)
 
-                rawDrive(l + lf, r + rf)
+                rawDrive(/*l + */lf, /*r + */rf)
             }
         }
         DriverDashboard.number("left encoder", Odometry.leftVel.value)

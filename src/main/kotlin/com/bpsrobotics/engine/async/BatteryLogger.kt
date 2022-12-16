@@ -20,13 +20,17 @@ class BatteryLogger(val pdp: PowerDistribution) {
     } else {
         // If we're not in a comp match, we use the "noncomp" directory
         // Files are created with the "0.txt", "1.txt", "2.txt" etc naming scheme
-        baseDir.resolve("noncomp")
-            .run {
-                mkdir()
-                (listFiles() ?: emptyArray())
-                    .maxByOrNull { it.nameWithoutExtension.toIntOrNull() ?: 0 }
-                    ?: resolve("0.txt")
-            }
+        val noncompDir = baseDir.resolve("noncomp")
+        noncompDir.mkdir()
+
+        val existingLogs = noncompDir.listFiles()!!
+        val highestNumber = existingLogs.maxOfOrNull { fi -> fi.nameWithoutExtension.toInt() }
+            ?: 0
+        val newFilename = "${highestNumber + 1}.txt"
+        val file = noncompDir.resolve(newFilename)
+        file.createNewFile()
+
+        file
     }
     private val startVoltage = pdp.voltage.volts
     private var minVoltage = startVoltage

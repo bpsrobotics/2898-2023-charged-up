@@ -21,7 +21,7 @@ object Constants {
     val DRIVETRAIN_MAX_ACCELERATION = MetersPerSecondSquared(1.5)  // placeholder
 
     // Horizontal distance between the centers of the wheels on each side of the drivetrain
-    val DRIVETRAIN_TRACK_WIDTH = In(22.75).toMeters()
+    val DRIVETRAIN_TRACK_WIDTH = In(26.5).toMeters()
 
     // Drivetrain characterization parameters, see [https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-characterization/index.html]
     // These do not carry from robot to robot, even if they're the same design! Characterize each drivetrain.

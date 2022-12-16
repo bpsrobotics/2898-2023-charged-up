@@ -1,7 +1,10 @@
+@file:Suppress("SpellCheckingInspection")  // nobody likes a prescriptivist
+
 package com.team2898.robot.subsystems
 
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode
 import com.ctre.phoenix.motorcontrol.can.TalonSRX
+import com.team2898.robot.RobotMap.FEEDER_MOTOR
 import com.team2898.robot.RobotMap.LEFT_BEAM_BREAK
 import com.team2898.robot.RobotMap.RIGHT_BEAM_BREAK
 import edu.wpi.first.wpilibj.DigitalInput
@@ -12,11 +15,10 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
-import kotlin.math.exp
 
 object Feeder : SubsystemBase() {
-    private val feederMotor = TalonSRX(5)
-    private val gateSolenoid = DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1)
+    private val feederMotor = TalonSRX(FEEDER_MOTOR)
+    private val gateSolenoid = DoubleSolenoid(7, PneumaticsModuleType.REVPH, 0, 1)
     private val leftInput = DigitalInput(LEFT_BEAM_BREAK)
     private val rightInput = DigitalInput(RIGHT_BEAM_BREAK)
 
@@ -43,7 +45,7 @@ object Feeder : SubsystemBase() {
         OUTTAKING(kReverse, 1.0)
     }
     override fun periodic() {
-        feederMotor.set(TalonSRXControlMode.PercentOutput, state.motor)
+        feederMotor.set(TalonSRXControlMode.PercentOutput, -state.motor)
         gateSolenoid.set(state.solenoid)
 
         SmartDashboard.putBoolean("Left Beam Break", leftInput.get())
@@ -64,7 +66,9 @@ object Feeder : SubsystemBase() {
             }
         }
         SmartDashboard.putNumber("tubeCount", tubeCount.toDouble())
-        updateBeamBreaks(leftInput.get(), rightInput.get())
+        SmartDashboard.putString("feeder state", state.name)
+        SmartDashboard.putNumber("feeder last switched", lastSwitchTime)
+        updateBeamBreaks(!leftInput.get(), !rightInput.get())
     }
 
     fun startIntaking(manual: Boolean) {
