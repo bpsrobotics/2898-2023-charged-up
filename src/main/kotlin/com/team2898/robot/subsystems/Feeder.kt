@@ -29,6 +29,7 @@ object Feeder : SubsystemBase() {
     var tubeCount = 0
 
 
+
     enum class CounterState(private val expectedLeft: Boolean, private val expectedRight: Boolean) {
         NOACTIVE(false, false),
         LEFTACTIVE(true, false),
@@ -100,5 +101,8 @@ object Feeder : SubsystemBase() {
             countState = CounterState.NOACTIVE
             tubeCount += 1
         }
+    }
+    fun isFull(): Boolean{
+        return tubeCount > 1 && !leftInput.get()
     }
 }

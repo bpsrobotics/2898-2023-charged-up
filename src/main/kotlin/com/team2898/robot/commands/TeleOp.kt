@@ -55,7 +55,7 @@ class TeleOp : CommandBase() {
 
         when {
             OI.intakeBackward -> Intake.setSpeed(-0.5)
-            OI.intakeForward && Feeder.tubeCount < 3 -> Intake.setSpeed(0.5)
+            OI.intakeForward && !Feeder.isFull() -> Intake.setSpeed(0.5)
             else -> Intake.setSpeed(0.0)
         }
     }
