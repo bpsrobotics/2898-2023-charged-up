@@ -14,9 +14,9 @@ class RobotAuto : CommandBase() {
     override fun initialize() {
         autoCommandGroup = SequentialCommandGroup (
 
-            ParallelRaceGroup(
+            ParallelCommandGroup(
                 //Runs the feeder
-                AutoFeeder(),
+                TubeCountFeederAuto(),
                 // Moves the robot to the drop-off zone
                 SequentialCommandGroup(
                     DriveForward(1.0),
