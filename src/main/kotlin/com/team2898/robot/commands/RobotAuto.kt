@@ -10,11 +10,11 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup
 import edu.wpi.first.wpilibj2.command.WaitCommand
 
 class RobotAuto : CommandBase() {
-    lateinit var autoCommandGroup: Command
+    private lateinit var autoCommandGroup: Command
     override fun initialize() {
         autoCommandGroup = SequentialCommandGroup (
 
-            ParallelCommandGroup(
+            ParallelRaceGroup(
                 //Runs the feeder
                 TubeCountFeederAuto(),
                 // Moves the robot to the drop-off zone
@@ -36,4 +36,5 @@ class RobotAuto : CommandBase() {
     override fun end(interrupted: Boolean) {
         autoCommandGroup.end(interrupted)
     }
+
 }
