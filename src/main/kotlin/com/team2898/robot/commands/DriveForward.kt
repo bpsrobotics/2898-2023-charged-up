@@ -5,7 +5,7 @@ import com.team2898.robot.subsystems.Drivetrain
 import edu.wpi.first.wpilibj2.command.CommandBase
 import edu.wpi.first.wpilibj.Timer
 
-class DriveForward(private val driveTimer: Double) : CommandBase() {
+class DriveForward(private val driveTimer: Double, private val speed: `M/s`) : CommandBase() {
     val timer = Timer()
     override fun initialize() {
         timer.reset()
@@ -13,9 +13,15 @@ class DriveForward(private val driveTimer: Double) : CommandBase() {
     }
 
     override fun execute() {
-        Drivetrain.stupidDrive(`M/s`(1.0), `M/s`(1.0))
+        Drivetrain.stupidDrive(speed, speed)
     }
+
     override fun isFinished(): Boolean {
         return timer.hasElapsed(driveTimer)
+            .apply { if (this) println("ifjioewjfioewjiof") }
+    }
+
+    override fun end(interrupted: Boolean) {
+        Drivetrain.mode = Drivetrain.Mode.OPEN_LOOP
     }
 }

@@ -22,7 +22,7 @@ object Feeder : SubsystemBase() {
     private val leftInput = DigitalInput(LEFT_BEAM_BREAK)
     private val rightInput = DigitalInput(RIGHT_BEAM_BREAK)
 
-    private var state = FeederState.STOPPED
+    var state = FeederState.STOPPED
     private var countState = CounterState.NOACTIVE
 
     private var lastSwitchTime = 0.0

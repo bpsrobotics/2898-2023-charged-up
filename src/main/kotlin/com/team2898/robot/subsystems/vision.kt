@@ -22,10 +22,11 @@ object Vision : SubsystemBase() {
     /** Time since the distance was updated (in seconds) */
     val timeSinceLastFix get() = Timer.getFPGATimestamp() - lastGotten
     /** Is true if the Apriltag is (likely) in the camera's picture */
-    val inCameraRange get() = lastGotten < 0.25
+    val inCameraRange get() = timeSinceLastFix < 0.25
 
     init {
         SmartDashboard.getEntry("VisionX").addListener({
+            println("got vision fix")
             lastGotten = Timer.getFPGATimestamp()
         }, EntryListenerFlags.kUpdate)
     }
