@@ -1,5 +1,6 @@
 package com.team2898.robot.commands
 
+import com.bpsrobotics.engine.utils.`M/s`
 import edu.wpi.first.wpilibj.smartdashboard.Field2d
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandBase
@@ -17,13 +18,12 @@ class RobotAuto : CommandBase() {
             ParallelRaceGroup(
                 //Runs the feeder
                 TubeCountFeederAuto(),
-                // Moves the robot to the drop-off zone
-                SequentialCommandGroup(
-                    DriveForward(1.0),
-                    HomingVision()
-                )
+                // Moves the robot forward to pick up the bunny
+                DriveForward(0.5, `M/s`(1.0))
             ),
-            //Deposits the bunny at the drop-off zone
+            // Drive to the dropoff
+            HomingVision(),
+            // Deposits the bunny at the drop-off zone
             AutoOutake()
         )
         autoCommandGroup.schedule()
