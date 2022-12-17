@@ -17,6 +17,7 @@ class TubeCountFeederAuto : CommandBase() {
     override fun isFinished(): Boolean {
 //        return startTubeCount > Feeder.tubeCount
         return false
+//        return Feeder.countState.ordinal > 1 || startTubeCount > Feeder.tubeCount
     }
 
     override fun end(interrupted: Boolean) {
