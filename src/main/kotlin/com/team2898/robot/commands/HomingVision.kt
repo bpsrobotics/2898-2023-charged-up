@@ -20,6 +20,12 @@ class HomingVision : CommandBase() {
     override fun execute() {
         //Turns to find tag if not in cameras FOV
         if (!(Vision.inCameraRange)) {
+            /*val turnSpeed = (1.2-timer.get()).clamp(0.5,1.0)
+            if (Vision.xdist < 0) {
+                Drivetrain.stupidDrive(`M/s`(-turnSpeed), `M/s`(turnSpeed))
+            } else /* if xdist >= 0 */ {
+                Drivetrain.stupidDrive(`M/s`(turnSpeed), `M/s`(-turnSpeed))
+            }*/
             Drivetrain.stupidDrive(`M/s`(0.5), `M/s`(-0.5))
             return
         }
