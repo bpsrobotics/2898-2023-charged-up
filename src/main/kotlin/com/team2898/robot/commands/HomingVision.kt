@@ -16,11 +16,13 @@ class HomingVision : CommandBase() {
     override fun initialize() {
         timer.reset()
         timer.start()
+//        println("HOMING STARTING")
     }
     override fun execute() {
         //Turns to find tag if not in cameras FOV
         if (!(Vision.inCameraRange)) {
-            Drivetrain.stupidDrive(`M/s`(0.75), `M/s`(-0.75))
+//            println("TURNING")
+            Drivetrain.stupidDrive(`M/s`(0.5), `M/s`(-0.5))
             return
         }
         // Makes sure the robot is not closer than 2 meters
@@ -32,11 +34,12 @@ class HomingVision : CommandBase() {
         } else {
             Drivetrain.rawDrive(0.0,0.0) // Full stop
         }
-        println(Vision.timeSinceLastFix)
+//        println(Vision.timeSinceLastFix)
     }
 
     override fun isFinished(): Boolean {
-        if (!(timer.hasElapsed(1.0))) { return false }
+        println("checking if finished")
+        if (!(timer.hasElapsed(3.0))) { println("in grace period, not stopping"); return false }
 //        println("dist: ${Vision.magnitude2D}")
         return  (Vision.magnitude2D <= 2) //Checks if it is closer than 2 meters
     }

@@ -13,13 +13,12 @@ import edu.wpi.first.wpilibj2.command.WaitCommand
 class RobotAuto : CommandBase() {
     private lateinit var autoCommandGroup: Command
     override fun initialize() {
-        autoCommandGroup = SequentialCommandGroup (
-
-            ParallelRaceGroup(
-                //Runs the feeder
-                TubeCountFeederAuto(),
+        autoCommandGroup = SequentialCommandGroup(
+            ParallelDeadlineGroup(
                 // Moves the robot forward to pick up the bunny
-                DriveForward(0.5, `M/s`(1.0))
+                DriveForward(0.5, `M/s`(0.5)),
+                //Runs the feeder
+                TubeCountFeederAuto()
             ),
             // Drive to the dropoff
             HomingVision(),

@@ -15,7 +15,13 @@ class DriveForward(private val driveTimer: Double, private val speed: `M/s`) : C
     override fun execute() {
         Drivetrain.stupidDrive(speed, speed)
     }
+
     override fun isFinished(): Boolean {
         return timer.hasElapsed(driveTimer)
+            .apply { if (this) println("ifjioewjfioewjiof") }
+    }
+
+    override fun end(interrupted: Boolean) {
+        Drivetrain.mode = Drivetrain.Mode.OPEN_LOOP
     }
 }
