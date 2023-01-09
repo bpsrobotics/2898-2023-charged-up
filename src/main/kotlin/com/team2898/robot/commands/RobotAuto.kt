@@ -18,12 +18,12 @@ class RobotAuto : CommandBase() {
                 // Moves the robot forward to pick up the bunny
                 DriveForward(0.75, `M/s`(0.75)),
                 // Runs the feeder
-                TubeCountFeederAuto()
+                //TubeCountFeederAuto()
             ),
             // Drive to the dropoff
             HomingVision(),
             // Deposits the bunny at the drop-of5f zone
-            AutoOutake()
+            //AutoOutake()
         )
         autoCommandGroup.schedule()
     }
