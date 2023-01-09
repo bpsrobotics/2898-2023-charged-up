@@ -16,7 +16,7 @@ class HomingVision : CommandBase() {
     override fun initialize() {
         timer.reset()
         timer.start()
-//        println("HOMING STARTING")
+        println("homing starting")
     }
     override fun execute() {
         //Turns to find tag if not in cameras FOV
@@ -28,11 +28,11 @@ class HomingVision : CommandBase() {
                 Drivetrain.stupidDrive(`M/s`(turnSpeed), `M/s`(-turnSpeed))
             }*/
 //            println("TURNING")
-            Drivetrain.stupidDrive(`M/s`(0.5), `M/s`(-0.5))
+            Drivetrain.stupidDrive(`M/s`(0.6), `M/s`(-0.6))
             return
         }
         // Makes sure the robot is not closer than 2 meters
-        if (Vision.magnitude2D > 2) {
+        if (Vision.magnitude2D > 2 || Vision.magnitude2D == 0.0) {
             // Throttle reduces as it gets closer to target
             val speedMultiplier = (log(Vision.magnitude2D, 10.0)*3).clamp(0.5,3.0)
             val speeds = DifferentialDrive.curvatureDriveIK(1.0, atan2(Vision.xdist, Vision.zdist) / 3.0, true)
@@ -44,14 +44,19 @@ class HomingVision : CommandBase() {
     }
 
     override fun isFinished(): Boolean {
-        println("checking if finished")
-        if (!(timer.hasElapsed(3.0))) { println("in grace period, not stopping"); return false }
+//        println("checking if finished")
+        if (!(timer.hasElapsed(3.0))) { /*println("in grace period, not stopping");*/ return false }
 //        println("dist: ${Vision.magnitude2D}")
-        return  (Vision.magnitude2D <= 2) //Checks if it is closer than 2 meters
+        val inRange = Vision.magnitude2D <= 2
+        val zeroedOut = Vision.magnitude2D == 0.0
+        if (inRange && !zeroedOut) {
+            println("stopping homing due to distance")
+        }
+        return inRange && !zeroedOut // Checks if it is closer than 2 meters
     }
 
     override fun end(interrupted: Boolean) {
-        println("STOPPING ================================================================")
+        println("homing finished")
         Drivetrain.mode = Drivetrain.Mode.OPEN_LOOP
         Drivetrain.rawDrive(0.0,0.0) // Full stop
     }

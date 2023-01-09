@@ -16,13 +16,13 @@ class RobotAuto : CommandBase() {
         autoCommandGroup = SequentialCommandGroup(
             ParallelDeadlineGroup(
                 // Moves the robot forward to pick up the bunny
-                DriveForward(0.5, `M/s`(0.5)),
-                //Runs the feeder
+                DriveForward(0.75, `M/s`(0.75)),
+                // Runs the feeder
                 TubeCountFeederAuto()
             ),
             // Drive to the dropoff
             HomingVision(),
-            // Deposits the bunny at the drop-off zone
+            // Deposits the bunny at the drop-of5f zone
             AutoOutake()
         )
         autoCommandGroup.schedule()

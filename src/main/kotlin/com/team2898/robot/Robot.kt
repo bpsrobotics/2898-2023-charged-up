@@ -44,7 +44,7 @@ object Robot : TimedRobot() {
 
         Feeder
 
-        CameraServer.startAutomaticCapture()
+//        CameraServer.startAutomaticCapture()
 
         // initialize battery logger
         if (RobotBase.isReal()) {

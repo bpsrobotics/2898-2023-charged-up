@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.XboxController
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import kotlin.math.pow
 import kotlin.math.sign
+import kotlin.reflect.KProperty
 
 /**
  * The Operator Interface object.
@@ -80,4 +81,26 @@ object OI : SubsystemBase() {
 
     val intakeBackward get() = operatorController.getRawButton(2)
     val alignButton get() = driverController.bButton
+
+    var defenseMode by object {
+        var lastValue = false
+        var v = false
+
+        operator fun getValue(thisRef: Any?, property: KProperty<*>): Boolean {
+            val inp = driverController.aButton
+            if (lastValue != inp) {
+                if (inp) {
+                    v = !v
+                    println("defense mode: $v")
+                }
+                lastValue = inp
+            }
+
+            return v
+        }
+
+        operator fun setValue(thisRef: Any?, property: KProperty<*>, v: Boolean) {
+            this.v = v
+        }
+    }
 }

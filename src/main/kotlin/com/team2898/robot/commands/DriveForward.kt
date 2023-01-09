@@ -10,6 +10,7 @@ class DriveForward(private val driveTimer: Double, private val speed: `M/s`) : C
     override fun initialize() {
         timer.reset()
         timer.start()
+        println("driving forward for $driveTimer seconds")
     }
 
     override fun execute() {
@@ -18,10 +19,10 @@ class DriveForward(private val driveTimer: Double, private val speed: `M/s`) : C
 
     override fun isFinished(): Boolean {
         return timer.hasElapsed(driveTimer)
-            .apply { if (this) println("ifjioewjfioewjiof") }
     }
 
     override fun end(interrupted: Boolean) {
         Drivetrain.mode = Drivetrain.Mode.OPEN_LOOP
+        println("finished driving, stopping")
     }
 }

@@ -21,6 +21,7 @@ class TeleOp : CommandBase() {
     // Called when the command is started.
     override fun initialize() {
         Drivetrain.mode = Drivetrain.Mode.OPEN_LOOP
+        OI.defenseMode = false
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -45,7 +46,11 @@ class TeleOp : CommandBase() {
             else -> curvatureDriveIK(OI.throttle, turn, true)
         }
 
-        Drivetrain.stupidDrive(`M/s`(speeds.left * 5), `M/s`(speeds.right * 5))
+        if (OI.defenseMode) {
+            Drivetrain.rawDrive(-speeds.right, -speeds.left)
+        } else {
+            Drivetrain.stupidDrive(`M/s`(speeds.left * 5.0), `M/s`(speeds.right * 5.0))
+        }
 
         when {
             OI.overrideOpenGate -> Feeder.startOuttaking(true)
