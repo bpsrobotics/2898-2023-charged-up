@@ -42,8 +42,6 @@ object Robot : TimedRobot() {
         // Automatically grab auto command to ensure m_autonomousCommand is defined before teleopInit is run
         autoCommand = robotContainer.getAutonomousCommand()
 
-        Feeder
-
 //        CameraServer.startAutomaticCapture()
 
         // initialize battery logger

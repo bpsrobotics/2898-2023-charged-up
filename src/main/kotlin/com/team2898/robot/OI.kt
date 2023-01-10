@@ -73,34 +73,5 @@ object OI : SubsystemBase() {
     val turn
         get() = process(driverController.rightX, deadzone = true, square = true)
 
-    val outtakeButton get() = operatorController.getRawButton(12)
-    val overrideOpenGate get() = operatorController.getRawButton(9)
-    val overrideClosedGate get() = operatorController.getRawButton(10)
 
-    val  intakeForward get() = operatorController.trigger
-
-    val intakeBackward get() = operatorController.getRawButton(2)
-    val alignButton get() = driverController.bButton
-
-    var defenseMode by object {
-        var lastValue = false
-        var v = false
-
-        operator fun getValue(thisRef: Any?, property: KProperty<*>): Boolean {
-            val inp = driverController.aButton
-            if (lastValue != inp) {
-                if (inp) {
-                    v = !v
-                    println("defense mode: $v")
-                }
-                lastValue = inp
-            }
-
-            return v
-        }
-
-        operator fun setValue(thisRef: Any?, property: KProperty<*>, v: Boolean) {
-            this.v = v
-        }
-    }
 }
