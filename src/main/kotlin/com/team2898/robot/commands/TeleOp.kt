@@ -26,6 +26,11 @@ class TeleOp : CommandBase() {
 
         val turn = OI.turn * 0.5
         val speeds = when {
+            //lessen speed when facing the community and getting close to the community
+            /*odometry.currentpos > communitywallpos -> {
+                val speedToGo = 1/(odometry.currentpos - odometry.wall) idk pls halp
+                arcadeDriveIK(speedToGo, OI.turn)
+            }*/
 
             // Quickturn buttons means turn in place
             OI.quickTurnRight - OI.quickTurnLeft != 0.0 -> DifferentialDrive.arcadeDriveIK(
