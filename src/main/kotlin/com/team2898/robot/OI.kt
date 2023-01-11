@@ -73,5 +73,8 @@ object OI : SubsystemBase() {
     val turn
         get() = process(driverController.rightX, deadzone = true, square = true)
 
+    //This is a palceholder for when we fully make the operator inputs
+    val PHButton1 get() = operatorController.getRawButton(0)
+
 
 }
