@@ -7,6 +7,7 @@ import com.team2898.robot.subsystems.Drivetrain
 import edu.wpi.first.wpilibj.drive.DifferentialDrive
 import edu.wpi.first.wpilibj2.command.CommandBase
 import edu.wpi.first.wpilibj.drive.DifferentialDrive.curvatureDriveIK
+import com.team2898.robot.commands.AutoBalance
 import kotlin.math.atan2
 
 class TeleOp : CommandBase() {
@@ -33,6 +34,8 @@ class TeleOp : CommandBase() {
                 false
             )
 
+            OI.rotateButton -> return
+
             // Otherwise, drive and turn normally
             else -> curvatureDriveIK(OI.throttle, turn, true)
         }
@@ -47,4 +50,6 @@ class TeleOp : CommandBase() {
     override fun isFinished(): Boolean {
         return false
     }
+
+
 }
