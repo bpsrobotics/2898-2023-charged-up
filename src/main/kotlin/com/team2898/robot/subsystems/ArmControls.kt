@@ -15,9 +15,14 @@ class ArmControls : SubsystemBase() {
     var controller = ProfiledPIDController(ARM_RAISED_KP, ARM_RAISED_KI, ARM_RAISED_KD,constraints)
     var currentGoal: Double? = null
 
+    //Motor for the arm
+    //NOTE: Will be Neos
+    var armMotor = null
+
     override fun periodic() {
         val profile = currentGoal
         if (profile == null) {
+
             //Engage breaks, stop motors
         }
         else {

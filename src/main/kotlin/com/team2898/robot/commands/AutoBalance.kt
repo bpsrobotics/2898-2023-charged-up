@@ -9,34 +9,43 @@ import com.bpsrobotics.engine.utils.NAVX
 import com.team2898.robot.subsystems.Drivetrain
 import edu.wpi.first.wpilibj2.command.CommandBase
 import edu.wpi.first.math.controller.PIDController
+import edu.wpi.first.wpilibj.Timer
+
 
 class AutoBalance : CommandBase() {
     private val pid = PIDController(AUTOBALANCE_KP, AUTOBALANCE_KI, AUTOBALANCE_KD)
     private val navx = NAVX()
     private var pitch = navx.pitch
     private var roll = navx.roll
+    private val timer = Timer()
+    private var elapsedTime = 0.0
+
+    private var pitchRate = 0.0
+    private var rollRate = 0.0
 
     override fun execute() {
+
+        //Gets the time since last execute, then resets the timer
+        elapsedTime = timer.get()
+        timer.reset()
+        timer.start()
+
+        //Gathers the change in the pitch and the change in roll since last execute
+        pitchRate = (navx.pitch - pitch) / elapsedTime
+        rollRate = (navx.roll - roll) / elapsedTime
+
+        //Gets the current pitch and roll of the robot
         pitch = navx.pitch
-        var powerNeeded = pid.calculate(pitch.toDouble())
+        roll = navx.pitch
 
-        /*if (pitch > 0) {
-            //Since the rotation is greater than 0, the robot needs to drive forward?
-        }
-        else if (pitch < 0) {
-            //Since rotation is less than 0, the bot needs to drive backward?
-        }
-        else if (pitch.toDouble() == 90.0) {
-            //This is for when the robot completely aligns
-        }
-        else {println("pitch is " + pitch + ", roll is " + roll)}
-        //This line is just for bug testing
-        */
-
-
+        val pitchPower = pid.calculate(pitch.toDouble())
+        val rollPower = pid.calculate(roll.toDouble())
 
     }
     override fun isFinished(): Boolean {
-        return (pitch > -5 || pitch < 5) && navx.rate < 0.3
+        //Test this to make sure the angles work properly for balance
+        //Finishes if both rotations are close to zero and haven't changed quickly
+        return (pitch > -5 || pitch < 5) && (roll > -5 || roll < 5) && (pitchRate < 0.3 && rollRate < 0.3)
     }
+
 }
