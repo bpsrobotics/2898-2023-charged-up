@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive
 import edu.wpi.first.wpilibj2.command.CommandBase
 import edu.wpi.first.wpilibj.drive.DifferentialDrive.curvatureDriveIK
 import com.team2898.robot.commands.AutoBalance
+import edu.wpi.first.wpilibj.DriverStation
 import kotlin.math.atan2
 
 class TeleOp : CommandBase() {
@@ -27,10 +28,7 @@ class TeleOp : CommandBase() {
         val turn = OI.turn * 0.5
         val speeds = when {
             //lessen speed when facing the community and getting close to the community
-            /*odometry.currentpos > communitywallpos -> {
-                val speedToGo = 1/(odometry.currentpos - odometry.wall) idk pls halp
-                arcadeDriveIK(speedToGo, OI.turn)
-            }*/
+
 
             // Quickturn buttons means turn in place
             OI.quickTurnRight - OI.quickTurnLeft != 0.0 -> DifferentialDrive.arcadeDriveIK(
@@ -44,6 +42,18 @@ class TeleOp : CommandBase() {
             // Otherwise, drive and turn normally
             else -> curvatureDriveIK(OI.throttle, turn, true)
         }
+        /*
+        val communityCoords = if (Driverstation.getAlliance()) = Alliance.Blue {
+        Odometry.blueComCoords
+        } else {
+        Odometry.redComCoords
+        }
+
+        val distToCommunity = Odometry.currentpos - allianceCommunity
+        var speedToGo = OI.throttle * distToCommunity/10  idk pls halp
+        driv
+        arcadeDriveIK(speedToGo, OI.turn)
+        */
 
     }
 
