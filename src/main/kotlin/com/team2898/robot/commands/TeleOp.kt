@@ -53,7 +53,7 @@ class TeleOp : CommandBase() {
         } else {
         Odometry.redComCoords
         }
-
+//      Make the alliance community zone a rectangle
         val pose = Odometry.pose
 
         var xdistToCommunity = pose.x - allianceXCommunitypos
