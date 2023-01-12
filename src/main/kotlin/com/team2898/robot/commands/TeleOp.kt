@@ -8,8 +8,12 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive
 import edu.wpi.first.wpilibj2.command.CommandBase
 import edu.wpi.first.wpilibj.drive.DifferentialDrive.curvatureDriveIK
 import com.team2898.robot.commands.AutoBalance
+import com.team2898.robot.subsystems.Odometry
 import edu.wpi.first.wpilibj.DriverStation
+import edu.wpi.first.wpilibj.DriverStation.Alliance
+import edu.wpi.first.wpilibj.drive.DifferentialDrive.arcadeDriveIK
 import kotlin.math.atan2
+import kotlin.math.min
 
 class TeleOp : CommandBase() {
 
@@ -42,18 +46,36 @@ class TeleOp : CommandBase() {
             // Otherwise, drive and turn normally
             else -> curvatureDriveIK(OI.throttle, turn, true)
         }
+
         /*
-        val communityCoords = if (Driverstation.getAlliance()) = Alliance.Blue {
+        val communityCoords = if (DriverStation.getAlliance() == Alliance.Blue) {
         Odometry.blueComCoords
         } else {
         Odometry.redComCoords
         }
 
-        val distToCommunity = Odometry.currentpos - allianceCommunity
-        var speedToGo = OI.throttle * distToCommunity/10  idk pls halp
-        driv
-        arcadeDriveIK(speedToGo, OI.turn)
+        val pose = Odometry.pose
+
+        var xdistToCommunity = pose.x - allianceXCommunitypos
+        var ydistToCommunity = pose.y - allianceYCommunitypos
+        if (xdistToCommunity < 5.0 || ydistToCommunity > 5.0) {
+            val maxAllowedSpeed = 5.0 - xdistToCommunity
+
+            val cappedLeft = min(speeds.left, maxAllowedSpeed)
+            val cappedRight = min(speeds.right, maxAllowedSpeed)
+//            var xspeedToGo = OI.throttle * xdistToCommunity/10  idk pls halp
+//            var yspeedToGo = OI.throttle * ydistToCommunity/10
+//            if (xdistToCommunity > ydistToCommunity) {
+//
+//                } else {
+//                arcadeDriveIK(xspeedToGo, OI.turn)
+//                }
+        } else {
+            Drivetrain.stupidDrive(`M/s`(speeds.left * 5.0), `M/s`(speeds.right * 5.0))
+        }
         */
+
+
 
     }
 
