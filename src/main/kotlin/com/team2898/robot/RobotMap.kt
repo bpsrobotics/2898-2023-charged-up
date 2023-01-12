@@ -6,6 +6,9 @@ object RobotMap {
     const val DRIVETRAIN_LEFT_SECONDARY   = 3
     const val DRIVETRAIN_RIGHT_MAIN       = 2
     const val DRIVETRAIN_RIGHT_SECONDARY  = 4
+    const val ARM_MAIN = 5
+    const val ARM_SECONDARY = 6
+
 
     // DIO
     const val DRIVETRAIN_LEFT_ENCODER_A   = 0
@@ -13,5 +16,6 @@ object RobotMap {
 
     const val DRIVETRAIN_RIGHT_ENCODER_A  = 2
     const val DRIVETRAIN_RIGHT_ENCODER_B  = 3
+
 
 }
