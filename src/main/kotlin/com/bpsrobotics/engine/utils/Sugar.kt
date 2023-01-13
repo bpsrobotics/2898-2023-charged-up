@@ -51,6 +51,14 @@ object Sugar {
      * Clamps this double to be within the range [min]..[max], inclusive.
      */
     fun Double.clamp(min: Double = 0.0, max: Double = 1.0) = this.coerceIn(min, max)
+
+    /**
+     * Finds angle difference between two angles in radians
+     */
+    fun angleDifference(angle1: Double, angle2: Double): Double {
+        val a = angle1 - angle2
+        return (a + PI).mod(2.0 * PI) - PI
+    }
 }
 
 typealias NAVX = AHRS
