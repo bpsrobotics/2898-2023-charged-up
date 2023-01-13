@@ -48,18 +48,20 @@ class TeleOp : CommandBase() {
             else -> curvatureDriveIK(OI.throttle, turn, true)
         }
 
-        /*
+
         val communityCoords = if (DriverStation.getAlliance() == Alliance.Blue) {
-            help
+//            help
+            Rectangle(0.0, 0.0, 0.0, 0.0)
         } else {
-        do red community rectangle
+//        do red community rectangle
+            Rectangle(0.0, 0.0, 0.0, 0.0)
         }
 //      Make the alliance community zone a rectangle
         val pose = Odometry.pose
 
-        var xdistToCommunity = pose.x - allianceXCommunitypos
-        var ydistToCommunity = pose.y - allianceYCommunitypos
-        if (xdistToCommunity < 5.0 || ydistToCommunity > 5.0) {
+        val xdistToCommunity = pose.x - communityCoords.x1
+//        var ydistToCommunity = pose.y - allianceYCommunitypos
+        if (pose in communityCoords) {  // FIXME add check for rotation
             val maxAllowedSpeed = 5.0 - xdistToCommunity
 
             val cappedLeft = min(speeds.left, maxAllowedSpeed)
@@ -71,10 +73,11 @@ class TeleOp : CommandBase() {
 //                } else {
 //                arcadeDriveIK(xspeedToGo, OI.turn)
 //                }
+            Drivetrain.stupidDrive(`M/s`(cappedLeft * 5.0), `M/s`(cappedRight * 5.0))
         } else {
             Drivetrain.stupidDrive(`M/s`(speeds.left * 5.0), `M/s`(speeds.right * 5.0))
         }
-        */
+
 
 
 
