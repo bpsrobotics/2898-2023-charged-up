@@ -1,6 +1,6 @@
 package com.team2898.robot.subsystems
 
-import com.team2898.robot.commands.AutoAlign
+import com.team2898.robot.commands.AutoParallel
 import com.revrobotics.CANSparkMax
 import com.revrobotics.CANSparkMaxLowLevel
 import com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless
@@ -11,25 +11,39 @@ import com.team2898.robot.Constants.ARM_RAISED_KI
 import com.team2898.robot.Constants.ARM_RAISED_KP
 import com.team2898.robot.RobotMap.ARM_MAIN
 import com.team2898.robot.RobotMap.ARM_SECONDARY
+import edu.wpi.first.math.controller.ArmFeedforward
 import edu.wpi.first.math.controller.ProfiledPIDController
 import edu.wpi.first.math.trajectory.TrapezoidProfile
 import edu.wpi.first.wpilibj.DoubleSolenoid
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value.kForward
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value.kReverse
+import edu.wpi.first.wpilibj.Encoder
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import kotlin.math.absoluteValue
 
 class ArmControls : SubsystemBase() {
 
     private var constraints = TrapezoidProfile.Constraints(ARM_MAXSPEED, ARM_MAXACCEL)
-    private var profileState = TrapezoidProfile.State()
+//    private var profileState = TrapezoidProfile.State()
 
 
-    var controller = ProfiledPIDController(ARM_RAISED_KP, ARM_RAISED_KI, ARM_RAISED_KD,constraints)
-    var currentGoal: Double? = null
-    var armMotor1 = CANSparkMax(ARM_MAIN, kBrushless)
-    var armMotor2 = CANSparkMax(ARM_SECONDARY, kBrushless)
-    var breakSolenoid = DoubleSolenoid(TODO(),TODO(),TODO(),TODO())
+    private val controller = ProfiledPIDController(ARM_RAISED_KP, ARM_RAISED_KI, ARM_RAISED_KD,constraints)
+    private var currentGoal: Double? = null
+    private val armMotor1 = CANSparkMax(ARM_MAIN, kBrushless)
+    private val armMotor2 = CANSparkMax(ARM_SECONDARY, kBrushless)
+    private val breakSolenoid = DoubleSolenoid(TODO(),TODO(),TODO(),TODO())
+    //Reminder to fix the encoder channel
+    private val encoder = Encoder(4, TODO())
+    private val feedforward = ArmFeedforward(0.0,0.0,0.0)
 
+
+    init {
+        listOf(armMotor1, armMotor2).forEach {
+            it.restoreFactoryDefaults()
+            it.setSmartCurrentLimit(20)
+        }
+        armMotor2.follow(armMotor1)
+    }
     override fun periodic() {
         val profile = currentGoal
         if (profile == null) {
@@ -38,15 +52,17 @@ class ArmControls : SubsystemBase() {
             armMotor1.stopMotor()
             armMotor2.stopMotor()
             breakSolenoid.set(kReverse)
-        }
-        else {
+        } else {
 
             //Controller moves the arm
-            controller.setGoal(profile)
-            controller.setGoal(profileState)
-
+            val pidOut = controller.calculate(encoder.distance, profile)
+            val feedForwardOut = feedforward.calculate(encoder.distance, encoder.rate)
+            armMotor1.set(pidOut + feedForwardOut)
             breakSolenoid.set(kForward)
 
+        }
+        if (profile != null && (armMotor1.encoder.velocity.absoluteValue < 0.05) && ((encoder.distance - profile).absoluteValue < 0.5)) {
+            currentGoal = null
         }
     }
 
