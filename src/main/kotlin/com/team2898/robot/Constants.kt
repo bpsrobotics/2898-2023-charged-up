@@ -35,4 +35,19 @@ object Constants {
     // **DO NOT CHANGE THESE PARAMETERS**
     const val DRIVETRAIN_RAMSETE_B = 5.0  // Higher values make it more aggressively stick to the trajectory. 0 < B
     const val DRIVETRAIN_RAMSETE_Z = 0.7  // Higher values give it more dampening. 0 < Z < 1
+
+    //PIDController parameters
+    const val AUTOBALANCE_KP = 0.0
+    const val AUTOBALANCE_KI = 0.0
+    const val AUTOBALANCE_KD = 0.0
+
+    //Arm parameters
+    const val ARM_MAXSPEED = 5.0
+    const val ARM_MAXACCEL = 5.0
+    const val ARM_RAISED_KP = 2.0
+    const val ARM_RAISED_KI = 2.0
+    const val ARM_RAISED_KD = 2.0
+    const val ARM_LOWERED_KP = 2.0
+    const val ARM_LOWERED_KI = 2.0
+    const val ARM_LOWERED_KD = 2.0
 }
