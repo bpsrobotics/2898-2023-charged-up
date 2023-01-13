@@ -18,7 +18,6 @@ class AutoBalance : CommandBase() {
     private val pid = PIDController(AUTOBALANCE_KP, AUTOBALANCE_KI, AUTOBALANCE_KD)
     private val navx = NAVX()
     private var pitch = navx.pitch.toDouble()
-    private var yaw = navx.yaw.toDouble()
     private var roll = navx.roll.toDouble()
     private val timer = Timer()
     private var elapsedTime = 0.0
@@ -47,7 +46,6 @@ class AutoBalance : CommandBase() {
         //Gets how much power is needed to re-align the bot
         val pitchPower = pid.calculate(pitch)
         val rollPower = pid.calculate(roll)
-        val yawPower = pid.calculate(yaw)
 
         Drivetrain.stupidDrive(`M/s` (pitchPower), `M/s`(pitchPower))
 
