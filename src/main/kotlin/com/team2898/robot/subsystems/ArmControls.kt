@@ -20,7 +20,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase
 
 class ArmControls : SubsystemBase() {
 
-    var constraints = TrapezoidProfile.Constraints(ARM_MAXSPEED, ARM_MAXACCEL)
+    private var constraints = TrapezoidProfile.Constraints(ARM_MAXSPEED, ARM_MAXACCEL)
+    private var profileState = TrapezoidProfile.State()
+
+
     var controller = ProfiledPIDController(ARM_RAISED_KP, ARM_RAISED_KI, ARM_RAISED_KD,constraints)
     var currentGoal: Double? = null
     var armMotor1 = CANSparkMax(ARM_MAIN, kBrushless)
@@ -39,7 +42,11 @@ class ArmControls : SubsystemBase() {
         else {
 
             //Controller moves the arm
+            controller.setGoal(profile)
+            controller.setGoal(profileState)
+
             breakSolenoid.set(kForward)
+
         }
     }
 
