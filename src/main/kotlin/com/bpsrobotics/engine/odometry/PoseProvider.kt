@@ -3,6 +3,7 @@ package com.bpsrobotics.engine.odometry
 import com.bpsrobotics.engine.utils.Degrees
 import com.bpsrobotics.engine.utils.Meters
 import edu.wpi.first.math.geometry.Pose2d
+import edu.wpi.first.math.geometry.Pose3d
 import edu.wpi.first.util.sendable.Sendable
 import edu.wpi.first.util.sendable.SendableBuilder
 import edu.wpi.first.util.sendable.SendableRegistry
@@ -21,6 +22,6 @@ interface PoseProvider : Sendable {
         SendableRegistry.setName(this, toString())
         builder.addDoubleProperty("x", { pose.x }, null)
         builder.addDoubleProperty("y", { pose.y }, null)
-        builder.addDoubleProperty("rotation", { pose.rotation.degrees }, null)
+        builder.addDoubleProperty("rotation", { pose.rotation.radians }, null)
     }
 }

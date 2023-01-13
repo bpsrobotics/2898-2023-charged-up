@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.interfaces.Gyro
 class DifferentialDrivePoseProvider(private val gyro: Gyro, private val leftEncoder: Encoder?, private val rightEncoder: Encoder?) : PoseProvider {
 
     /** The differential drive odometry provides the position part of the pose, but not the angle*/
-    private val odometry = DifferentialDriveOdometry(gyro.rotation2d)
+    private val odometry = DifferentialDriveOdometry(gyro.rotation2d, TODO(), TODO())
 
     override var pose: Pose2d = Pose2d()
         private set // Makes pose read only
@@ -33,6 +33,7 @@ class DifferentialDrivePoseProvider(private val gyro: Gyro, private val leftEnco
         gyro.reset()
         leftEncoder?.reset()
         rightEncoder?.reset()
-        odometry.resetPosition(Pose2d(Translation2d(x.value, y.value), Rotation2d(0.0)), Rotation2d(theta.radiansValue()))
+        // TODO test
+        odometry.resetPosition(Rotation2d(gyro.angle), 0.0, 0.0, Pose2d(Translation2d(x.value, y.value), Rotation2d(theta.radiansValue())))
     }
 }

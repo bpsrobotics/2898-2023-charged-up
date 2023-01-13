@@ -65,7 +65,8 @@ object Drivetrain : SubsystemBase() {
              file.write("time,leftvel,rightvel,leftgoal,rightgoal,leftpid,rightpid,leftff,rightff\n")
         }
 
-        leftMain.inverted = true
+        // FIXME
+//        leftMain.inverted = true
     }
 
     val trajectoryMaker = TrajectoryMaker(DRIVETRAIN_MAX_VELOCITY, DRIVETRAIN_MAX_ACCELERATION)
@@ -113,22 +114,23 @@ object Drivetrain : SubsystemBase() {
     init {
         differentialDrive.setDeadband(0.0)
 
-        applyToMotors {
-            if (this is WPI_TalonSRX) {
-                configFactoryDefault()
-                // Configure current limits to prevent motors stalling and overheating/breaking something or browning out the robot
-                configContinuousCurrentLimit(DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT)
-                // Have a higher peak current limit for accelerating and starting, but it's only allowed for a short amount of time
-                configPeakCurrentLimit(DRIVETRAIN_PEAK_CURRENT_LIMIT, DRIVETRAIN_PEAK_CURRENT_LIMIT_DURATION)
-            } else if (this is CANSparkMax) {
-                restoreFactoryDefaults()
-                setSmartCurrentLimit(DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT)
-                idleMode = CANSparkMax.IdleMode.kCoast
-           }
-        }
-
-        rightMain.inverted = true
-        rightSecondary.inverted = true
+        // FIXME
+//        applyToMotors {
+//            if (this is WPI_TalonSRX) {
+//                configFactoryDefault()
+//                // Configure current limits to prevent motors stalling and overheating/breaking something or browning out the robot
+//                configContinuousCurrentLimit(DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT)
+//                // Have a higher peak current limit for accelerating and starting, but it's only allowed for a short amount of time
+//                configPeakCurrentLimit(DRIVETRAIN_PEAK_CURRENT_LIMIT, DRIVETRAIN_PEAK_CURRENT_LIMIT_DURATION)
+//            } else if (this is CANSparkMax) {
+//                restoreFactoryDefaults()
+//                setSmartCurrentLimit(DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT)
+//                idleMode = CANSparkMax.IdleMode.kCoast
+//           }
+//        }
+//
+//        rightMain.inverted = true
+//        rightSecondary.inverted = true
     }
 
     fun follow(path: Trajectory) {
@@ -171,7 +173,8 @@ object Drivetrain : SubsystemBase() {
     /** Runs the provided [block] of code on each motor. */
     private fun applyToMotors(block: MotorController.() -> Unit) {
         for (motor in listOf(leftMain, leftSecondary, rightMain, rightSecondary)) {
-            motor.apply(block)
+            // FIXME
+//            motor.apply(block)
         }
     }
 
@@ -183,12 +186,13 @@ object Drivetrain : SubsystemBase() {
                 }
             }  // Nothing to do in the loop because it's handled by [Robot]
             Mode.CLOSED_LOOP -> {
-                rawDrive(
-                    ramsete.voltages(
-                    trajectory ?: run { mode = Mode.OPEN_LOOP; return },
-                    Timer.getFPGATimestamp().seconds - startTime,
-                    Odometry.vels
-                ))
+                // FIXME
+//                rawDrive(
+//                    ramsete.voltages(
+//                    trajectory ?: run { mode = Mode.OPEN_LOOP; return },
+//                    Timer.getFPGATimestamp().seconds - startTime,
+//                    Odometry.vels
+//                ))
             }
             Mode.STUPID -> {
                 val l = leftPid.calculate(leftEncoder.rate)
