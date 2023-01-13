@@ -2,6 +2,7 @@ package com.team2898.robot.commands
 
 //The commands for both the driver and operator
 import com.bpsrobotics.engine.utils.`M/s`
+import com.bpsrobotics.engine.utils.Rectangle
 import com.team2898.robot.OI
 import com.team2898.robot.subsystems.Drivetrain
 import edu.wpi.first.wpilibj.drive.DifferentialDrive
@@ -49,9 +50,9 @@ class TeleOp : CommandBase() {
 
         /*
         val communityCoords = if (DriverStation.getAlliance() == Alliance.Blue) {
-        Odometry.blueComCoords
+            help
         } else {
-        Odometry.redComCoords
+        do red community rectangle
         }
 //      Make the alliance community zone a rectangle
         val pose = Odometry.pose
