@@ -42,14 +42,14 @@ class TeleOp : CommandBase() {
                 false
             )
 
-            OI.rotateButton -> return
+            OI.alignButton -> return
 
             // Otherwise, drive and turn normally
             else -> curvatureDriveIK(OI.throttle, turn, true)
         }
 
 
-        val communityCoords = if (DriverStation.getAlliance() == Alliance.Blue) {
+        val communityCoords = if (DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
 //            help
             Rectangle(0.0, 0.0, 0.0, 0.0)
         } else {
@@ -61,18 +61,13 @@ class TeleOp : CommandBase() {
 
         val xdistToCommunity = pose.x - communityCoords.x1
 //        var ydistToCommunity = pose.y - allianceYCommunitypos
-        if (pose in communityCoords) {  // FIXME add check for rotation
+        if ((pose in communityCoords && (pose.rotation.degrees in 170.0..190.0)) || (pose in communityCoords && (pose.rotation.degrees in -170.0..-190.0))) {
+            // TODO what do if pose loops around i.e 360 into 540 or -540
             val maxAllowedSpeed = 5.0 - xdistToCommunity
 
             val cappedLeft = min(speeds.left, maxAllowedSpeed)
             val cappedRight = min(speeds.right, maxAllowedSpeed)
-//            var xspeedToGo = OI.throttle * xdistToCommunity/10  idk pls halp
-//            var yspeedToGo = OI.throttle * ydistToCommunity/10
-//            if (xdistToCommunity > ydistToCommunity) {
 //
-//                } else {
-//                arcadeDriveIK(xspeedToGo, OI.turn)
-//                }
             Drivetrain.stupidDrive(`M/s`(cappedLeft * 5.0), `M/s`(cappedRight * 5.0))
         } else {
             Drivetrain.stupidDrive(`M/s`(speeds.left * 5.0), `M/s`(speeds.right * 5.0))
