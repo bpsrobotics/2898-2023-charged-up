@@ -23,8 +23,8 @@ class AutoParallel : CommandBase() {
         val yawPower = pid.calculate(yaw)
         teamColor = DriverStation.getAlliance()
 
-        //TODO(Figure out which direction is negative rotation, and adjust rotation direction accordingly)
-        //TODO(Implement proper rotation depending on whether or not the bot is on the left or right of charging station and the team it's one)
+        //TODO: Figure out which direction is negative rotation, and adjust rotation direction accordingly
+        //TODO: Implement proper rotation depending on whether or not the bot is on the left or right of charging station and the team it's one
         if (teamColor == DriverStation.Alliance.Blue) {
             //If (Right of charging station)
             if (yaw < 180) {
@@ -44,7 +44,7 @@ class AutoParallel : CommandBase() {
     }
 
     override fun isFinished(): Boolean {
-        //TODO(Make it incorporate the position on the map)
+        //TODO: Make it incorporate the position on the map
         if (teamColor == DriverStation.Alliance.Blue) {
             println("yaw absolute is ${yaw.absoluteValue}")
         }

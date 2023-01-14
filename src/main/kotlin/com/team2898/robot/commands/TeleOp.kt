@@ -42,7 +42,7 @@ class TeleOp : CommandBase() {
                 false
             )
 
-            OI.alignButton -> return
+            OI.parallelButton -> return
 
             // Otherwise, drive and turn normally
             else -> curvatureDriveIK(OI.throttle, turn, true)
@@ -50,7 +50,7 @@ class TeleOp : CommandBase() {
 
 
         val communityCoords = if (DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
-//            help
+            // TODO: Replace placeholder coordinates with real coordinates
             Rectangle(0.0, 0.0, 0.0, 0.0)
         } else {
 //        do red community rectangle
@@ -62,7 +62,7 @@ class TeleOp : CommandBase() {
         val xdistToCommunity = pose.x - communityCoords.x1
 //        var ydistToCommunity = pose.y - allianceYCommunitypos
         if ((pose in communityCoords && (pose.rotation.degrees in 170.0..190.0)) || (pose in communityCoords && (pose.rotation.degrees in -170.0..-190.0))) {
-            // TODO what do if pose loops around i.e 360 into 540 or -540
+            // TODO: what do if pose loops around i.e 360 into 540 or -540
             val maxAllowedSpeed = 5.0 - xdistToCommunity
 
             val cappedLeft = min(speeds.left, maxAllowedSpeed)
@@ -81,6 +81,7 @@ class TeleOp : CommandBase() {
     // Called once the command ends or is interrupted.
     override fun end(interrupted: Boolean) {
     }
+
 
     // Returns true when the command should end.
     override fun isFinished(): Boolean {
