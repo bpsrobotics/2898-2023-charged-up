@@ -9,7 +9,7 @@ import kotlin.math.sign
 import kotlin.reflect.KProperty
 
 /**
- * The Operator Interface object.
+ * The Operating Interface object.
  * This is where you put all of the joystick, button, or keyboard inputs.
  *
  * A note about delegated properties, which are used in this object:
@@ -74,10 +74,16 @@ object OI : SubsystemBase() {
         get() = process(driverController.rightX, deadzone = true, square = true)
 
     //This is a placeholder template for when we fully make the operator inputs
-    val PHButton1 get() = operatorController.getRawButton(0)
+    val armIntakePosition get() = operatorController.getRawButton(0)
+    val armHeightOne get() = operatorController.getRawButton(1)
+    val armHeightTwoCube get() = operatorController.getRawButton(2)
+    val armHeightThreeCube get() = operatorController.getRawButton(3)
+    val armHeightTwoCone get() = operatorController.getRawButton(4)
+    val armHeightThreeCone get() = operatorController.getRawButton(5)
+    val armFeederStation get() = operatorController.getRawButton(6)
 
-    //Change the input depending on what the driver requests
-    val rotateButton get() = driverController.getRawButton(0)
+    //Button the make the robot auto align with the charging station
+    val alignButton get() = driverController.getRawButton(0)
 
 
 }
