@@ -1,5 +1,7 @@
 package com.team2898.robot
 
+import edu.wpi.first.wpilibj.PneumaticsModuleType
+
 object RobotMap {
     // Motor IDs
     const val DRIVETRAIN_LEFT_MAIN        = 1
@@ -16,6 +18,15 @@ object RobotMap {
 
     const val DRIVETRAIN_RIGHT_ENCODER_A  = 2
     const val DRIVETRAIN_RIGHT_ENCODER_B  = 3
+
+    const val ARM_ENCODER_A = 4
+    const val ARM_ENCODER_B = 5
+
+    //Pneumatics
+    const val PNUEMATICS_MODULE = 0
+    val PNEUMATICS_MODULE_TYPE = PneumaticsModuleType.REVPH
+    const val DISK_BREAK_FORWARD = 1
+    const val DISK_BREAK_BACKWARD = 2
 
 
 }

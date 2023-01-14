@@ -9,8 +9,14 @@ import com.team2898.robot.Constants.ARM_MAXSPEED
 import com.team2898.robot.Constants.ARM_RAISED_KD
 import com.team2898.robot.Constants.ARM_RAISED_KI
 import com.team2898.robot.Constants.ARM_RAISED_KP
+import com.team2898.robot.RobotMap.ARM_ENCODER_A
+import com.team2898.robot.RobotMap.ARM_ENCODER_B
 import com.team2898.robot.RobotMap.ARM_MAIN
 import com.team2898.robot.RobotMap.ARM_SECONDARY
+import com.team2898.robot.RobotMap.DISK_BREAK_BACKWARD
+import com.team2898.robot.RobotMap.DISK_BREAK_FORWARD
+import com.team2898.robot.RobotMap.PNEUMATICS_MODULE_TYPE
+import com.team2898.robot.RobotMap.PNUEMATICS_MODULE
 import edu.wpi.first.math.controller.ArmFeedforward
 import edu.wpi.first.math.controller.ProfiledPIDController
 import edu.wpi.first.math.trajectory.TrapezoidProfile
@@ -31,9 +37,9 @@ class ArmControls : SubsystemBase() {
     private var currentGoal: Double? = null
     private val armMotor1 = CANSparkMax(ARM_MAIN, kBrushless)
     private val armMotor2 = CANSparkMax(ARM_SECONDARY, kBrushless)
-    private val breakSolenoid = DoubleSolenoid(TODO(),TODO(),TODO(),TODO())
+    private val breakSolenoid = DoubleSolenoid(PNUEMATICS_MODULE, PNEUMATICS_MODULE_TYPE, DISK_BREAK_FORWARD, DISK_BREAK_BACKWARD)
     //Reminder to fix the encoder channel
-    private val encoder = Encoder(4, TODO())
+    private val encoder = Encoder(ARM_ENCODER_A, ARM_ENCODER_B)
     private val feedforward = ArmFeedforward(0.0,0.0,0.0)
 
 
