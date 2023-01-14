@@ -83,7 +83,7 @@ object OI : SubsystemBase() {
     val armFeederStation get() = operatorController.getRawButton(6)
 
     //Button the make the robot auto align with the charging station
-    val alignButton get() = driverController.getRawButton(0)
+    val parallelButton get() = driverController.getRawButton(0)
 
 
 }

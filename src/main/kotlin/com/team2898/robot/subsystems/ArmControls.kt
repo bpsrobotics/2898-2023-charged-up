@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj.Encoder
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import kotlin.math.absoluteValue
 
-class ArmControls : SubsystemBase() {
+object ArmControls : SubsystemBase() {
 
     private var constraints = TrapezoidProfile.Constraints(ARM_MAXSPEED, ARM_MAXACCEL)
 //    private var profileState = TrapezoidProfile.State()
