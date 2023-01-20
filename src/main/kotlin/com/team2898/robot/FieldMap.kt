@@ -6,9 +6,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase
 
 object FieldMap : SubsystemBase() {
     private var teamColor: DriverStation.Alliance = DriverStation.getAlliance()
-    private lateinit var communityCoordinates: Rectangle
-    private lateinit var chargingDock: Rectangle
-    private lateinit var loadingBay: Rectangle
+    lateinit var communityCoordinates: Rectangle
+    lateinit var chargingDock: Rectangle
+    lateinit var loadingBay: Rectangle
     fun initialize() {
         //TODO: Replace placeholder coordinates
         teamColor = DriverStation.getAlliance()

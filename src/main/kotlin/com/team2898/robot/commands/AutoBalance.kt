@@ -47,14 +47,14 @@ class AutoBalance : CommandBase() {
         val pitchPower = pid.calculate(pitch)
         val rollPower = pid.calculate(roll)
 
-        Drivetrain.stupidDrive(`M/s` (pitchPower), `M/s`(-pitchPower))
+        Drivetrain.stupidDrive(`M/s` (pitchPower), `M/s`(pitchPower))
 
 
     }
 
     override fun isFinished(): Boolean {
-        //Test this to make sure the angles work properly for balance
+        //TODO: Test and adjust these values to be more accurate
         /** Finishes if both rotations are close to zero and haven't changed quickly */
-        return (pitch > -5 || pitch < 5) && (roll > -5 || roll < 5) && (pitchRate < 0.3 && rollRate < 0.3)
+        return (pitch > -2.5 || pitch < 2.5) && (roll > -2.5 || roll < 2.5) && (pitchRate < 0.3 && rollRate < 0.3)
     }
 }
