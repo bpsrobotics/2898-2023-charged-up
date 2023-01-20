@@ -23,9 +23,12 @@ class AutoParallel : CommandBase() {
         val yawPower = pid.calculate(yaw)
         teamColor = DriverStation.getAlliance()
 
+        //This bool is literally just for testing
+        val testing = true
+
         //TODO: Figure out which direction is negative rotation, and adjust rotation direction accordingly
         //TODO: Implement proper rotation depending on whether or not the bot is on the left or right of charging station and the team it's one
-        if (teamColor == DriverStation.Alliance.Blue) {
+        if (teamColor == DriverStation.Alliance.Blue || testing) {
             //If (Right of charging station)
             if (yaw < 180) {
                 Drivetrain.stupidDrive(`M/s`(yawPower),`M/s`(-yawPower))
@@ -37,10 +40,16 @@ class AutoParallel : CommandBase() {
 
         }
         else if (teamColor == DriverStation.Alliance.Red) {
-            //If (Right of charing station)
+            //If (Right of charging station)
             println("Team color is $teamColor")
+            if (yaw < 180) {
+                Drivetrain.stupidDrive(`M/s`(yawPower),`M/s`(-yawPower))
+            }
+            else if (yaw > 180) {
+                Drivetrain.stupidDrive(`M/s`(-yawPower),`M/s`(yawPower))
+            }
+            //else if(left of charging station)
         }
-
     }
 
     override fun isFinished(): Boolean {

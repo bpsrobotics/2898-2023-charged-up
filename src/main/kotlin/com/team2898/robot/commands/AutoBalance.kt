@@ -41,20 +41,20 @@ class AutoBalance : CommandBase() {
 
         //Gets the current pitch and roll of the robot
         pitch = navx.pitch.toDouble()
-        roll = navx.pitch.toDouble()
+        roll = navx.roll.toDouble()
 
         //Gets how much power is needed to re-align the bot
         val pitchPower = pid.calculate(pitch)
         val rollPower = pid.calculate(roll)
 
-        Drivetrain.stupidDrive(`M/s` (pitchPower), `M/s`(pitchPower))
+        Drivetrain.stupidDrive(`M/s` (pitchPower), `M/s`(-pitchPower))
 
 
     }
 
     override fun isFinished(): Boolean {
         //Test this to make sure the angles work properly for balance
-        //Finishes if both rotations are close to zero and haven't changed quickly
+        /** Finishes if both rotations are close to zero and haven't changed quickly */
         return (pitch > -5 || pitch < 5) && (roll > -5 || roll < 5) && (pitchRate < 0.3 && rollRate < 0.3)
     }
 }

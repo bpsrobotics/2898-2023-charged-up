@@ -1,5 +1,4 @@
 package com.bpsrobotics.engine.utils
-
 import kotlin.math.pow
 
 class Polynomial(vararg val coefficients: Double) {

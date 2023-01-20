@@ -32,13 +32,12 @@ object ArmControls : SubsystemBase() {
     private var constraints = TrapezoidProfile.Constraints(ARM_MAXSPEED, ARM_MAXACCEL)
 //    private var profileState = TrapezoidProfile.State()
 
-
     private val controller = ProfiledPIDController(ARM_RAISED_KP, ARM_RAISED_KI, ARM_RAISED_KD,constraints)
     private var currentGoal: Double? = null
     private val armMotor1 = CANSparkMax(ARM_MAIN, kBrushless)
     private val armMotor2 = CANSparkMax(ARM_SECONDARY, kBrushless)
     private val breakSolenoid = DoubleSolenoid(PNUEMATICS_MODULE, PNEUMATICS_MODULE_TYPE, DISK_BREAK_FORWARD, DISK_BREAK_BACKWARD)
-    //Reminder to fix the encoder channel
+    //TODO: Reminder to fix the encoder channel
     private val encoder = Encoder(ARM_ENCODER_A, ARM_ENCODER_B)
     private val feedforward = ArmFeedforward(0.0,0.0,0.0)
 
