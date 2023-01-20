@@ -1,4 +1,4 @@
-@file:Suppress("EXPERIMENTAL_API_USAGE")
+@file:Suppress("EXPERIMENTAL_API_USAGE", "OPT_IN_USAGE")
 
 package com.team2898.robot.subsystems
 
@@ -13,12 +13,15 @@ import kotlin.math.sin
 import kotlin.random.Random
 
 object RGBLEDHandler : SubsystemBase() {
-    private const val ledCount = 200 // TODO: How many WS2812s do we have
-    private val ledStrip = AddressableLED(8) // TODO: PWM Port Constant
-    private val finalLEDStripBuffer = AddressableLEDBuffer(ledCount)
-    private val ledStripBuffer = RGBAArray(ledCount)
+    private val strips = listOf(LEDStrip(1, 10), LEDStrip(2, 42), LEDStrip(3, 69420))
+    private val ledStripBuffer = RGBAArray(strips.sumOf { it.ledCount })
     private const val rainbowSpeed = 1.0 // Configure rainbow spacing, 0 to 2 PI
     private const val ledsPerFlagColor = 4 // Size of each color strip in flag color modes
+
+    class LEDStrip(port: Int, val ledCount: Int) {
+        val strip = AddressableLED(port)
+        val buffer = AddressableLEDBuffer(ledCount)
+    }
 
     /**
      * The current color mode.  Set it to the desired value and the subsystem will handle updating.
@@ -31,7 +34,9 @@ object RGBLEDHandler : SubsystemBase() {
             val t = Timer.getFPGATimestamp().seconds
             value.lambda.invoke(ledStripBuffer, t)
             setDataRGBA()
-            ledStrip.setData(finalLEDStripBuffer)
+            for (item in strips) {
+                item.strip.setData(item.buffer)
+            }
             lastUpdate = t
         }
 
@@ -102,7 +107,6 @@ object RGBLEDHandler : SubsystemBase() {
             RGBA(0xFF, 0xD5, 0x00)))
         }),
 
-
         // effects that modify existing data in the buffer
         SLIDE_LEFT({
             array.copyInto(temp.array, 0, 1)
@@ -136,8 +140,10 @@ object RGBLEDHandler : SubsystemBase() {
     }
 
     init {
-        ledStrip.setData(finalLEDStripBuffer)
-        ledStrip.start()
+        for (item in strips) {
+            item.strip.setData(item.buffer)
+            item.strip.start()
+        }
     }
 
     private fun RGBAArray.stripes(colors: RGBAArray) {
@@ -154,13 +160,17 @@ object RGBLEDHandler : SubsystemBase() {
      * adjust the brightness
      */
     private fun setDataRGBA() {
-        for (i in ledStripBuffer.indices) {
-            val color = ledStripBuffer[i]
-            finalLEDStripBuffer.setRGB(i,
-                color.r.toInt() * color.a.toInt() / 255,
-                color.g.toInt() * color.a.toInt() / 255,
-                color.b.toInt() * color.a.toInt() / 255
-            )
+        var i = 0
+
+        for (item in strips) {
+            for (idx in 0 until item.ledCount) {
+                val color = ledStripBuffer[i++]
+                item.buffer.setRGB(idx,
+                    color.r.toInt() * color.a.toInt() / 255,
+                    color.g.toInt() * color.a.toInt() / 255,
+                    color.b.toInt() * color.a.toInt() / 255
+                )
+            }
         }
     }
 
@@ -180,7 +190,10 @@ object RGBLEDHandler : SubsystemBase() {
                 setDataRGBA()
                 lastUpdate = time
             }
-            ledStrip.setData(finalLEDStripBuffer)
+
+            for (item in strips) {
+                item.strip.setData(item.buffer)
+            }
         }
     }
 }
