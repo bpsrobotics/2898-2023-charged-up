@@ -29,7 +29,6 @@ class AutoParallel : CommandBase() {
         val testing = true
 
         //TODO: Figure out which direction is negative rotation, and adjust rotation direction accordingly
-        //TODO: Implement proper rotation depending on whether or not the bot is on the left or right of charging station and the team it's one
         if (teamColor == DriverStation.Alliance.Blue || testing) {
             if (chargingDock.x2 < pose.x) {
                 if (yaw < 180) {
@@ -50,15 +49,22 @@ class AutoParallel : CommandBase() {
 
         }
         else if (teamColor == DriverStation.Alliance.Red) {
-            //If (Right of charging station)
-            println("Team color is $teamColor")
-            if (yaw < 180) {
-                Drivetrain.stupidDrive(`M/s`(yawPower),`M/s`(-yawPower))
+            if (chargingDock.x1 > pose.x) {
+                if (yaw < 180) {
+                    Drivetrain.stupidDrive(`M/s`(yawPower),`M/s`(-yawPower))
+                }
+                else if (yaw > 180) {
+                    Drivetrain.stupidDrive(`M/s`(-yawPower),`M/s`(yawPower))
+                }
             }
-            else if (yaw > 180) {
-                Drivetrain.stupidDrive(`M/s`(-yawPower),`M/s`(yawPower))
+            else if (chargingDock.x2 < pose.x) {
+                if (yaw < 180) {
+                    Drivetrain.stupidDrive(`M/s`(yawPower),`M/s`(-yawPower))
+                }
+                else if (yaw > 180) {
+                    Drivetrain.stupidDrive(`M/s`(-yawPower),`M/s`(yawPower))
+                }
             }
-            //else if(left of charging station)
         }
     }
 
