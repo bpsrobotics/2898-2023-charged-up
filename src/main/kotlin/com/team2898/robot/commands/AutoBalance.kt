@@ -27,7 +27,8 @@ class AutoBalance : CommandBase() {
     private var state = findState()
 
     private val odometry = DifferentialDriveOdometry(Rotation2d.fromRotations(0.0), Drivetrain.leftEncoder.distance, Drivetrain.rightEncoder.distance)
-
+    private val IN_ZONE = 0.0
+    private val APPROACHING_KP = 0.0
     override fun execute() {
         val pose = odometry.update(Rotation2d.fromRotations(0.0), Drivetrain.leftEncoder.distance, Drivetrain.rightEncoder.distance)
         val m = -0.0176546 * 0.99999
@@ -37,7 +38,7 @@ class AutoBalance : CommandBase() {
         timer.reset()
         timer.start()
 
-        // Gathers the change in the pitch and the change in roll since last execute
+        // Gathers the change in roll since last execute
         rollRate = (navx.roll - roll) / elapsedTime
 
         // Gets the current pitch and roll of the robot
@@ -56,10 +57,6 @@ class AutoBalance : CommandBase() {
 
         val averagePos = (max+min)/2
 
-        // TODO: move to constants or just in the class body
-        val IN_ZONE = 0.0
-        val APPROACHING_KP = 0.0
-
         when (state) {
             DrivingState.DRIVINGFORWARDS -> {
                 val speed = when (pose.x) {
@@ -71,16 +68,19 @@ class AutoBalance : CommandBase() {
             DrivingState.DRIVINGBACKWARDS -> {
                 val speed = when (pose.x) {
                     in min..max -> -IN_ZONE
-                    else -> (max - pose.x) * APPROACHING_KP - IN_ZONE
+                    else -> (max - pose.x) * -APPROACHING_KP - IN_ZONE
                 }
                 Drivetrain.stupidDrive(`M/s`(speed),`M/s`(speed))
             }
             DrivingState.FINDINGMIDDLE -> {
+                //TODO: Adjust the multiplied amount
+                val middlePower = (odometry.poseMeters.x - averagePos)* 0.1
+                Drivetrain.stupidDrive(`M/s`(-middlePower),`M/s`(-middlePower))
             }
             DrivingState.BALANCING -> {
                 val rollPower = pid.calculate(roll).clamp(-0.05, 0.05) + dController.calculate(roll) + roll * m
                 if (rollRate.absoluteValue > 5) {
-                    // TODO widen estimate range?
+                    // TODO: Widen estimate range?
                     state = findState()
                 }
                 Drivetrain.stupidDrive(`M/s`(rollPower), `M/s`(rollPower))
@@ -96,15 +96,18 @@ class AutoBalance : CommandBase() {
         BALANCING
     }
 
-    private fun findState(): DrivingState {
-//        val angle =
-
-//        return if ((Drivetrain.leftEncoder.rate+Drivetrain.rightEncoder.rate) > 0) {
-//            DrivingState.DRIVINGFORWARDS
-//        } else if ((Drivetrain.leftEncoder.rate+Drivetrain.rightEncoder.rate) < 0) {
-//            DrivingState.DRIVINGBACKWARDS
-//        } else DrivingState.NOTMOVING
-        TODO()
+    private fun findState(): DrivingState?  {
+        //TODO: Fully set up the findState function
+        return if ((max - min < 0.2)) {
+            DrivingState.FINDINGMIDDLE
+        } else if (rollRate > 3 || roll > 0) {
+            DrivingState.DRIVINGFORWARDS
+        } else if ((rollRate < -3 || roll < 0)) {
+            DrivingState.DRIVINGBACKWARDS
+        } else if ((odometry.poseMeters.x) in (min..max)) {
+            DrivingState.BALANCING
+        }
+        else state
     }
     override fun isFinished(): Boolean {
         //TODO: Test and adjust these values to be more accurate

@@ -29,43 +29,47 @@ class AutoParallel : CommandBase() {
         val testing = true
 
         //TODO: Figure out which direction is negative rotation, and adjust rotation direction accordingly
-        if (teamColor == DriverStation.Alliance.Blue || testing) {
-            if (chargingDock.x2 < pose.x) {
-                if (yaw < 180) {
-                    Drivetrain.stupidDrive(`M/s`(yawPower),`M/s`(-yawPower))
-                }
-                else if (yaw > 180) {
-                    Drivetrain.stupidDrive(`M/s`(-yawPower),`M/s`(yawPower))
-                }
-            }
-            else if (chargingDock.x1 > pose.x) {
-                if (yaw < 180) {
-                    Drivetrain.stupidDrive(`M/s`(yawPower),`M/s`(-yawPower))
-                }
-                else if (yaw > 180) {
-                    Drivetrain.stupidDrive(`M/s`(-yawPower),`M/s`(yawPower))
+        if (pose.x !in (chargingDock.x1..chargingDock.x2)) {
+                if (teamColor == DriverStation.Alliance.Blue || testing) {
+                    if (chargingDock.x2 < pose.x) {
+                        if ((yaw - 270) < 0.5) {
+                            Drivetrain.stupidDrive(`M/s`(2.0), `M/s`(2.0))
+                        } else if (yaw < 180) {
+                            Drivetrain.stupidDrive(`M/s`(yawPower), `M/s`(-yawPower))
+                        } else if (yaw > 180) {
+                            Drivetrain.stupidDrive(`M/s`(-yawPower), `M/s`(yawPower))
+                        }
+                    } else if (chargingDock.x1 > pose.x) {
+                        if ((yaw - 90) < 0.5) {
+                            Drivetrain.stupidDrive(`M/s`(2.0), `M/s`(2.0))
+                        } else if (yaw < 180) {
+                            Drivetrain.stupidDrive(`M/s`(yawPower), `M/s`(-yawPower))
+                        } else if (yaw > 180) {
+                            Drivetrain.stupidDrive(`M/s`(-yawPower), `M/s`(yawPower))
+                        }
+                    }
+
+                } else if (teamColor == DriverStation.Alliance.Red) {
+                    if (pose.x < chargingDock.x1) {
+                        if ((yaw - 90) < 0.5) {
+                            Drivetrain.stupidDrive(`M/s`(2.0), `M/s`(2.0))
+                        } else if (yaw < 180) {
+                            Drivetrain.stupidDrive(`M/s`(yawPower), `M/s`(-yawPower))
+                        } else if (yaw > 180) {
+                            Drivetrain.stupidDrive(`M/s`(-yawPower), `M/s`(yawPower))
+                        }
+                    } else if (chargingDock.x2 < pose.x) {
+                        if ((yaw - 270) < 0.5) {
+                            Drivetrain.stupidDrive(`M/s`(2.0), `M/s`(2.0))
+                        } else if (yaw < 180) {
+                            Drivetrain.stupidDrive(`M/s`(yawPower), `M/s`(-yawPower))
+                        } else if (yaw > 180) {
+                            Drivetrain.stupidDrive(`M/s`(-yawPower), `M/s`(yawPower))
+                        }
+                    }
                 }
             }
 
-        }
-        else if (teamColor == DriverStation.Alliance.Red) {
-            if (chargingDock.x1 > pose.x) {
-                if (yaw < 180) {
-                    Drivetrain.stupidDrive(`M/s`(yawPower),`M/s`(-yawPower))
-                }
-                else if (yaw > 180) {
-                    Drivetrain.stupidDrive(`M/s`(-yawPower),`M/s`(yawPower))
-                }
-            }
-            else if (chargingDock.x2 < pose.x) {
-                if (yaw < 180) {
-                    Drivetrain.stupidDrive(`M/s`(yawPower),`M/s`(-yawPower))
-                }
-                else if (yaw > 180) {
-                    Drivetrain.stupidDrive(`M/s`(-yawPower),`M/s`(yawPower))
-                }
-            }
-        }
     }
 
     override fun isFinished(): Boolean {
