@@ -7,6 +7,7 @@
 
 package com.team2898.robot
 
+import com.team2898.robot.commands.AutoBalance
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
@@ -20,7 +21,7 @@ import edu.wpi.first.wpilibj2.command.PerpetualCommand
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 class RobotContainer {
-    private val noopAutoCommand: Command = InstantCommand({})
+    private val noopAutoCommand: Command = AutoBalance()
 
     // A chooser for which command to use for auto, i.e. one for right, middle, left, red, blue, etc
     private var autoCommandChooser: SendableChooser<Command> = SendableChooser()
