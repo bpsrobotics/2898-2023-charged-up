@@ -1,26 +1,37 @@
 package com.team2898.robot
 
-import com.bpsrobotics.engine.utils.Rectangle
+import com.bpsrobotics.engine.utils.geometry.*
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import com.bpsrobotics.engine.utils.Feet
+class Map(val community : Polygon,
+          val chargingDock : Rectangle,
+          val loadingBay : Rectangle
+        ) {
+}
 
-object FieldMap : SubsystemBase() {
+//TODO: Replace placeholder coordinates
+val blueTeam = Map(
+    community = Polygon(
+        Coordinate(0.0,0.0),
+        Coordinates("18 ft","0 ft")
+    ),
+    chargingDock = Rectangle(0.0,0.0,0.0,0.0),
+    loadingBay = Rectangle(0.0,0.0,0.0,0.0)
+)
+val redTeam = Map(
+    community = Rectangle(0.0,0.0,0.0,0.0),
+    chargingDock = Rectangle(0.0,0.0,0.0,0.0),
+    loadingBay = Rectangle(0.0,0.0,0.0,0.0)
+)
+object Field : SubsystemBase() {
     private var teamColor: DriverStation.Alliance = DriverStation.getAlliance()
-    lateinit var communityCoordinates: Rectangle
-    lateinit var chargingDock: Rectangle
-    lateinit var loadingBay: Rectangle
+    lateinit var map : Map;
     fun initialize() {
-        //TODO: Replace placeholder coordinates
-        teamColor = DriverStation.getAlliance()
-        if (teamColor == DriverStation.Alliance.Blue) {
-            communityCoordinates = Rectangle(0.0,0.0,0.0,0.0)
-            chargingDock = Rectangle(0.0,0.0,0.0,0.0)
-            loadingBay = Rectangle(0.0,0.0,0.0,0.0)
-        }
-        else {
-            communityCoordinates = Rectangle(0.0,0.0,0.0,0.0)
-            chargingDock = Rectangle(0.0,0.0,0.0,0.0)
-            loadingBay = Rectangle(0.0,0.0,0.0,0.0)
+        map = if (teamColor == DriverStation.Alliance.Blue) {
+            blueTeam
+        } else {
+            redTeam
         }
     }
 }
