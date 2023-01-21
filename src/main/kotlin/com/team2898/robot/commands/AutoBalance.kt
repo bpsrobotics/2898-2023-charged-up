@@ -1,80 +1,47 @@
 package com.team2898.robot.commands
 
 import com.bpsrobotics.engine.utils.`M/s`
-import com.team2898.robot.Constants
-import com.team2898.robot.subsystems.Odometry
-import com.bpsrobotics.engine.utils.NAVX
 import com.bpsrobotics.engine.utils.Sugar.clamp
 import com.team2898.robot.subsystems.Drivetrain
-import com.team2898.robot.subsystems.Odometry.pose
-import com.team2898.robot.subsystems.Vision
-import edu.wpi.first.wpilibj2.command.CommandBase
+import com.team2898.robot.subsystems.Odometry.NavxHolder.navx
 import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry
 import edu.wpi.first.wpilibj.Timer
+import edu.wpi.first.wpilibj2.command.CommandBase
 import kotlin.math.absoluteValue
-import kotlin.math.atan
-import kotlin.math.log
-import kotlin.math.sqrt
 
 class AutoBalance : CommandBase() {
     private val pid = PIDController(0.026, 0.0, 0.0)
     private val dController = PIDController(0.0, 0.0, 0.005)
-    private val navx = NAVX()
-    private var pitch = navx.pitch.toDouble()
     private var roll = navx.roll.toDouble()
     private val timer = Timer()
     private var elapsedTime = 0.0
 
-    private var pitchRate = 0.0
     private var rollRate = 0.0
 
+    // estimated CG position
     private var min = 0.0
     private var max = 0.0
-    private var drivingForward = true
-    private var drivingBack = false
-    var state = findState()
-    val odometry = DifferentialDriveOdometry(Rotation2d.fromRotations(0.0), Drivetrain.leftEncoder.distance, Drivetrain.rightEncoder.distance)
-    var speed = 0.0
 
-    override fun initialize() {
-        navx.zeroYaw()
-    }
+    private var state = findState()
+
+    private val odometry = DifferentialDriveOdometry(Rotation2d.fromRotations(0.0), Drivetrain.leftEncoder.distance, Drivetrain.rightEncoder.distance)
+
     override fun execute() {
-        odometry.update(Rotation2d.fromRotations(0.0), Drivetrain.leftEncoder.distance, Drivetrain.rightEncoder.distance)
+        val pose = odometry.update(Rotation2d.fromRotations(0.0), Drivetrain.leftEncoder.distance, Drivetrain.rightEncoder.distance)
         val m = -0.0176546 * 0.99999
-//        val b = 0.0176546
 
-        //Gets the time since last execute, then resets the timer
+        // Gets the time since last execute, then resets the timer
         elapsedTime = timer.get()
         timer.reset()
         timer.start()
 
-        //Gathers the change in the pitch and the change in roll since last execute
-//        pitchRate = (navx.pitch - pitch) / elapsedTime
+        // Gathers the change in the pitch and the change in roll since last execute
         rollRate = (navx.roll - roll) / elapsedTime
 
-        //Gets the current pitch and roll of the robot
-//        pitch = navx.pitch.toDouble()
+        // Gets the current pitch and roll of the robot
         roll = navx.roll.toDouble()
-
-        println(roll)
-
-        /*
-        //Gets how much power is needed to re-align the bot
-//        val pitchPower = pid.calculate(pitch)
-        val rollPower = pid.calculate(roll).clamp(-0.05, 0.05) + dController.calculate(roll) + roll * m
-
-        println("trying to go $rollPower m/s")
-//        if (rollRate > 10) {
-        Drivetrain.stupidDrive(`M/s` (rollPower), `M/s`(rollPower))
-//        } else if (rollRate <= 10) {
-//            Drivetrain.stupidDrive(`M/s` (rollPower/2), `M/s`(rollPower/2))
-//        }
-
-         */
-
 
 
         //TODO: Fine tune these values to improve the balance
@@ -89,44 +56,55 @@ class AutoBalance : CommandBase() {
 
         val averagePos = (max+min)/2
 
+        // TODO: move to constants or just in the class body
+        val IN_ZONE = 0.0
+        val APPROACHING_KP = 0.0
+
         when (state) {
             DrivingState.DRIVINGFORWARDS -> {
-                if (pose.x < averagePos) {speed = averagePos - pose.x}
-                else if (pose.x > averagePos) {speed = pose.x - averagePos}
+                val speed = when (pose.x) {
+                    in min..max -> IN_ZONE
+                    else -> (min - pose.x) * APPROACHING_KP + IN_ZONE
+                }
                 Drivetrain.stupidDrive(`M/s`(speed),`M/s`(speed))
             }
             DrivingState.DRIVINGBACKWARDS -> {
-                if (pose.x < averagePos) {speed = averagePos - pose.x}
-                else if (pose.x > averagePos) {speed = pose.x - averagePos}
-                Drivetrain.stupidDrive(`M/s`(-speed),`M/s`(-speed))
+                val speed = when (pose.x) {
+                    in min..max -> -IN_ZONE
+                    else -> (max - pose.x) * APPROACHING_KP - IN_ZONE
+                }
+                Drivetrain.stupidDrive(`M/s`(speed),`M/s`(speed))
             }
             DrivingState.FINDINGMIDDLE -> {
-                val rollPower = pid.calculate(roll).clamp(-0.05, 0.05) + dController.calculate(roll) + roll * m
-                if (rollRate > 10) {
-                    Drivetrain.stupidDrive(`M/s` (rollPower), `M/s`(rollPower))
-                } else if (rollRate <= 10) {
-                    Drivetrain.stupidDrive(`M/s` (rollPower/2), `M/s`(rollPower/2))
-                }
             }
-
-            DrivingState.NOTMOVING -> {}
+            DrivingState.BALANCING -> {
+                val rollPower = pid.calculate(roll).clamp(-0.05, 0.05) + dController.calculate(roll) + roll * m
+                if (rollRate.absoluteValue > 5) {
+                    // TODO widen estimate range?
+                    state = findState()
+                }
+                Drivetrain.stupidDrive(`M/s`(rollPower), `M/s`(rollPower))
+            }
         }
 
     }
 
-    enum class DrivingState() {
-        DRIVINGFORWARDS(),
-        DRIVINGBACKWARDS(),
-        FINDINGMIDDLE(),
-        NOTMOVING()
+    enum class DrivingState {
+        DRIVINGFORWARDS,
+        DRIVINGBACKWARDS,
+        FINDINGMIDDLE,
+        BALANCING
     }
 
-    fun findState(): DrivingState {
-        return if ((Drivetrain.leftEncoder.rate+Drivetrain.rightEncoder.rate) > 0) {
-            DrivingState.DRIVINGFORWARDS
-        } else if ((Drivetrain.leftEncoder.rate+Drivetrain.rightEncoder.rate) > 0) {
-            DrivingState.DRIVINGBACKWARDS
-        } else DrivingState.NOTMOVING
+    private fun findState(): DrivingState {
+//        val angle =
+
+//        return if ((Drivetrain.leftEncoder.rate+Drivetrain.rightEncoder.rate) > 0) {
+//            DrivingState.DRIVINGFORWARDS
+//        } else if ((Drivetrain.leftEncoder.rate+Drivetrain.rightEncoder.rate) < 0) {
+//            DrivingState.DRIVINGBACKWARDS
+//        } else DrivingState.NOTMOVING
+        TODO()
     }
     override fun isFinished(): Boolean {
         //TODO: Test and adjust these values to be more accurate
