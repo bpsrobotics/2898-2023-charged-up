@@ -29,6 +29,7 @@ object Sugar {
         return times(PI / 180)
     }
 
+
     /**
      * Converts the value from radians to degrees
      *
