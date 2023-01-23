@@ -3,7 +3,7 @@ package com.team2898.robot
 import com.bpsrobotics.engine.utils.geometry.*
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj2.command.SubsystemBase
-import com.bpsrobotics.engine.utils.Feet
+import com.bpsrobotics.engine.utils.ft
 class Map(val community : Polygon,
           val chargingDock : Rectangle,
           val loadingBay : Rectangle
@@ -14,13 +14,13 @@ class Map(val community : Polygon,
 val blueTeam = Map(
     community = Polygon(
         Coordinate(0.0,0.0),
-        Coordinates("18 ft","0 ft")
+        Coordinate.new(18.ft,0.ft)
     ),
     chargingDock = Rectangle(0.0,0.0,0.0,0.0),
     loadingBay = Rectangle(0.0,0.0,0.0,0.0)
 )
 val redTeam = Map(
-    community = Rectangle(0.0,0.0,0.0,0.0),
+    community = Polygon(Coordinate(0.0,0.0)),
     chargingDock = Rectangle(0.0,0.0,0.0,0.0),
     loadingBay = Rectangle(0.0,0.0,0.0,0.0)
 )
