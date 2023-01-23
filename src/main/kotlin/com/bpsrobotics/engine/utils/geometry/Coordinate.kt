@@ -6,10 +6,15 @@ import com.bpsrobotics.engine.utils.Meters
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class Coordinate(val x : Double, val y: Double) {
-    constructor(x : Meters, y : Meters) : this(x.value, y.value)
-    constructor(x : Inches, y : Inches) : this(x.meterValue(), y.meterValue())
-    constructor(x : Feet, y : Feet) : this(x.meterValue(), y.meterValue())
+class Coordinate(val x: Double, val y: Double) {
+    companion object {
+        @JvmName("newMeters")
+        fun new(x: Meters, y: Meters) = Coordinate(x.value, y.value)
+        @JvmName("newInches")
+        fun new(x: Inches, y: Inches) = Coordinate(x.meterValue(), y.meterValue())
+        @JvmName("newFeet")
+        fun new(x: Feet, y: Feet) = Coordinate(x.meterValue(), y.meterValue())
+    }
 
 
     val magnitude get() = sqrt(x.pow(2) + y.pow(2))
