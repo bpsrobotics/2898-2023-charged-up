@@ -22,10 +22,11 @@ object Confidence {
 
     /** Returns the standard deviation. The higher the value, the less confident we are*/
     fun get_confindence(x_dist: Double, y_dist: Double, speed: Double = 0.0): Double {
-        val xDistOutput = xDistPolynomial[x_dist]
-        val yDistOutput = yDistPolynomial[y_dist]
-        val speedOutput = speedPolynomial[speed]
-        return xDistOutput + yDistOutput + speedOutput
+//        val xDistOutput = xDistPolynomial[x_dist]
+//        val yDistOutput = yDistPolynomial[y_dist]
+//        val speedOutput = speedPolynomial[speed]
+//        return xDistOutput + yDistOutput + speedOutput
+        TODO()
     }
 }
 

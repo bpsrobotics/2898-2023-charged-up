@@ -4,14 +4,13 @@ import com.bpsrobotics.engine.utils.`M/s`
 import com.team2898.robot.Constants.AUTOBALANCE_KP
 import com.team2898.robot.Constants.AUTOBALANCE_KI
 import com.team2898.robot.Constants.AUTOBALANCE_KD
+import com.team2898.robot.Field
 import com.team2898.robot.subsystems.Drivetrain
 import com.team2898.robot.subsystems.Odometry
-import com.team2898.robot.subsystems.Odometry.NavxHolder.navx
 import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj2.command.CommandBase
 import kotlin.math.absoluteValue
-import com.team2898.robot.FieldMap.chargingDock
 import com.team2898.robot.subsystems.Odometry.pose
 
 class AutoParallel : CommandBase() {
@@ -29,9 +28,9 @@ class AutoParallel : CommandBase() {
         val testing = true
 
         //TODO: Figure out which direction is negative rotation, and adjust rotation direction accordingly
-        if (pose.x !in (chargingDock.x1..chargingDock.x2)) {
+        if (pose.x !in (Field.map.chargingDock.x1..Field.map.chargingDock.x2)) {
                 if (teamColor == DriverStation.Alliance.Blue || testing) {
-                    if (chargingDock.x2 < pose.x) {
+                    if (Field.map.chargingDock.x2 < pose.x) {
                         if ((yaw - 270) < 0.5) {
                             Drivetrain.stupidDrive(`M/s`(2.0), `M/s`(2.0))
                         } else if (yaw < 180) {
@@ -39,7 +38,7 @@ class AutoParallel : CommandBase() {
                         } else if (yaw > 180) {
                             Drivetrain.stupidDrive(`M/s`(-yawPower), `M/s`(yawPower))
                         }
-                    } else if (chargingDock.x1 > pose.x) {
+                    } else if (Field.map.chargingDock.x1 > pose.x) {
                         if ((yaw - 90) < 0.5) {
                             Drivetrain.stupidDrive(`M/s`(2.0), `M/s`(2.0))
                         } else if (yaw < 180) {
@@ -50,7 +49,7 @@ class AutoParallel : CommandBase() {
                     }
 
                 } else if (teamColor == DriverStation.Alliance.Red) {
-                    if (pose.x < chargingDock.x1) {
+                    if (pose.x < Field.map.chargingDock.x1) {
                         if ((yaw - 90) < 0.5) {
                             Drivetrain.stupidDrive(`M/s`(2.0), `M/s`(2.0))
                         } else if (yaw < 180) {
@@ -58,7 +57,7 @@ class AutoParallel : CommandBase() {
                         } else if (yaw > 180) {
                             Drivetrain.stupidDrive(`M/s`(-yawPower), `M/s`(yawPower))
                         }
-                    } else if (chargingDock.x2 < pose.x) {
+                    } else if (Field.map.chargingDock.x2 < pose.x) {
                         if ((yaw - 270) < 0.5) {
                             Drivetrain.stupidDrive(`M/s`(2.0), `M/s`(2.0))
                         } else if (yaw < 180) {

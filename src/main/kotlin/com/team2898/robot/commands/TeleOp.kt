@@ -2,21 +2,17 @@ package com.team2898.robot.commands
 
 //The commands for both the driver and operator
 import com.bpsrobotics.engine.utils.`M/s`
-import com.bpsrobotics.engine.utils.Rectangle
 import com.bpsrobotics.engine.utils.Sugar.angleDifference
 import com.bpsrobotics.engine.utils.Sugar.degreesToRadians
+import com.bpsrobotics.engine.utils.geometry.Rectangle
 import com.team2898.robot.OI
 import com.team2898.robot.subsystems.Drivetrain
 import edu.wpi.first.wpilibj.drive.DifferentialDrive
 import edu.wpi.first.wpilibj2.command.CommandBase
 import edu.wpi.first.wpilibj.drive.DifferentialDrive.curvatureDriveIK
-import com.team2898.robot.commands.AutoBalance
 import com.team2898.robot.subsystems.Odometry
 import edu.wpi.first.wpilibj.DriverStation
-import edu.wpi.first.wpilibj.DriverStation.Alliance
-import edu.wpi.first.wpilibj.drive.DifferentialDrive.arcadeDriveIK
 import kotlin.math.absoluteValue
-import kotlin.math.atan2
 import kotlin.math.min
 
 class TeleOp : CommandBase() {
@@ -62,10 +58,10 @@ class TeleOp : CommandBase() {
 //      Make the alliance community zone a rectangle
         val pose = Odometry.pose
 
-        val xdistToCommunity = pose.x - communityCoords.x1
+        val xdistToCommunity = pose.x - communityCoords.coordinate1.x
 //        var ydistToCommunity = pose.y - allianceYCommunitypos
         val radianDif = angleDifference(180.degreesToRadians(), pose.rotation.radians)
-        val radianDif2 = angleDifference(-180.degreesToRadians(), pose.rotation.radians)
+        val radianDif2 = angleDifference((-180).degreesToRadians(), pose.rotation.radians)
         if ((pose in communityCoords && radianDif.absoluteValue < 0.1) || (pose in communityCoords && radianDif2.absoluteValue > -0.1)) {
             // TODO: what do if pose loops around i.e 360 into 540 or -540
             val maxAllowedSpeed = 5.0 - xdistToCommunity
