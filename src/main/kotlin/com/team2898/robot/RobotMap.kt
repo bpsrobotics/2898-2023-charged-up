@@ -27,6 +27,8 @@ object RobotMap {
     val PNEUMATICS_MODULE_TYPE = PneumaticsModuleType.REVPH
     const val DISK_BREAK_FORWARD = 1
     const val DISK_BREAK_BACKWARD = 2
+    const val INTAKE_BREAK_FORWARD = 3
+    const val INTAKE_BREAK_BACKWARD = 4
 
 
 }

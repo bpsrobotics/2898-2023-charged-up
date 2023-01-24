@@ -84,6 +84,9 @@ object OI : SubsystemBase() {
 
     //Button the make the robot auto align with the charging station
     val parallelButton get() = driverController.getRawButton(0)
+    val intakeButton get() = driverController.getRawButton(3)
+    //TODO: Confer with Abhi to replace placeholder intake button
 
+    var previousIntake = false
 
 }
