@@ -1,5 +1,7 @@
 package com.bpsrobotics.engine.utils.geometry
 
+import com.bpsrobotics.engine.utils.DistanceUnit
+import com.bpsrobotics.engine.utils.Meters
 import edu.wpi.first.math.geometry.Pose2d
 import kotlin.math.*
 class Rectangle(val coordinate1: Coordinate, val coordinate2: Coordinate) {
@@ -17,5 +19,14 @@ class Rectangle(val coordinate1: Coordinate, val coordinate2: Coordinate) {
     /**Returns true if the point given in within the bounds of the rectangle */
     operator fun contains(pose: Pose2d): Boolean {
         return contains(pose.x, pose.y)
+    }
+    fun reflectHorizontally(x: DistanceUnit) : Rectangle{
+        val coor1 = coordinate1.reflectHorizontally(x)
+        val coor2 = coordinate2.reflectHorizontally(x)
+        val center = Meters((coor1.x+coor2.x)/2)
+        return Rectangle(
+            coor1.reflectHorizontally(center),
+            coor2.reflectHorizontally(center)
+        )
     }
 }

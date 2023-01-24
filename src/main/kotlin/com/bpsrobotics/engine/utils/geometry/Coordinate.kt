@@ -1,5 +1,6 @@
 package com.bpsrobotics.engine.utils.geometry
 
+import com.bpsrobotics.engine.utils.DistanceUnit
 import com.bpsrobotics.engine.utils.Feet
 import com.bpsrobotics.engine.utils.Inches
 import com.bpsrobotics.engine.utils.Meters
@@ -7,6 +8,8 @@ import kotlin.math.pow
 import kotlin.math.sqrt
 
 class Coordinate(val x: Double, val y: Double) {
+
+    constructor(x: DistanceUnit, y: DistanceUnit) : this(x.meterValue(), y.meterValue())
     companion object {
         @JvmName("newMeters")
         fun new(x: Meters, y: Meters) = Coordinate(x.value, y.value)
@@ -23,5 +26,8 @@ class Coordinate(val x: Double, val y: Double) {
     }
     operator fun minus(other: Coordinate) : Coordinate {
         return Coordinate(x - other.x,y - other.y)
+    }
+    fun reflectHorizontally(x: DistanceUnit) : Coordinate{
+        return Coordinate(x.meterValue() + (x.meterValue() - this.x),y)
     }
 }

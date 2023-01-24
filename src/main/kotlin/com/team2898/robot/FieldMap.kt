@@ -4,25 +4,48 @@ import com.bpsrobotics.engine.utils.geometry.*
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import com.bpsrobotics.engine.utils.ft
+import com.bpsrobotics.engine.utils.toMeters
+
 class Map(val community : Polygon,
           val chargingDock : Rectangle,
-          val loadingBay : Rectangle
+          val loadingBay : Polygon
         ) {
 }
+private val redLoadingBay = Polygon(
+    Coordinate(0.0.ft, 18.0.ft),
+    Coordinate(11.0.ft, 18.0.ft),
+    Coordinate(11.0.ft, 22.048.ft),
+    Coordinate(22.0.ft, 22.048.ft),
+    Coordinate(22.0.ft, 26.25.ft),
+    Coordinate(0.0.ft, 26.25.ft),
+)
+private val blueLoadingBay = Polygon(
+    Coordinate(4.5.ft,0.0.ft),
+    Coordinate(4.5.ft,18.0.ft),
+    Coordinate(11.0.ft,18.0.ft),
+    Coordinate(11.0.ft,13.22.ft),
+    Coordinate(16.07.ft,13.22.ft),
+    Coordinate(16.07.ft, 0.0.ft)
+)
+private val blueChargeStation = Rectangle(
+    Coordinate(9.56.ft,13.05.ft),
+    Coordinate(15.9.ft,4.95.ft)
+)
 
 //TODO: Replace placeholder coordinates
 val blueTeam = Map(
-    community = Polygon(
-        Coordinate(0.0,0.0),
-        Coordinate.new(18.ft,0.ft)
-    ),
-    chargingDock = Rectangle(0.0,0.0,0.0,0.0),
-    loadingBay = Rectangle(0.0,0.0,0.0,0.0)
+
+    //x + 4.5
+    community = blueLoadingBay,
+    chargingDock = blueChargeStation,
+    loadingBay = redLoadingBay.reflectHorizontally(27.ft)
 )
 val redTeam = Map(
-    community = Polygon(Coordinate(0.0,0.0)),
-    chargingDock = Rectangle(0.0,0.0,0.0,0.0),
-    loadingBay = Rectangle(0.0,0.0,0.0,0.0)
+    community = blueLoadingBay.reflectHorizontally(27.ft),
+    chargingDock = blueChargeStation.reflectHorizontally(27.ft),
+    loadingBay = redLoadingBay
+
+
 )
 object Field : SubsystemBase() {
     private var teamColor: DriverStation.Alliance = DriverStation.getAlliance()
