@@ -6,11 +6,17 @@ import com.bpsrobotics.engine.utils.Sugar.angleDifference
 import com.bpsrobotics.engine.utils.Sugar.degreesToRadians
 import com.bpsrobotics.engine.utils.geometry.Rectangle
 import com.team2898.robot.OI
+import com.team2898.robot.OI.previousIntake
+import com.team2898.robot.blueTeam
+import com.team2898.robot.redTeam
+import com.team2898.robot.subsystems.ArmControls
 import com.team2898.robot.subsystems.Drivetrain
+import com.team2898.robot.subsystems.Intake.intakePneumatic
 import edu.wpi.first.wpilibj.drive.DifferentialDrive
 import edu.wpi.first.wpilibj2.command.CommandBase
 import edu.wpi.first.wpilibj.drive.DifferentialDrive.curvatureDriveIK
 import com.team2898.robot.subsystems.Odometry
+import edu.wpi.first.wpilibj.DoubleSolenoid
 import edu.wpi.first.wpilibj.DriverStation
 import kotlin.math.absoluteValue
 import kotlin.math.min
@@ -46,14 +52,21 @@ class TeleOp : CommandBase() {
             // Otherwise, drive and turn normally
             else -> curvatureDriveIK(OI.throttle, turn, true)
         }
-
+        if (OI.intakeButton && !previousIntake) {
+            if (intakePneumatic.get() == DoubleSolenoid.Value.kForward) {
+                intakePneumatic.set(DoubleSolenoid.Value.kReverse)
+            } else {
+                intakePneumatic.set(DoubleSolenoid.Value.kForward)
+            }
+            previousIntake = true
+        } else {
+            previousIntake = false
+        }
 
         val communityCoords = if (DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
-            // TODO: Replace placeholder coordinates with real coordinates
-            Rectangle(0.0, 0.0, 0.0, 0.0)
+            blueTeam.community
         } else {
-//        do red community rectangle
-            Rectangle(0.0, 0.0, 0.0, 0.0)
+            redTeam.community
         }
 //      Make the alliance community zone a rectangle
         val pose = Odometry.pose
