@@ -3,6 +3,11 @@ package com.bpsrobotics.engine.utils.geometry
 import com.bpsrobotics.engine.utils.DistanceUnit
 import kotlin.math.PI
 
+/**
+ * A two-dimensional shape with at least 3 sides. (Sides cannot intersect)
+ * @property coordinates List of polygon vertices of the polygon
+ * @author Ozy King
+ */
 class Polygon(vararg val coordinates : Coordinate){
     val lines = mutableListOf<Line>()
     init {
@@ -10,16 +15,38 @@ class Polygon(vararg val coordinates : Coordinate){
             lines.add(Line(p1,p2))
         }
     }
+
+    /**
+     * Returns true if the coordinate is within the bounds of the polygon
+     * @param coordinate Coordinate to check
+     * @return If point is in polygon
+     * @author Ozy King
+     */
     fun contains(coordinate: Coordinate) : Boolean {
-        var left = false
-        var right = false
+        var intersections = 0
         for (i in lines){
-            if(i.intersects(coordinate, 0.0)) left = true
-            if (i.intersects(coordinate, PI)) right = true
-            if (left && right) return true
+            //println(i.intersects(coordinate, 0.0))
+            if (i.intersects(coordinate, PI)) intersections++
+            if (intersections > 1) return false
         }
-        return false
+        return intersections == 1
     }
+    /**
+     * Returns true if the point is within the bounds of the polygon
+     * @param x X value of the point to check
+     * @param y Y value of the point to check
+     * @return If point is in polygon
+     * @author Ozy King
+     */
+    fun contains(x: Double, y: Double) : Boolean{
+        return contains(Coordinate(x,y))
+    }
+    /**
+     * Returns true if the point is within the bounds of the polygon
+     * @param x X value of the point to check
+     * @return If point is in polygon
+     * @author Ozy King
+     */
     fun reflectHorizontally(x: DistanceUnit) : Polygon{
         val newCoordinates = coordinates.map { it.reflectHorizontally(x) }
         return Polygon(*newCoordinates.toTypedArray())

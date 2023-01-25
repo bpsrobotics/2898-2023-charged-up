@@ -20,9 +20,10 @@ class Line(val point1 : Coordinate, val point2 : Coordinate){
      * @return Intersection point of ray-cast and line
      * @sample intersection
      * */
-    fun intersection(coordinate : Coordinate, theta : Double) : Coordinate {
+    fun intersection(coordinate : Coordinate, theta : Double) : Coordinate? {
         var xp : Double
         var yp : Double
+        if(!intersects(coordinate, theta)) return null
         if(point2.x-point1.x == 0.0 || cos(theta) == 0.0 ){
             val rm = cos(theta) / sin(theta)
             val lm = (point2.x-point1.x)/(point2.y-point1.y)
@@ -42,7 +43,7 @@ class Line(val point1 : Coordinate, val point2 : Coordinate){
      * @return Intersection point of ray-cast and line
      * @sample intersection
      * */
-    fun intersection(pose: Pose2d) : Coordinate {
+    fun intersection(pose: Pose2d) : Coordinate? {
         return intersection(Coordinate(pose.x,pose.y), pose.rotation.radians)
     }
     /**
@@ -53,7 +54,7 @@ class Line(val point1 : Coordinate, val point2 : Coordinate){
      * @sample distance
      * */
     fun distance(coordinate : Coordinate, rotation : Double) : Double{
-        val intersectionPoint = intersection(coordinate, rotation)
+        val intersectionPoint = intersection(coordinate, rotation) ?: return Double.NaN
         return (coordinate - intersectionPoint).magnitude
     }
     /**
@@ -62,8 +63,8 @@ class Line(val point1 : Coordinate, val point2 : Coordinate){
      * @return Distance from the intersection point of ray-cast and line
      * @sample distance
      * */
-    fun distance(pose : Pose2d) : Double{
-        val intersectionPoint = intersection(pose)
+    fun distance(pose : Pose2d) : Double? {
+        val intersectionPoint = intersection(pose) ?: return null
         return (Coordinate(pose.x,pose.y) - intersectionPoint).magnitude
     }
 }

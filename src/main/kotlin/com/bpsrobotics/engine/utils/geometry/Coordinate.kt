@@ -19,7 +19,9 @@ class Coordinate(val x: Double, val y: Double) {
         fun new(x: Feet, y: Feet) = Coordinate(x.meterValue(), y.meterValue())
     }
 
-
+    /**
+     * Distance from 0, 0
+     * */
     val magnitude get() = sqrt(x.pow(2) + y.pow(2))
     operator fun plus(other: Coordinate) : Coordinate {
         return Coordinate(x + other.x, y + other.y)
@@ -27,6 +29,17 @@ class Coordinate(val x: Double, val y: Double) {
     operator fun minus(other: Coordinate) : Coordinate {
         return Coordinate(x - other.x,y - other.y)
     }
+
+    override fun toString(): String {
+        return "(x: ${x}, y: ${y})"
+    }
+
+    /**
+     * Reflects the point across a horizontal line
+     * @return Reflected point
+     * @param x The x value of the vertical line to reflect across
+     * @author Ozy King
+     */
     fun reflectHorizontally(x: DistanceUnit) : Coordinate{
         return Coordinate(x.meterValue() + (x.meterValue() - this.x),y)
     }
