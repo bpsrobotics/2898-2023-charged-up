@@ -8,7 +8,8 @@ import com.bpsrobotics.engine.utils.toMeters
 
 class Map(val community : Polygon,
           val chargingDock : Rectangle,
-          val loadingBay : Polygon
+          val loadingBay : Polygon,
+          val gridWall : Line
         ) {
 }
 private val redLoadingBay = Polygon(
@@ -31,6 +32,10 @@ private val blueChargeStation = Rectangle(
     Coordinate(9.56.ft,13.05.ft),
     Coordinate(15.9.ft,4.95.ft)
 )
+private val blueGridWall = Line(
+    Coordinate(4.5.ft,0.0.ft),
+    Coordinate(4.5.ft,18.0.ft),
+    )
 
 //TODO: Replace placeholder coordinates
 val blueTeam = Map(
@@ -38,12 +43,14 @@ val blueTeam = Map(
     //x + 4.5
     community = blueLoadingBay,
     chargingDock = blueChargeStation,
-    loadingBay = redLoadingBay.reflectHorizontally(27.ft)
+    loadingBay = redLoadingBay.reflectHorizontally(27.ft),
+    gridWall = blueGridWall
 )
 val redTeam = Map(
     community = blueLoadingBay.reflectHorizontally(27.ft),
     chargingDock = blueChargeStation.reflectHorizontally(27.ft),
-    loadingBay = redLoadingBay
+    loadingBay = redLoadingBay,
+    gridWall = blueGridWall.reflectHorizontally(27.ft)
 
 
 )

@@ -4,6 +4,13 @@ import com.bpsrobotics.engine.utils.DistanceUnit
 import com.bpsrobotics.engine.utils.Meters
 import edu.wpi.first.math.geometry.Pose2d
 import kotlin.math.*
+
+/**
+ * A two-dimensional shape with 2 sets of parallel lines
+ * @property coordinate1 Top left corner of the rectangle
+ * @property coordinate2 Bottom right corner of the rectangle
+ * @author Anthony, Ozy
+ */
 class Rectangle(val coordinate1: Coordinate, val coordinate2: Coordinate) {
     constructor(x1: Double, y1: Double, x2: Double, y2: Double) : this(Coordinate(x1, y1), Coordinate(x2, y2))
 
@@ -21,7 +28,7 @@ class Rectangle(val coordinate1: Coordinate, val coordinate2: Coordinate) {
      * @author Anthony, Ozy
      * */
     fun contains(x: Double, y: Double): Boolean {
-        return x in coordinate1.x..coordinate2.x && y in coordinate1.y..coordinate2.y
+        return x in coordinate1.x..coordinate2.x && y in coordinate2.y..coordinate1.y
     }
     /** Returns true if the coordinate given is within the bounds of the rectangle
      * @param coordinate Coordinate to check

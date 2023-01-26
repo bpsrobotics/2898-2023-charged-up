@@ -2,6 +2,9 @@ package com.bpsrobotics.engine.utils
 
 import com.kauailabs.navx.frc.AHRS
 import kotlin.math.PI
+import kotlin.math.absoluteValue
+import kotlin.math.pow
+import kotlin.math.round
 
 // Don't show warnings if these functions are unused or could be private
 @Suppress("unused", "MemberVisibilityCanBePrivate")
@@ -19,6 +22,9 @@ object Sugar {
     fun Double.radiansToDegrees(): Double {
         return times(180 / PI)
     }
+
+    infix fun Double.eqEpsilon(other: Double) = (this - other).absoluteValue < 0.01
+    infix fun Double.eqEpsilon(other: Int) = (this - other).absoluteValue < 0.01
 
     /**
      * Converts the value from degrees to radians
@@ -59,6 +65,10 @@ object Sugar {
     fun angleDifference(angle1: Double, angle2: Double): Double {
         val a = angle1 - angle2
         return (a + PI).mod(2.0 * PI) - PI
+    }
+    fun Double.roundTo(decimalPlace: Int) : Double{
+        val multiplier = 10.0.pow(decimalPlace).toInt()
+        return round(this*multiplier)/multiplier
     }
 }
 

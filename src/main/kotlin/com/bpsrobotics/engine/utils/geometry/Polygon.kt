@@ -42,9 +42,9 @@ class Polygon(vararg val coordinates : Coordinate){
         return contains(Coordinate(x,y))
     }
     /**
-     * Returns true if the point is within the bounds of the polygon
-     * @param x X value of the point to check
-     * @return If point is in polygon
+     * Returns a polygon reflected over the x value given
+     * @param x X value of the vertical line to reflect over
+     * @return Reflected polygon
      * @author Ozy King
      */
     fun reflectHorizontally(x: DistanceUnit) : Polygon{

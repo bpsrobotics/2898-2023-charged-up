@@ -71,7 +71,7 @@ class TeleOp : CommandBase() {
 //      Make the alliance community zone a rectangle
         val pose = Odometry.pose
 
-        val xdistToCommunity = pose.x - communityCoords.coordinate1.x
+        /*val xdistToCommunity = pose.x - communityCoords.coordinate1.x
 //        var ydistToCommunity = pose.y - allianceYCommunitypos
         val radianDif = angleDifference(180.degreesToRadians(), pose.rotation.radians)
         val radianDif2 = angleDifference((-180).degreesToRadians(), pose.rotation.radians)
@@ -85,7 +85,7 @@ class TeleOp : CommandBase() {
             Drivetrain.stupidDrive(`M/s`(cappedLeft * 5.0), `M/s`(cappedRight * 5.0))
         } else {
             Drivetrain.stupidDrive(`M/s`(speeds.left * 5.0), `M/s`(speeds.right * 5.0))
-        }
+        }*/
 
 
 
