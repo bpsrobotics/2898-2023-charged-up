@@ -9,6 +9,12 @@ import edu.wpi.first.wpilibj.DoubleSolenoid
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 
 object Intake: SubsystemBase() {
+    private val
+    init {
+    }
+    override fun {
+
+    }
 
     val intakePneumatic = DoubleSolenoid(PNUEMATICS_MODULE, PNEUMATICS_MODULE_TYPE, INTAKE_BREAK_FORWARD, INTAKE_BREAK_BACKWARD)
 

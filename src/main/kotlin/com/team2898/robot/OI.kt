@@ -4,6 +4,7 @@ import edu.wpi.first.math.MathUtil
 import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.XboxController
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import edu.wpi.first.wpilibj2.command.button.Trigger
 import kotlin.math.pow
 import kotlin.math.sign
 import kotlin.reflect.KProperty
@@ -74,18 +75,35 @@ object OI : SubsystemBase() {
         get() = process(driverController.rightX, deadzone = true, square = true)
 
     //This is a placeholder template for when we fully make the operator inputs
-    val armIntakePosition get() = operatorController.getRawButton(0)
-    val armHeightOne get() = operatorController.getRawButton(1)
-    val armHeightTwoCube get() = operatorController.getRawButton(2)
-    val armHeightThreeCube get() = operatorController.getRawButton(3)
-    val armHeightTwoCone get() = operatorController.getRawButton(4)
-    val armHeightThreeCone get() = operatorController.getRawButton(5)
-    val armFeederStation get() = operatorController.getRawButton(6)
+    class Toggle(private val lambda: () -> Boolean) {
+        var value = false
+        private var lastValue = false
+
+        operator fun getValue(thisRef: Any?, property: KProperty<*>): Boolean {
+            val res = lambda()
+            lastValue = if (res && !lastValue) {
+                value = !value
+                true
+            } else {
+                res
+            }
+            return value
+        }
+
+    }
+    val intakeButton by Toggle { operatorController.trigger }
+    val floorGrabButton get() = operatorController.getRawButton(2)
+    val lowArm get() = operatorController.getRawButton(12)
+    val midArmCube get() = operatorController.getRawButton(11)
+    val midArmCone get() = operatorController.getRawButton(10)
+    //We might not do High Arm Cube and Cone - Abhi
+    val highArmCube get() = operatorController.getRawButton(9)
+    val highArmCone get() = operatorController.getRawButton(8)
+
 
     //Button the make the robot auto align with the charging station
     val parallelButton get() = driverController.getRawButton(0)
-    val intakeButton get() = driverController.getRawButton(3)
-    //TODO: Confer with Abhi to replace placeholder intake button
+
 
     var previousIntake = false
 
