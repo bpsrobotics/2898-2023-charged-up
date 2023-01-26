@@ -5,6 +5,7 @@ import com.bpsrobotics.engine.utils.`M/s`
 import com.bpsrobotics.engine.utils.Sugar.angleDifference
 import com.bpsrobotics.engine.utils.Sugar.degreesToRadians
 import com.bpsrobotics.engine.utils.geometry.Rectangle
+import com.team2898.robot.Field
 import com.team2898.robot.OI
 import com.team2898.robot.OI.previousIntake
 import com.team2898.robot.blueTeam
@@ -71,13 +72,10 @@ class TeleOp : CommandBase() {
 //      Make the alliance community zone a rectangle
         val pose = Odometry.pose
 
-        /*val xdistToCommunity = pose.x - communityCoords.coordinate1.x
-//        var ydistToCommunity = pose.y - allianceYCommunitypos
-        val radianDif = angleDifference(180.degreesToRadians(), pose.rotation.radians)
-        val radianDif2 = angleDifference((-180).degreesToRadians(), pose.rotation.radians)
-        if ((pose in communityCoords && radianDif.absoluteValue < 0.1) || (pose in communityCoords && radianDif2.absoluteValue > -0.1)) {
+        val distanceToCommunity = Field.map.gridWall.distance(pose) ?: 100.0
+        if (distanceToCommunity < 5.0) {
             // TODO: what do if pose loops around i.e 360 into 540 or -540
-            val maxAllowedSpeed = 5.0 - xdistToCommunity
+            val maxAllowedSpeed = distanceToCommunity + 0.5
 
             val cappedLeft = min(speeds.left, maxAllowedSpeed)
             val cappedRight = min(speeds.right, maxAllowedSpeed)
@@ -85,7 +83,7 @@ class TeleOp : CommandBase() {
             Drivetrain.stupidDrive(`M/s`(cappedLeft * 5.0), `M/s`(cappedRight * 5.0))
         } else {
             Drivetrain.stupidDrive(`M/s`(speeds.left * 5.0), `M/s`(speeds.right * 5.0))
-        }*/
+        }
 
 
 
