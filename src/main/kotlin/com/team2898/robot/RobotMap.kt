@@ -10,6 +10,7 @@ object RobotMap {
     const val DRIVETRAIN_RIGHT_SECONDARY  = 4
     const val ARM_MAIN = 5
     const val ARM_SECONDARY = 6
+    const val INTAKE_MOTOR = 7
 
 
     // DIO
