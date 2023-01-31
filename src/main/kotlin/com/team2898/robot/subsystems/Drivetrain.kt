@@ -114,23 +114,24 @@ object Drivetrain : SubsystemBase() {
     init {
         differentialDrive.setDeadband(0.0)
 
-        // FIXME
-//        applyToMotors {
-//            if (this is WPI_TalonSRX) {
-//                configFactoryDefault()
-//                // Configure current limits to prevent motors stalling and overheating/breaking something or browning out the robot
-//                configContinuousCurrentLimit(DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT)
-//                // Have a higher peak current limit for accelerating and starting, but it's only allowed for a short amount of time
-//                configPeakCurrentLimit(DRIVETRAIN_PEAK_CURRENT_LIMIT, DRIVETRAIN_PEAK_CURRENT_LIMIT_DURATION)
-//            } else if (this is CANSparkMax) {
-//                restoreFactoryDefaults()
-//                setSmartCurrentLimit(DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT)
-//                idleMode = CANSparkMax.IdleMode.kCoast
-//           }
-//        }
-//
-//        rightMain.inverted = true
-//        rightSecondary.inverted = true
+        applyToMotors {
+            if (this is WPI_TalonSRX) {
+                configFactoryDefault()
+                // Configure current limits to prevent motors stalling and overheating/breaking something or browning out the robot
+                configContinuousCurrentLimit(DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT)
+                // Have a higher peak current limit for accelerating and starting, but it's only allowed for a short amount of time
+                configPeakCurrentLimit(DRIVETRAIN_PEAK_CURRENT_LIMIT, DRIVETRAIN_PEAK_CURRENT_LIMIT_DURATION)
+            } else if (this is CANSparkMax) {
+                restoreFactoryDefaults()
+                setSmartCurrentLimit(DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT)
+                idleMode = CANSparkMax.IdleMode.kCoast
+           }
+        }
+
+        leftMain.inverted = true
+        leftSecondary.inverted = true
+        rightMain.inverted = false
+        rightSecondary.inverted = false
     }
 
     fun follow(path: Trajectory) {

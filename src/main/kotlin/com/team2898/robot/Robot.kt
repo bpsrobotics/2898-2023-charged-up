@@ -49,6 +49,8 @@ object Robot : TimedRobot() {
             BatteryLogger(PowerDistribution(60, ModuleType.kRev))
         }
 
+        Field.initialize()
+
         Drivetrain
     }
 
@@ -98,7 +100,9 @@ object Robot : TimedRobot() {
         // continue until interrupted by another command, remove
         // this line or comment it out.
         autoCommand.let { autoCommand.cancel() }
-        Drivetrain.defaultCommand = TeleOp()
+        val teleop = TeleOp()
+        Drivetrain.defaultCommand = teleop
+        teleop.schedule()
     }
 
     /**

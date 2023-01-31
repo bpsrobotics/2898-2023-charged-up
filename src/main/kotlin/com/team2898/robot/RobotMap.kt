@@ -24,7 +24,7 @@ object RobotMap {
     const val ARM_ENCODER_B = 5
 
     //Pneumatics
-    const val PNUEMATICS_MODULE = 0
+    const val PNUEMATICS_MODULE = 42
     val PNEUMATICS_MODULE_TYPE = PneumaticsModuleType.REVPH
     const val DISK_BREAK_FORWARD = 1
     const val DISK_BREAK_BACKWARD = 2
