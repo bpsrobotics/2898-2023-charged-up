@@ -67,6 +67,12 @@ class TeleOp : CommandBase() {
             Drivetrain.stupidDrive(`M/s`(speeds.left * 5.0), `M/s`(speeds.right * 5.0))
         }
 
+        if (OI.intakeButton) {
+            Intake.runIntake()
+        }
+        else if (OI.outtakeButton) {
+            Intake.runOuttake()
+        }
     }
 
     // Called once the command ends or is interrupted.

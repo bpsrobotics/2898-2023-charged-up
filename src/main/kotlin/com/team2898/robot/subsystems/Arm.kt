@@ -1,8 +1,6 @@
 package com.team2898.robot.subsystems
 
-import com.team2898.robot.commands.AutoParallel
 import com.revrobotics.CANSparkMax
-import com.revrobotics.CANSparkMaxLowLevel
 import com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless
 import com.team2898.robot.Constants.ARM_MAXACCEL
 import com.team2898.robot.Constants.ARM_MAXSPEED
@@ -39,6 +37,7 @@ object ArmControls : SubsystemBase() {
     private val breakSolenoid = DoubleSolenoid(PNUEMATICS_MODULE, PNEUMATICS_MODULE_TYPE, DISK_BREAK_FORWARD, DISK_BREAK_BACKWARD)
     //TODO: Reminder to fix the encoder channel
     private val encoder = Encoder(ARM_ENCODER_A, ARM_ENCODER_B)
+    //TODO: Tune the armFeedforward numbers
     private val feedforward = ArmFeedforward(0.0,0.0,0.0)
 
 
