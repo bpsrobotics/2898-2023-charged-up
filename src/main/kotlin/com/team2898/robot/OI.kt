@@ -1,5 +1,6 @@
 package com.team2898.robot
 
+import com.team2898.robot.subsystems.Drivetrain
 import com.team2898.robot.subsystems.Intake
 import edu.wpi.first.math.MathUtil
 import edu.wpi.first.wpilibj.Joystick
@@ -121,5 +122,12 @@ object OI : SubsystemBase() {
             Commands.startEnd(
                 Intake::intakeOpen,
                 Intake::intakeClose))
+
+        Trigger { operatorController.pov != 0 }.toggleOnTrue(
+            Commands.startEnd(
+                Drivetrain::brakeMode,
+                Drivetrain::coastMode
+            )
+        )
     }
 }

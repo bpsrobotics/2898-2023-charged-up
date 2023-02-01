@@ -32,6 +32,7 @@ import com.team2898.robot.Constants.DRIVETRAIN_TRACK_WIDTH
 import com.team2898.robot.DriverDashboard
 import edu.wpi.first.math.controller.SimpleMotorFeedforward
 import edu.wpi.first.math.trajectory.Trajectory
+import edu.wpi.first.util.sendable.SendableBuilder
 import edu.wpi.first.wpilibj.Encoder
 import edu.wpi.first.wpilibj.RobotBase
 import edu.wpi.first.wpilibj.Timer
@@ -60,13 +61,12 @@ object Drivetrain : SubsystemBase() {
         listOf(leftEncoder, rightEncoder).map {
             it.distancePerPulse = (In(6.0).meterValue() * PI) / 2048
         }
+        leftEncoder.setReverseDirection(true)
+
         if (RobotBase.isReal()) {
              val file = File("/home/lvuser/dt-data.csv").outputStream().bufferedWriter()
              file.write("time,leftvel,rightvel,leftgoal,rightgoal,leftpid,rightpid,leftff,rightff\n")
         }
-
-        // FIXME
-//        leftMain.inverted = true
     }
 
     val trajectoryMaker = TrajectoryMaker(DRIVETRAIN_MAX_VELOCITY, DRIVETRAIN_MAX_ACCELERATION)
@@ -208,5 +208,27 @@ object Drivetrain : SubsystemBase() {
         DriverDashboard.number("left encoder", Odometry.leftVel.value)
         DriverDashboard.number("right encoder", Odometry.rightVel.value)
 //        differentialDrive.feed()
+
+    }
+
+    fun brakeMode() {
+        applyToMotors {
+            when (this) {
+                is CANSparkMax -> { idleMode = CANSparkMax.IdleMode.kBrake }
+            }
+        }
+    }
+
+    fun coastMode() {
+        applyToMotors {
+            when (this) {
+                is CANSparkMax -> { idleMode = CANSparkMax.IdleMode.kCoast }
+            }
+        }
+    }
+
+    override fun initSendable(builder: SendableBuilder) {
+        builder.addDoubleProperty("leftEncoderPos", leftEncoder::getDistance) {}
+        builder.addDoubleProperty("rightEncoderPos", rightEncoder::getDistance) {}
     }
 }

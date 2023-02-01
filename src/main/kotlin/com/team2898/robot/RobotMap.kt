@@ -14,11 +14,11 @@ object RobotMap {
 
 
     // DIO
-    const val DRIVETRAIN_LEFT_ENCODER_A   = 0
-    const val DRIVETRAIN_LEFT_ENCODER_B   = 1
+    const val DRIVETRAIN_LEFT_ENCODER_A   = 2
+    const val DRIVETRAIN_LEFT_ENCODER_B   = 3
 
-    const val DRIVETRAIN_RIGHT_ENCODER_A  = 2
-    const val DRIVETRAIN_RIGHT_ENCODER_B  = 3
+    const val DRIVETRAIN_RIGHT_ENCODER_A  = 0
+    const val DRIVETRAIN_RIGHT_ENCODER_B  = 1
 
     const val ARM_ENCODER_A = 4
     const val ARM_ENCODER_B = 5

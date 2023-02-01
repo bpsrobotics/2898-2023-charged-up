@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase
 import edu.wpi.first.wpilibj.drive.DifferentialDrive.curvatureDriveIK
 import com.team2898.robot.subsystems.Odometry
 import edu.wpi.first.wpilibj.DriverStation
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Commands
 import kotlin.math.absoluteValue
 import kotlin.math.min
@@ -52,20 +53,23 @@ class TeleOp : CommandBase() {
             else -> curvatureDriveIK(OI.throttle, turn, true)
         }
 
-
+        val pitch = Odometry.NavxHolder.navx.pitch
+        val kP = 0.003
+        val ff = if (pitch.absoluteValue > 2.0) kP * pitch else 0.0
+        Drivetrain.stupidDrive(`M/s`(speeds.left * 5.0 + ff), `M/s`(speeds.right * 5.0 + ff))
 //      Make the alliance community zone a rectangle
-        val pose = Odometry.pose
-        val distanceToCommunity = Field.map.gridWall.distance(pose) ?: 100.0
-        if (distanceToCommunity < 5.0) {
-            val maxAllowedSpeed = distanceToCommunity + 0.5
-
-            val cappedLeft = min(speeds.left, maxAllowedSpeed)
-            val cappedRight = min(speeds.right, maxAllowedSpeed)
+//        val pose = Odometry.pose
+//        val distanceToCommunity = Field.map.gridWall.distance(pose) ?: 100.0
+//        if (distanceToCommunity < 5.0) {
+//            val maxAllowedSpeed = distanceToCommunity + 0.5
 //
-            Drivetrain.stupidDrive(`M/s`(cappedLeft * 5.0), `M/s`(cappedRight * 5.0))
-        } else {
-            Drivetrain.stupidDrive(`M/s`(speeds.left * 5.0), `M/s`(speeds.right * 5.0))
-        }
+//            val cappedLeft = min(speeds.left, maxAllowedSpeed)
+//            val cappedRight = min(speeds.right, maxAllowedSpeed)
+////
+//            Drivetrain.stupidDrive(`M/s`(cappedLeft * 5.0), `M/s`(cappedRight * 5.0))
+//        } else {
+//            Drivetrain.stupidDrive(`M/s`(speeds.left * 5.0), `M/s`(speeds.right * 5.0))
+//        }
 
         if (OI.intakeButton) {
             Intake.runIntake()
