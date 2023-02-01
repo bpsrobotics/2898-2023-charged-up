@@ -101,6 +101,7 @@ object OI : SubsystemBase() {
 
     val intakeButton by Toggle { operatorController.trigger }
     */
+//TODO: assign proper intake and outtake buttons
     val intakeButton get() = operatorController.getRawButton(3)
     val outtakeButton get() = operatorController.getRawButton(5)
     val floorGrabButton get() = operatorController.getRawButton(2)
