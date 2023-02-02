@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase
 import edu.wpi.first.wpilibj.drive.DifferentialDrive.curvatureDriveIK
 import com.team2898.robot.subsystems.Odometry
 import edu.wpi.first.wpilibj.DriverStation
+import edu.wpi.first.wpilibj.PneumaticHub
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Commands
 import kotlin.math.absoluteValue
@@ -31,6 +32,7 @@ class TeleOp : CommandBase() {
     override fun initialize() {
         Drivetrain.mode = Drivetrain.Mode.OPEN_LOOP
         Intake
+        PneumaticHub(42).enableCompressorDigital()
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -72,11 +74,11 @@ class TeleOp : CommandBase() {
 //            Drivetrain.stupidDrive(`M/s`(speeds.left * 5.0), `M/s`(speeds.right * 5.0))
 //        }
 
-        if (OI.intakeButton) {
-            Intake.runIntake()
-        }
-        else if (OI.outtakeButton) {
+        if (OI.highHat > 270 || OI.highHat < 90)  {
             Intake.runOuttake()
+        }
+        else if (OI.highHat in 91 until  270) {
+            Intake.runIntake()
         }
     }
 
