@@ -174,8 +174,7 @@ object Drivetrain : SubsystemBase() {
     /** Runs the provided [block] of code on each motor. */
     private fun applyToMotors(block: MotorController.() -> Unit) {
         for (motor in listOf(leftMain, leftSecondary, rightMain, rightSecondary)) {
-            // FIXME
-//            motor.apply(block)
+            motor.apply(block)
         }
     }
 
@@ -187,13 +186,18 @@ object Drivetrain : SubsystemBase() {
                 }
             }  // Nothing to do in the loop because it's handled by [Robot]
             Mode.CLOSED_LOOP -> {
-                // FIXME
-//                rawDrive(
-//                    ramsete.voltages(
-//                    trajectory ?: run { mode = Mode.OPEN_LOOP; return },
-//                    Timer.getFPGATimestamp().seconds - startTime,
-//                    Odometry.vels
-//                ))
+                val traj = trajectory
+                if (traj == null) {
+                    mode = Mode.OPEN_LOOP
+                    return
+                }
+
+                rawDrive(
+                    ramsete.voltages(
+                    traj,
+                    Timer.getFPGATimestamp().seconds - startTime,
+                    Odometry.vels
+                ))
             }
             Mode.STUPID -> {
                 val l = leftPid.calculate(leftEncoder.rate)
