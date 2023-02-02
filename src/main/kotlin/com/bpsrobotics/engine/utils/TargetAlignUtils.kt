@@ -28,6 +28,6 @@
 //        abs(distance) < 0.02
 //    }
 //    fun getPowers(): Shooter.ShooterPowers{
-//        TODO("Deprecated")
+//
 //    }
 //}
