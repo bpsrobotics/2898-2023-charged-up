@@ -56,7 +56,7 @@ val redTeam = Map(
 )
 object Field : SubsystemBase() {
     private var teamColor: DriverStation.Alliance = DriverStation.getAlliance()
-    lateinit var map : Map;
+    lateinit var map : Map
     fun initialize() {
         map = if (teamColor == DriverStation.Alliance.Blue) {
             blueTeam

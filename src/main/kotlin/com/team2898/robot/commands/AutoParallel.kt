@@ -5,6 +5,8 @@ import com.team2898.robot.Constants.AUTOBALANCE_KP
 import com.team2898.robot.Constants.AUTOBALANCE_KI
 import com.team2898.robot.Constants.AUTOBALANCE_KD
 import com.team2898.robot.Field
+import com.team2898.robot.blueTeam
+import com.team2898.robot.redTeam
 import com.team2898.robot.subsystems.Drivetrain
 import com.team2898.robot.subsystems.Odometry
 import edu.wpi.first.math.controller.PIDController
@@ -28,56 +30,25 @@ class AutoParallel : CommandBase() {
         val testing = true
 
         //TODO: Figure out which direction is negative rotation, and adjust rotation direction accordingly
-        if (pose.x !in (Field.map.chargingDock.x1..Field.map.chargingDock.x2)) {
-                if (teamColor == DriverStation.Alliance.Blue || testing) {
-                    if (Field.map.chargingDock.x2 < pose.x) {
-                        if ((yaw - 270) < 0.5) {
-                            Drivetrain.stupidDrive(`M/s`(2.0), `M/s`(2.0))
-                        } else if (yaw < 180) {
-                            Drivetrain.stupidDrive(`M/s`(yawPower), `M/s`(-yawPower))
-                        } else if (yaw > 180) {
-                            Drivetrain.stupidDrive(`M/s`(-yawPower), `M/s`(yawPower))
-                        }
-                    } else if (Field.map.chargingDock.x1 > pose.x) {
-                        if ((yaw - 90) < 0.5) {
-                            Drivetrain.stupidDrive(`M/s`(2.0), `M/s`(2.0))
-                        } else if (yaw < 180) {
-                            Drivetrain.stupidDrive(`M/s`(yawPower), `M/s`(-yawPower))
-                        } else if (yaw > 180) {
-                            Drivetrain.stupidDrive(`M/s`(-yawPower), `M/s`(yawPower))
-                        }
-                    }
-
-                } else if (teamColor == DriverStation.Alliance.Red) {
-                    if (pose.x < Field.map.chargingDock.x1) {
-                        if ((yaw - 90) < 0.5) {
-                            Drivetrain.stupidDrive(`M/s`(2.0), `M/s`(2.0))
-                        } else if (yaw < 180) {
-                            Drivetrain.stupidDrive(`M/s`(yawPower), `M/s`(-yawPower))
-                        } else if (yaw > 180) {
-                            Drivetrain.stupidDrive(`M/s`(-yawPower), `M/s`(yawPower))
-                        }
-                    } else if (Field.map.chargingDock.x2 < pose.x) {
-                        if ((yaw - 270) < 0.5) {
-                            Drivetrain.stupidDrive(`M/s`(2.0), `M/s`(2.0))
-                        } else if (yaw < 180) {
-                            Drivetrain.stupidDrive(`M/s`(yawPower), `M/s`(-yawPower))
-                        } else if (yaw > 180) {
-                            Drivetrain.stupidDrive(`M/s`(-yawPower), `M/s`(yawPower))
-                        }
-                    }
+        if (pose.y in (Field.map.chargingDock.y1..Field.map.chargingDock.y2)) {
+            if (pose.x > Field.map.chargingDock.x2) {
+                if (yaw > 270 || yaw < 90) {
+                    Drivetrain.stupidDrive(`M/s`(-yawPower), `M/s`(yawPower))
+                } else if (yaw in (90.0..270.0)) {
+                    Drivetrain.stupidDrive(`M/s`(yawPower), `M/s`(-yawPower))
+                }
+            } else if (pose.x < Field.map.chargingDock.x1) {
+                if (yaw < 90 || yaw > 270) {
+                    Drivetrain.stupidDrive(`M/s`(yawPower), `M/s`(-yawPower))
+                } else if (yaw in (90.0..270.0)) {
+                    Drivetrain.stupidDrive(`M/s`(-yawPower), `M/s`(yawPower))
                 }
             }
-
+        }
     }
 
     override fun isFinished(): Boolean {
-        //TODO: Make it incorporate the position on the map
-        if (teamColor == DriverStation.Alliance.Blue) {
-            println("yaw absolute is ${yaw.absoluteValue}")
-        }
-
-        return (yaw.absoluteValue) > 3
+        return (Field.map.chargingDock.contains(pose))
     }
 
 }

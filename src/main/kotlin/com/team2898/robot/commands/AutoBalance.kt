@@ -85,6 +85,8 @@ class AutoBalance : CommandBase() {
                 }
                 Drivetrain.stupidDrive(`M/s`(rollPower), `M/s`(rollPower))
             }
+
+            else -> {}
         }
 
     }
@@ -97,7 +99,6 @@ class AutoBalance : CommandBase() {
     }
 
     private fun findState(): DrivingState?  {
-        //TODO: Fully set up the findState function
         return if ((max - min < 0.2)) {
             DrivingState.FINDINGMIDDLE
         } else if (rollRate > 3 || roll > 0) {

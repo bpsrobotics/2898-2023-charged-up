@@ -35,7 +35,7 @@ object ArmControls : SubsystemBase() {
     private val armMotor1 = CANSparkMax(ARM_MAIN, kBrushless)
     private val armMotor2 = CANSparkMax(ARM_SECONDARY, kBrushless)
     private val breakSolenoid = DoubleSolenoid(PNUEMATICS_MODULE, PNEUMATICS_MODULE_TYPE, DISK_BREAK_FORWARD, DISK_BREAK_BACKWARD)
-    //TODO: Reminder to fix the encoder channel
+    //TODO: Reminder to fix the arm encoder channel (ports)
     private val encoder = Encoder(ARM_ENCODER_A, ARM_ENCODER_B)
     //TODO: Tune the armFeedforward numbers
     private val feedforward = ArmFeedforward(0.0,0.0,0.0)
