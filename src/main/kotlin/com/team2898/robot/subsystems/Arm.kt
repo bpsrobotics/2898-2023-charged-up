@@ -28,8 +28,6 @@ import kotlin.math.absoluteValue
 object ArmControls : SubsystemBase() {
 
     private var constraints = TrapezoidProfile.Constraints(ARM_MAXSPEED, ARM_MAXACCEL)
-//    private var profileState = TrapezoidProfile.State()
-
     private val controller = ProfiledPIDController(ARM_RAISED_KP, ARM_RAISED_KI, ARM_RAISED_KD,constraints)
     private var currentGoal: Double? = null
     private val armMotor1 = CANSparkMax(ARM_MAIN, kBrushless)

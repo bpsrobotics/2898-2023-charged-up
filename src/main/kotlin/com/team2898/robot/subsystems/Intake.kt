@@ -17,8 +17,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase
 
 object Intake: SubsystemBase() {
 
-    val intakePneumatic = DoubleSolenoid(PNUEMATICS_MODULE, PNEUMATICS_MODULE_TYPE, INTAKE_BREAK_FORWARD, INTAKE_BREAK_BACKWARD)
-    val intakeMotor = CANSparkMax(INTAKE_MOTOR, kBrushed)
+    private val intakePneumatic = DoubleSolenoid(PNUEMATICS_MODULE, PNEUMATICS_MODULE_TYPE, INTAKE_BREAK_FORWARD, INTAKE_BREAK_BACKWARD)
+    private val intakeMotor = CANSparkMax(INTAKE_MOTOR, kBrushed)
     fun intakeOpen () {
         intakePneumatic.set(kForward)
     }

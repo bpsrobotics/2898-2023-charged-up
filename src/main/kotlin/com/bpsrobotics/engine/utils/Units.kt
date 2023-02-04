@@ -249,7 +249,8 @@ fun DistanceUnit.toMeters() = Meters(meterValue())
 fun VelocityUnit.toMetersPerSecond() = `M/s`(metersPerSecondValue())
 
 fun Radians.toDegrees() = Degrees(value.radiansToDegrees())
-// TODO: more
+
+// TODO: Add more conversion functions
 
 inline val Double.volts get() = Volts(this)
 inline val Double.seconds get() = Seconds(this)

@@ -60,19 +60,22 @@ class TeleOp : CommandBase() {
         val kP = 0.003
         val ff = if (pitch.absoluteValue > 2.0) kP * pitch else 0.0
         Drivetrain.stupidDrive(`M/s`(speeds.left * 5.0 + ff), `M/s`(speeds.right * 5.0 + ff))
-//      Make the alliance community zone a rectangle
-//        val pose = Odometry.pose
-//        val distanceToCommunity = Field.map.gridWall.distance(pose) ?: 100.0
-//        if (distanceToCommunity < 5.0) {
-//            val maxAllowedSpeed = distanceToCommunity + 0.5
-//
-//            val cappedLeft = min(speeds.left, maxAllowedSpeed)
-//            val cappedRight = min(speeds.right, maxAllowedSpeed)
-////
-//            Drivetrain.stupidDrive(`M/s`(cappedLeft * 5.0), `M/s`(cappedRight * 5.0))
-//        } else {
-//            Drivetrain.stupidDrive(`M/s`(speeds.left * 5.0), `M/s`(speeds.right * 5.0))
-//        }
+
+        /*
+      Make the alliance community zone a rectangle
+        val pose = Odometry.pose
+        val distanceToCommunity = Field.map.gridWall.distance(pose) ?: 100.0
+        if (distanceToCommunity < 5.0) {
+            val maxAllowedSpeed = distanceToCommunity + 0.5
+
+            val cappedLeft = min(speeds.left, maxAllowedSpeed)
+            val cappedRight = min(speeds.right, maxAllowedSpeed)
+
+            Drivetrain.stupidDrive(`M/s`(cappedLeft * 5.0), `M/s`(cappedRight * 5.0))
+        } else {
+            Drivetrain.stupidDrive(`M/s`(speeds.left * 5.0), `M/s`(speeds.right * 5.0))
+        }
+*/
 
         if (OI.highHat > 270 || OI.highHat < 90)  {
             Intake.runOuttake()

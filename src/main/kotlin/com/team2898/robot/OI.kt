@@ -77,7 +77,7 @@ object OI : SubsystemBase() {
     val turn
         get() = process(driverController.rightX, deadzone = true, square = true)
 
-//TODO: assign proper intake and outtake buttons
+
     val highHat get() = operatorController.pov
     val floorGrabButton get() = operatorController.getRawButton(2)
     val lowArm get() = operatorController.getRawButton(12)

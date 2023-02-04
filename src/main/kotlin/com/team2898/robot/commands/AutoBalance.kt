@@ -22,7 +22,7 @@ class AutoBalance : CommandBase() {
 
     // estimated CG position
     private var min = 0.0
-    private var max = 0.0
+    private var max = 5.0
 
     private var state = findState()
 
@@ -57,6 +57,8 @@ class AutoBalance : CommandBase() {
 
         val averagePos = (max+min)/2
 
+        state = findState()
+
         when (state) {
             DrivingState.DRIVINGFORWARDS -> {
                 val speed = when (pose.x) {
@@ -72,16 +74,19 @@ class AutoBalance : CommandBase() {
                 }
                 Drivetrain.stupidDrive(`M/s`(speed),`M/s`(speed))
             }
-            DrivingState.FINDINGMIDDLE -> {
+            DrivingState.DRIVINGTOMIDDLE -> {
                 //TODO: Adjust the multiplied amount
-                val middlePower = (odometry.poseMeters.x - averagePos)* 0.1
+                val middlePower = (odometry.poseMeters.x - averagePos) * 0.1
                 Drivetrain.stupidDrive(`M/s`(-middlePower),`M/s`(-middlePower))
             }
             DrivingState.BALANCING -> {
                 val rollPower = pid.calculate(roll).clamp(-0.05, 0.05) + dController.calculate(roll) + roll * m
-                if (rollRate.absoluteValue > 5) {
+                if (rollRate.absoluteValue > 3) {
                     // TODO: Widen estimate range?
                     state = findState()
+                    val difference = (max-min) * 0.2
+                    min -= difference
+                    max += difference
                 }
                 Drivetrain.stupidDrive(`M/s`(rollPower), `M/s`(rollPower))
 
@@ -95,14 +100,14 @@ class AutoBalance : CommandBase() {
     enum class DrivingState {
         DRIVINGFORWARDS,
         DRIVINGBACKWARDS,
-        FINDINGMIDDLE,
+        DRIVINGTOMIDDLE,
         BALANCING
     }
 
     private fun findState(): DrivingState?  {
         return when {
             max - min < 0.2 -> {
-                DrivingState.FINDINGMIDDLE
+                DrivingState.DRIVINGTOMIDDLE
             }
             rollRate > 3 || roll > 0 -> {
                 DrivingState.DRIVINGFORWARDS
