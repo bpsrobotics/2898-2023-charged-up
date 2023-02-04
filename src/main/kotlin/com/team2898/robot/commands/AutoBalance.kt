@@ -84,6 +84,7 @@ class AutoBalance : CommandBase() {
                     state = findState()
                 }
                 Drivetrain.stupidDrive(`M/s`(rollPower), `M/s`(rollPower))
+
             }
 
             else -> {}
@@ -99,16 +100,21 @@ class AutoBalance : CommandBase() {
     }
 
     private fun findState(): DrivingState?  {
-        return if ((max - min < 0.2)) {
-            DrivingState.FINDINGMIDDLE
-        } else if (rollRate > 3 || roll > 0) {
-            DrivingState.DRIVINGFORWARDS
-        } else if ((rollRate < -3 || roll < 0)) {
-            DrivingState.DRIVINGBACKWARDS
-        } else if ((odometry.poseMeters.x) in (min..max)) {
-            DrivingState.BALANCING
+        return when {
+            max - min < 0.2 -> {
+                DrivingState.FINDINGMIDDLE
+            }
+            rollRate > 3 || roll > 0 -> {
+                DrivingState.DRIVINGFORWARDS
+            }
+            rollRate < -3 || roll < 0 -> {
+                DrivingState.DRIVINGBACKWARDS
+            }
+            (odometry.poseMeters.x) in (min..max) -> {
+                DrivingState.BALANCING
+            }
+            else -> state
         }
-        else state
     }
     override fun isFinished(): Boolean {
         //TODO: Test and adjust these values to be more accurate

@@ -77,42 +77,19 @@ object OI : SubsystemBase() {
     val turn
         get() = process(driverController.rightX, deadzone = true, square = true)
 
-/*
-
-    //This is a placeholder template for when we fully make the operator inputs
-    class Toggle(private val lambda: () -> Boolean) {
-        var value = false
-        private var lastValue = false
-
-        */
-/** This is a toggle that checks if the last input is the same as current input *//*
-
-        operator fun getValue(thisRef: Any?, property: KProperty<*>): Boolean {
-            val result = lambda()
-            lastValue = if (result && !lastValue) {
-                value = !value
-                true
-            } else {
-                result
-            }
-            return value
-        }
-    }
-
-    val intakeButton by Toggle { operatorController.trigger }
-    */
 //TODO: assign proper intake and outtake buttons
     val highHat get() = operatorController.pov
     val floorGrabButton get() = operatorController.getRawButton(2)
     val lowArm get() = operatorController.getRawButton(12)
     val midArmCube get() = operatorController.getRawButton(11)
     val midArmCone get() = operatorController.getRawButton(10)
-    //We might not do High Arm Cube and Cone - Abhi
+
+    /** We might not do High Arm Cube and Cone - Abhi */
     val highArmCube get() = operatorController.getRawButton(9)
     val highArmCone get() = operatorController.getRawButton(8)
 
 
-    //Button the make the robot auto align with the charging station
+    /** Button the make the robot auto align with the charging station */
     val parallelButton get() = driverController.getRawButton(0)
 
     val operatorTrigger = Trigger { operatorController.trigger }
