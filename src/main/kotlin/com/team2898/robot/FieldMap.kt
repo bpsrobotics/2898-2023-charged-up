@@ -6,6 +6,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase
 import com.bpsrobotics.engine.utils.ft
 import com.bpsrobotics.engine.utils.toMeters
 
+/**
+ * Used to store Alliance-specific locations
+ * @property community The community zone on the field, stored as a Polygon
+ * @property chargingDock The alliance's charging dock, stored as a Rectangle
+ * @property loadingBay The alliance's loading bay, stored as a Polygon
+ * @property gridWall The line separating the scoring grid from the community zone.
+ * */
 class Map(val community : Polygon,
           val chargingDock : Rectangle,
           val loadingBay : Polygon,
@@ -37,23 +44,28 @@ private val blueGridWall = Line(
     Coordinate(4.5.ft,18.0.ft),
     )
 
-//TODO: Replace placeholder coordinates
+/** Map of the blue alliance side
+ * @see Field
+ * */
 val blueTeam = Map(
-
-    //x + 4.5
-    community = blueLoadingBay,
-    chargingDock = blueChargeStation,
-    loadingBay = redLoadingBay.reflectHorizontally(27.ft),
-    gridWall = blueGridWall
+        community = blueLoadingBay,
+        chargingDock = blueChargeStation,
+        loadingBay = redLoadingBay.reflectHorizontally(27.ft),
+        gridWall = blueGridWall
 )
+/** Map of the red alliance side
+ * @see Field
+ * */
 val redTeam = Map(
-    community = blueLoadingBay.reflectHorizontally(27.ft),
-    chargingDock = blueChargeStation.reflectHorizontally(27.ft),
-    loadingBay = redLoadingBay,
-    gridWall = blueGridWall.reflectHorizontally(27.ft)
-
-
+        community = blueLoadingBay.reflectHorizontally(27.ft),
+        chargingDock = blueChargeStation.reflectHorizontally(27.ft),
+        loadingBay = redLoadingBay,
+        gridWall = blueGridWall.reflectHorizontally(27.ft)
 )
+/** Map of the feild based off of the Driverstation alliance
+ * @author Ozy King
+ * @property map Includes alliance-specific zones
+ * */
 object Field : SubsystemBase() {
     private var teamColor: DriverStation.Alliance = DriverStation.getAlliance()
     lateinit var map : Map

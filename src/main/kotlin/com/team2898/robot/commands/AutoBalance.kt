@@ -10,7 +10,9 @@ import edu.wpi.first.math.kinematics.DifferentialDriveOdometry
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj2.command.CommandBase
 import kotlin.math.absoluteValue
-
+/** Robot automatically balances on the charge station
+ * @author Ori, Max Leibowitz
+ * */
 class AutoBalance : CommandBase() {
     private val pid = PIDController(0.026, 0.0, 0.0)
     private val dController = PIDController(0.0, 0.0, 0.005)
@@ -96,15 +98,19 @@ class AutoBalance : CommandBase() {
         }
 
     }
-
     enum class DrivingState {
+        /** Robot drives forwards to find maximum */
         DRIVINGFORWARDS,
+        /** Robot drives backwards to find the minimum */
         DRIVINGBACKWARDS,
         DRIVINGTOMIDDLE,
+        /** Robot attempts to stay still to keep in position between to maximum and minimum */
         BALANCING
     }
-
-    private fun findState(): DrivingState?  {
+    /**
+     * @return The state the robot should be in
+     * */
+    private fun findState(): DrivingState {
         return when {
             max - min < 0.2 -> {
                 DrivingState.DRIVINGTOMIDDLE
@@ -121,9 +127,9 @@ class AutoBalance : CommandBase() {
             else -> state
         }
     }
+    /** Finishes if both rotations are close to zero and haven't changed quickly */
     override fun isFinished(): Boolean {
         //TODO: Test and adjust these values to be more accurate
-        /** Finishes if both rotations are close to zero and haven't changed quickly */
 //        return (pitch > -2.5 || pitch < 2.5) && (roll > -2.5 || roll < 2.5) && (pitchRate < 0.3 && rollRate < 0.3)
         return false
     }

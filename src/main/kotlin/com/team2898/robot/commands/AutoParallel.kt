@@ -5,8 +5,6 @@ import com.team2898.robot.Constants.AUTOBALANCE_KP
 import com.team2898.robot.Constants.AUTOBALANCE_KI
 import com.team2898.robot.Constants.AUTOBALANCE_KD
 import com.team2898.robot.Field
-import com.team2898.robot.blueTeam
-import com.team2898.robot.redTeam
 import com.team2898.robot.subsystems.Drivetrain
 import com.team2898.robot.subsystems.Odometry
 import edu.wpi.first.math.controller.PIDController
