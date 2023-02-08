@@ -8,6 +8,7 @@
 package com.team2898.robot
 
 import com.team2898.robot.commands.AutoBalance
+import com.team2898.robot.commands.BalanceTesting
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
@@ -34,6 +35,6 @@ class RobotContainer {
 
     fun getAutonomousCommand(): Command {
         // Return the selected command
-        return InstantCommand({})
+        return BalanceTesting()
     }
 }

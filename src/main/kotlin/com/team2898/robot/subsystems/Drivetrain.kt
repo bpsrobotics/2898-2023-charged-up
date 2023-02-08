@@ -124,12 +124,13 @@ object Drivetrain : SubsystemBase() {
             } else if (this is CANSparkMax) {
                 restoreFactoryDefaults()
                 setSmartCurrentLimit(DRIVETRAIN_CONTINUOUS_CURRENT_LIMIT)
-                idleMode = CANSparkMax.IdleMode.kCoast
+                idleMode = CANSparkMax.IdleMode.kBrake
+                enableVoltageCompensation(12.0)
            }
         }
 
-        leftMain.inverted = true
-        leftSecondary.inverted = true
+        leftMain.inverted = false
+        leftSecondary.inverted = false
         rightMain.inverted = false
         rightSecondary.inverted = false
     }

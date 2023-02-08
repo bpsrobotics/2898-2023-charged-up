@@ -8,6 +8,8 @@
 package com.team2898.robot
 
 import com.bpsrobotics.engine.async.BatteryLogger
+import com.bpsrobotics.engine.utils.deg
+import com.bpsrobotics.engine.utils.m
 import com.team2898.robot.commands.TeleOp
 import com.team2898.robot.subsystems.*
 import edu.wpi.first.cameraserver.CameraServer
@@ -47,14 +49,16 @@ object Robot : TimedRobot() {
 //        CameraServer.startAutomaticCapture()
 
         // initialize battery logger
-        if (RobotBase.isReal()) {
+        /*if (RobotBase.isReal()) {
             BatteryLogger(PowerDistribution(60, ModuleType.kRev))
-        }
+        }*/
 
         Field.initialize()
 
         SmartDashboard.putData(Drivetrain)
         SmartDashboard.putData(Odometry)
+
+        Odometry.reset(0.m,0.m,0.deg)
     }
 
     /**

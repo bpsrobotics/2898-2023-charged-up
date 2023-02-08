@@ -3,6 +3,7 @@ package com.team2898.robot.commands
 import com.bpsrobotics.engine.utils.`M/s`
 import com.bpsrobotics.engine.utils.Sugar.clamp
 import com.team2898.robot.subsystems.Drivetrain
+import com.team2898.robot.subsystems.Odometry
 import com.team2898.robot.subsystems.Odometry.NavxHolder.navx
 import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.math.geometry.Rotation2d
@@ -21,18 +22,20 @@ class AutoBalance : CommandBase() {
     private var elapsedTime = 0.0
 
     private var rollRate = 0.0
-
+ 
     // estimated CG position
     private var min = 0.0
     private var max = 5.0
 
     private var state = findState()
 
-    private val odometry = DifferentialDriveOdometry(Rotation2d.fromRotations(0.0), Drivetrain.leftEncoder.distance, Drivetrain.rightEncoder.distance)
+    //private val odometry = DifferentialDriveOdometry(Rotation2d.fromRotations(0.0), Drivetrain.leftEncoder.distance, Drivetrain.rightEncoder.distance)
+    private val odometry = Odometry
     private val IN_ZONE = 0.0
     private val APPROACHING_KP = 0.0
     override fun execute() {
-        val pose = odometry.update(Rotation2d.fromRotations(0.0), Drivetrain.leftEncoder.distance, Drivetrain.rightEncoder.distance)
+        //val pose = odometry.update(Rotation2d.fromRotations(0.0), Drivetrain.leftEncoder.distance, Drivetrain.rightEncoder.distance)
+        val pose = odometry.pose
         val m = -0.0176546 * 0.99999
 
         // Gets the time since last execute, then resets the timer
@@ -78,7 +81,7 @@ class AutoBalance : CommandBase() {
             }
             DrivingState.DRIVINGTOMIDDLE -> {
                 //TODO: Adjust the multiplied amount
-                val middlePower = (odometry.poseMeters.x - averagePos) * 0.1
+                val middlePower = (Odometry.pose.x - averagePos) * 0.1
                 Drivetrain.stupidDrive(`M/s`(-middlePower),`M/s`(-middlePower))
             }
             DrivingState.BALANCING -> {
@@ -121,7 +124,7 @@ class AutoBalance : CommandBase() {
             rollRate < -3 || roll < 0 -> {
                 DrivingState.DRIVINGBACKWARDS
             }
-            (odometry.poseMeters.x) in (min..max) -> {
+            (Odometry.pose.x) in (min..max) -> {
                 DrivingState.BALANCING
             }
             else -> state
