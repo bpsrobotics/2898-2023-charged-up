@@ -32,4 +32,6 @@ object Intake: SubsystemBase() {
     fun runOuttake() {
         intakeMotor.set(0.5)
     }
+
+    //TODO: Set up box inake and cone intake seperately
 }

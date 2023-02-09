@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj.Encoder
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import kotlin.math.absoluteValue
 
-object ArmControls : SubsystemBase() {
+object Arm : SubsystemBase() {
 
     private var constraints = TrapezoidProfile.Constraints(ARM_MAXSPEED, ARM_MAXACCEL)
     private val controller = ProfiledPIDController(ARM_RAISED_KP, ARM_RAISED_KI, ARM_RAISED_KD,constraints)
@@ -47,6 +47,7 @@ object ArmControls : SubsystemBase() {
         armMotor2.follow(armMotor1)
     }
     override fun periodic() {
+        //TODO: Set up a way to take profiles as inputs
         val profile = currentGoal
         if (profile == null) {
 
@@ -66,6 +67,10 @@ object ArmControls : SubsystemBase() {
         if (profile != null && (armMotor1.encoder.velocity.absoluteValue < 0.05) && ((encoder.distance - profile).absoluteValue < 0.5)) {
             currentGoal = null
         }
+    }
+
+    fun setGoal(newPos: Double) {
+        currentGoal = newPos
     }
 
 

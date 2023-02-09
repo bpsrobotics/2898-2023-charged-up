@@ -50,4 +50,13 @@ object Constants {
     const val ARM_LOWERED_KP = 2.0
     const val ARM_LOWERED_KI = 2.0
     const val ARM_LOWERED_KD = 2.0
+
+    enum class ArmHeights(val position: Double) {
+        STOWED(0.0),
+        PICKUP(0.0),
+        LOWGOAL(0.0),
+        MIDDLECONEGOAL(0.0),
+        MIDDLEBOXGOAL(0.0),
+        HIGHCUBELAUNCH(0.0)
+    }
 }
