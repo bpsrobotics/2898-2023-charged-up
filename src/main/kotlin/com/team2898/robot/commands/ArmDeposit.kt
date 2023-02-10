@@ -9,11 +9,9 @@ class ArmDeposit : CommandBase() {
     var hasCone: Boolean = true
 
     override fun execute() {
-        //TODO: Set up the proper positions
         if (hasCone) {
             Arm.setGoal(MIDDLECONEGOAL.position)
-        }
-        else {
+        } else {
             Arm.setGoal(MIDDLEBOXGOAL.position)
         }
         //hasCone = false

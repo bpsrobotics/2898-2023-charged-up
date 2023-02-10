@@ -38,7 +38,6 @@ object Arm : SubsystemBase() {
     //TODO: Tune the armFeedforward numbers
     private val feedforward = ArmFeedforward(0.0,0.0,0.0)
 
-
     init {
         listOf(armMotor1, armMotor2).forEach {
             it.restoreFactoryDefaults()
@@ -48,6 +47,7 @@ object Arm : SubsystemBase() {
     }
     override fun periodic() {
         //TODO: Set up a way to take profiles as inputs
+
         val profile = currentGoal
         if (profile == null) {
 
@@ -73,5 +73,8 @@ object Arm : SubsystemBase() {
         currentGoal = newPos
     }
 
+    fun isMoving() : Boolean {
+        return (currentGoal == null)
+    }
 
 }

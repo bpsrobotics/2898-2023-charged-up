@@ -51,6 +51,8 @@ object Constants {
     const val ARM_LOWERED_KI = 2.0
     const val ARM_LOWERED_KD = 2.0
 
+
+    //TODO: Set up the proper positions for the arm
     enum class ArmHeights(val position: Double) {
         STOWED(0.0),
         PICKUP(0.0),
