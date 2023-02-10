@@ -36,6 +36,10 @@ object Intake: SubsystemBase() {
         intakeMotor.set(0.5)
     }
 
+    fun stopIntake() {
+        intakeMotor.set(0.0)
+    }
+
     fun intakeIsOpen() : Boolean {
         return intakeState
     }
