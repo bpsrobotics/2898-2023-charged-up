@@ -20,7 +20,7 @@ class Coordinate(val x: Double, val y: Double) {
     }
 
     /**
-     * Distance from 0, 0
+     * Distance from 0, 0, calculated using pythagorean theorem
      * */
     val magnitude get() = sqrt(x.pow(2) + y.pow(2))
     operator fun plus(other: Coordinate) : Coordinate {
@@ -28,6 +28,9 @@ class Coordinate(val x: Double, val y: Double) {
     }
     operator fun minus(other: Coordinate) : Coordinate {
         return Coordinate(x - other.x,y - other.y)
+    }
+    operator fun div(other: Double) : Coordinate{
+        return Coordinate(x / other,y / other)
     }
 
     override fun toString(): String {

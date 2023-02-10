@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj2.command.CommandBase
 import kotlin.math.absoluteValue
 /** Robot automatically balances on the charge station
- * @author Ori, Max Leibowitz
+ * @author Ori, Max Leibowitz, Anthony
  * */
 class AutoBalance : CommandBase() {
     private val pid = PIDController(0.026, 0.0, 0.0)
@@ -112,6 +112,7 @@ class AutoBalance : CommandBase() {
     }
     /**
      * @return The state the robot should be in
+     * @author Ori
      * */
     private fun findState(): DrivingState {
         return when {

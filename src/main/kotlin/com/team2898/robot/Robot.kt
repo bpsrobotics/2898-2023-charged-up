@@ -28,7 +28,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler
  * the package after creating this project, you must also update the build.gradle file in the
  * project.
  */
-object Robot : TimedRobot() {
+object zRobot : TimedRobot() {
 
     // Note: 'lateinit' means you can declare a non-nullable variable and then first set it later
     lateinit var autoCommand: Command
@@ -127,5 +127,6 @@ object Robot : TimedRobot() {
      * This function is called periodically during test mode.
      */
     override fun testPeriodic() {
+
     }
 }

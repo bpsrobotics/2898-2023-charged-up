@@ -22,6 +22,10 @@ import edu.wpi.first.wpilibj2.command.Commands
 import kotlin.math.absoluteValue
 import kotlin.math.min
 
+/**
+ * Allows the bot to be operated remotely with a controller
+ * @author Elise, Wither, Max Leibowitz, Ori, Ozy King, Anthony
+ */
 class TeleOp : CommandBase() {
 
     init {

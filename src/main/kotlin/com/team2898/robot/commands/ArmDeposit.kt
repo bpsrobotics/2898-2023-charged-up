@@ -5,6 +5,10 @@ import com.team2898.robot.Constants.ArmHeights.*
 import com.team2898.robot.subsystems.Arm
 import edu.wpi.first.wpilibj2.command.CommandBase
 
+/**
+ * Moves arm to deposit a cone or cube
+ * @author Ori
+ */
 class ArmDeposit : CommandBase() {
     var hasCone: Boolean = true
 

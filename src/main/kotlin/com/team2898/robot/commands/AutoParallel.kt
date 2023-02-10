@@ -13,6 +13,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase
 import kotlin.math.absoluteValue
 import com.team2898.robot.subsystems.Odometry.pose
 
+/**
+ * Turns to face the charge station
+ * @author Ori
+ */
 class AutoParallel : CommandBase() {
     private var yaw = Odometry.pose.rotation.degrees
     private val pid = PIDController(AUTOBALANCE_KP, AUTOBALANCE_KI, AUTOBALANCE_KD)
@@ -28,21 +32,22 @@ class AutoParallel : CommandBase() {
         val testing = true
 
         //TODO: Figure out which direction is negative rotation, and adjust rotation direction accordingly
-        if (pose.y in (Field.map.chargingDock.y1..Field.map.chargingDock.y2)) {
-            if (pose.x > Field.map.chargingDock.x2) {
-                if (yaw > 270 || yaw < 90) {
-                    Drivetrain.stupidDrive(`M/s`(-yawPower), `M/s`(yawPower))
-                } else if (yaw in (90.0..270.0)) {
-                    Drivetrain.stupidDrive(`M/s`(yawPower), `M/s`(-yawPower))
-                }
-            } else if (pose.x < Field.map.chargingDock.x1) {
-                if (yaw < 90 || yaw > 270) {
-                    Drivetrain.stupidDrive(`M/s`(yawPower), `M/s`(-yawPower))
-                } else if (yaw in (90.0..270.0)) {
-                    Drivetrain.stupidDrive(`M/s`(-yawPower), `M/s`(yawPower))
-                }
+        if (!Field.map.chargingDock.containsY(pose.y)) return
+
+        if (Field.map.chargingDock.distToCenter(pose).x < 0) {
+            if (yaw > 270 || yaw < 90) {
+                Drivetrain.stupidDrive(`M/s`(-yawPower), `M/s`(yawPower))
+            } else /* if (yaw in (90.0..270.0)) */ {
+                Drivetrain.stupidDrive(`M/s`(yawPower), `M/s`(-yawPower))
+            }
+        } else /* On the other side of the charge station*/ {
+            if (yaw < 90 || yaw > 270) {
+                Drivetrain.stupidDrive(`M/s`(yawPower), `M/s`(-yawPower))
+            } else /* if (yaw in (90.0..270.0)) */  {
+                Drivetrain.stupidDrive(`M/s`(-yawPower), `M/s`(yawPower))
             }
         }
+
     }
 
     override fun isFinished(): Boolean {
