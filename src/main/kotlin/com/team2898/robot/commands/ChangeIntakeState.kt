@@ -11,9 +11,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase
 class ChangeIntakeState(private val mode: IntakeState) : CommandBase() {
     private val timer = Timer()
     override fun initialize() {
-        if (mode == IntakeState.INTAKEOPEN) {
+        if (mode == IntakeState.OPENINTAKE) {
             Intake.intakeOpen()
-        } else if (mode == IntakeState.INTAKECLOSE) {
+        } else if (mode == IntakeState.CLOSEINTAKE) {
             Intake.intakeClose()
         }
 
@@ -24,8 +24,8 @@ class ChangeIntakeState(private val mode: IntakeState) : CommandBase() {
         return (timer.hasElapsed(0.5))
     }
     enum class IntakeState{
-        INTAKEOPEN,
-        INTAKECLOSE
+        OPENINTAKE,
+        CLOSEINTAKE
 
     }
 }

@@ -10,14 +10,13 @@ import com.team2898.robot.subsystems.Odometry
 import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj2.command.CommandBase
-import kotlin.math.absoluteValue
 import com.team2898.robot.subsystems.Odometry.pose
 
 /**
  * Turns to face the charge station
  * @author Ori
  */
-class AutoParallel : CommandBase() {
+class AutoPerpendicular : CommandBase() {
     private var yaw = Odometry.pose.rotation.degrees
     private val pid = PIDController(AUTOBALANCE_KP, AUTOBALANCE_KI, AUTOBALANCE_KD)
     private var teamColor = DriverStation.getAlliance()
