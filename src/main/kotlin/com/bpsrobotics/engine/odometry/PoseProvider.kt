@@ -2,6 +2,8 @@ package com.bpsrobotics.engine.odometry
 
 import com.bpsrobotics.engine.utils.Degrees
 import com.bpsrobotics.engine.utils.Meters
+import com.bpsrobotics.engine.utils.deg
+import com.bpsrobotics.engine.utils.m
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Pose3d
 import edu.wpi.first.util.sendable.Sendable
@@ -17,7 +19,9 @@ interface PoseProvider : Sendable {
     fun update()
 
     fun reset(x: Meters, y: Meters, theta: Degrees)
-
+    fun reset(pose2d: Pose2d) {
+        reset(pose2d.x.m, pose2d.y.m, pose2d.rotation.degrees.deg)
+    }
     override fun initSendable(builder: SendableBuilder) {
         SendableRegistry.setName(this, toString())
         builder.addDoubleProperty("x", { pose.x }, null)
