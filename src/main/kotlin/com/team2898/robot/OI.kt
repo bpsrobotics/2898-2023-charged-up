@@ -79,13 +79,13 @@ object OI : SubsystemBase() {
 
 
     val highHat get() = operatorController.pov
-    val floorGrabButton get() = operatorController.getRawButton(2)
-    val lowArm get() = operatorController.getRawButton(12)
+    val floorIntake get() = operatorController.getRawButton(2)
+    val lowGoal get() = operatorController.getRawButton(12)
     val midArmCube get() = operatorController.getRawButton(11)
     val midArmCone get() = operatorController.getRawButton(10)
+    val highArmCube get() = operatorController.getRawButton(9)
 
     /** We might not do High Arm Cube and Cone - Abhi */
-    val highArmCube get() = operatorController.getRawButton(9)
     val highArmCone get() = operatorController.getRawButton(8)
 
 

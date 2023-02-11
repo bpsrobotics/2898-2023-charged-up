@@ -2,23 +2,16 @@ package com.team2898.robot.commands
 
 //The commands for both the driver and operator
 import com.bpsrobotics.engine.utils.`M/s`
-import com.bpsrobotics.engine.utils.Sugar.angleDifference
-import com.bpsrobotics.engine.utils.Sugar.degreesToRadians
-import com.bpsrobotics.engine.utils.geometry.Rectangle
+import com.team2898.robot.Constants.ArmHeights.*
 import com.team2898.robot.Field
 import com.team2898.robot.OI
-import com.team2898.robot.OI.operatorTrigger
-import com.team2898.robot.subsystems.Arm
 import com.team2898.robot.subsystems.Drivetrain
 import com.team2898.robot.subsystems.Intake
-import edu.wpi.first.wpilibj.drive.DifferentialDrive
-import edu.wpi.first.wpilibj2.command.CommandBase
-import edu.wpi.first.wpilibj.drive.DifferentialDrive.curvatureDriveIK
 import com.team2898.robot.subsystems.Odometry
-import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.PneumaticHub
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
-import edu.wpi.first.wpilibj2.command.Commands
+import edu.wpi.first.wpilibj.drive.DifferentialDrive
+import edu.wpi.first.wpilibj.drive.DifferentialDrive.curvatureDriveIK
+import edu.wpi.first.wpilibj2.command.CommandBase
 import kotlin.math.absoluteValue
 import kotlin.math.min
 
@@ -81,6 +74,18 @@ class TeleOp : CommandBase() {
         }
         else if (OI.highHat in 91 until  270) {
             Intake.runIntake()
+        }
+
+        val goalPosition = when {
+            OI.floorIntake -> PICKUP
+            OI.lowGoal -> LOWGOAL
+            OI.midArmCube -> MIDDLEBOXGOAL
+            OI.midArmCone -> MIDDLECONEGOAL
+            OI.highArmCube -> HIGHCUBELAUNCH
+            else -> null
+        }
+        if (goalPosition != null) {
+            ArmMove(goalPosition)
         }
     }
 

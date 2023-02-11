@@ -19,6 +19,7 @@ import edu.wpi.first.math.controller.ArmFeedforward
 import edu.wpi.first.math.controller.ProfiledPIDController
 import edu.wpi.first.math.trajectory.TrapezoidProfile
 import edu.wpi.first.wpilibj.AnalogEncoder
+import edu.wpi.first.wpilibj.DigitalInput
 import edu.wpi.first.wpilibj.DoubleSolenoid
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value.kForward
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value.kReverse
@@ -39,10 +40,14 @@ object Arm : SubsystemBase() {
     private val encoder = AnalogEncoder(0)
     //TODO: Tune the armFeedforward numbers
     private val feedforward = ArmFeedforward(0.0,0.0,0.0)
+    //TODO: Add proper limit switch port
+    private val limitSwitch = DigitalInput(0)
+    private var lastTick = false
 
     private val timer = Timer()
     private var encoderPos = 0.0
     private var encoderRate = 0.0
+
 
     init {
         listOf(armMotor1, armMotor2).forEach {
@@ -53,8 +58,10 @@ object Arm : SubsystemBase() {
     }
     override fun periodic() {
         val elapsedTime = timer.get()
+        val currentTick = limitSwitch.get()
         timer.reset()
         timer.start()
+
 
         encoderRate = (encoder.get() - encoderPos) / elapsedTime
 
@@ -72,13 +79,28 @@ object Arm : SubsystemBase() {
             //Controller moves the arm
             val pidOut = controller.calculate(encoder.distance, profile)
             val feedForwardOut = feedforward.calculate(encoder.distance, encoderRate)
-            armMotor1.set(pidOut + feedForwardOut)
+            var output = pidOut + feedForwardOut
+            if (currentTick) {
+                output = output.coerceAtLeast(0.0)
+            }
+            //TODO: Adjust soft stop for the arm
+            if (encoderPos > 1.0) {
+              output.coerceAtMost(0.0)
+            }
+            armMotor1.set(output)
             breakSolenoid.set(kForward)
 
         }
         if (profile != null && (armMotor1.encoder.velocity.absoluteValue < 0.05) && ((encoder.distance - profile).absoluteValue < 0.5)) {
             currentGoal = null
         }
+
+        if (!lastTick && currentTick) {
+            encoder.reset()
+            currentGoal = null
+        }
+
+        lastTick = limitSwitch.get()
     }
 
     fun setGoal(newPos: Double) {
