@@ -1,5 +1,7 @@
 package com.team2898.robot.commands
 
+import com.bpsrobotics.engine.utils.`M/s`
+import com.bpsrobotics.engine.utils.MetersPerSecondSquared
 import com.team2898.robot.Constants
 import com.team2898.robot.Constants.ArmHeights.MIDDLEBOXGOAL
 import com.team2898.robot.Constants.ArmHeights.PICKUP
@@ -20,12 +22,12 @@ class SimpleAuto : CommandBase() {
         autoCommandGroup = SequentialCommandGroup (
             ArmMove(MIDDLEBOXGOAL),
             ActivateIntake(RUNOUTTAKE),
-            //TODO: Run the path to drive back
+            PathFollowCommand("UpperDropCube.path", true),
             ArmMove(PICKUP),
-            //Move the bot to the cone
             ActivateIntake(RUNINTAKE),
+            PathFollowCommand("UpperPickupCube.path", false),
             ChangeIntakeState(CLOSEINTAKE),
-            //Move the bot down
+            PathFollowCommand("UpperCubeToCharge.path", false),
             AutoPerpendicular(),
             AutoBalance()
         )
