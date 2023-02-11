@@ -23,7 +23,6 @@ class AutoBalance : CommandBase() {
     private val dController = PIDController(0.0, 0.0, 0.005)
     private var roll = navx.roll.toDouble()
     private val timer = Timer()
-    private var elapsedTime = 0.0
 
     private var rollRate = 0.0
  
@@ -43,7 +42,7 @@ class AutoBalance : CommandBase() {
         val m = -0.0176546 * 0.99999
 
         // Gets the time since last execute, then resets the timer
-        elapsedTime = timer.get()
+        val elapsedTime = timer.get()
         timer.reset()
         timer.start()
 

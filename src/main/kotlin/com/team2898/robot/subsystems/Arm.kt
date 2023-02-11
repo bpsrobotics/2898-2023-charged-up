@@ -18,10 +18,12 @@ import com.team2898.robot.RobotMap.PNUEMATICS_MODULE
 import edu.wpi.first.math.controller.ArmFeedforward
 import edu.wpi.first.math.controller.ProfiledPIDController
 import edu.wpi.first.math.trajectory.TrapezoidProfile
+import edu.wpi.first.wpilibj.AnalogEncoder
 import edu.wpi.first.wpilibj.DoubleSolenoid
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value.kForward
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value.kReverse
 import edu.wpi.first.wpilibj.Encoder
+import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import kotlin.math.absoluteValue
 
@@ -33,10 +35,14 @@ object Arm : SubsystemBase() {
     private val armMotor1 = CANSparkMax(ARM_MAIN, kBrushless)
     private val armMotor2 = CANSparkMax(ARM_SECONDARY, kBrushless)
     private val breakSolenoid = DoubleSolenoid(PNUEMATICS_MODULE, PNEUMATICS_MODULE_TYPE, DISK_BREAK_FORWARD, DISK_BREAK_BACKWARD)
-    //TODO: Reminder to fix the arm encoder channel (ports)
-    private val encoder = Encoder(ARM_ENCODER_A, ARM_ENCODER_B)
+    //TODO: Reminder to fix the arm encoder channel (port)
+    private val encoder = AnalogEncoder(0)
     //TODO: Tune the armFeedforward numbers
     private val feedforward = ArmFeedforward(0.0,0.0,0.0)
+
+    private val timer = Timer()
+    private var encoderPos = 0.0
+    private var encoderRate = 0.0
 
     init {
         listOf(armMotor1, armMotor2).forEach {
@@ -46,7 +52,13 @@ object Arm : SubsystemBase() {
         armMotor2.follow(armMotor1)
     }
     override fun periodic() {
-        //TODO: Set up a way to take profiles as inputs
+        val elapsedTime = timer.get()
+        timer.reset()
+        timer.start()
+
+        encoderRate = (encoder.get() - encoderPos) / elapsedTime
+
+        encoderPos = encoder.get()
 
         val profile = currentGoal
         if (profile == null) {
@@ -59,7 +71,7 @@ object Arm : SubsystemBase() {
 
             //Controller moves the arm
             val pidOut = controller.calculate(encoder.distance, profile)
-            val feedForwardOut = feedforward.calculate(encoder.distance, encoder.rate)
+            val feedForwardOut = feedforward.calculate(encoder.distance, encoderRate)
             armMotor1.set(pidOut + feedForwardOut)
             breakSolenoid.set(kForward)
 
