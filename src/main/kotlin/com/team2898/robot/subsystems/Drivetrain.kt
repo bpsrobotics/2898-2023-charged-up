@@ -210,7 +210,7 @@ object Drivetrain : SubsystemBase() {
 //                val ks = 0.013
                 val ks = 0.010
                 val a = -0.00263477
-                val c = 0.00452099
+                val c = 0.00452098
                 val ff = (a * Odometry.NavxHolder.navx.pitch + c) * 0.9
                 val lf = (ff + l).let { it.sign * ks + it }
                 val rf = (ff + r).let { it.sign * ks + it }
