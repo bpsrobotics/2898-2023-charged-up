@@ -8,7 +8,7 @@ import com.bpsrobotics.engine.utils.geometry.Rectangle
 import com.team2898.robot.Field
 import com.team2898.robot.OI
 import com.team2898.robot.OI.operatorTrigger
-import com.team2898.robot.subsystems.ArmControls
+import com.team2898.robot.subsystems.Arm
 import com.team2898.robot.subsystems.Drivetrain
 import com.team2898.robot.subsystems.Intake
 import edu.wpi.first.wpilibj.drive.DifferentialDrive
@@ -61,8 +61,7 @@ class TeleOp : CommandBase() {
         val ff = if (pitch.absoluteValue > 2.0) kP * pitch else 0.0
         Drivetrain.stupidDrive(`M/s`(speeds.left * 5.0 + ff), `M/s`(speeds.right * 5.0 + ff))
 
-        /*
-      Make the alliance community zone a rectangle
+      /** Make the alliance community zone a rectangle */
         val pose = Odometry.pose
         val distanceToCommunity = Field.map.gridWall.distance(pose) ?: 100.0
         if (distanceToCommunity < 5.0) {
@@ -75,7 +74,7 @@ class TeleOp : CommandBase() {
         } else {
             Drivetrain.stupidDrive(`M/s`(speeds.left * 5.0), `M/s`(speeds.right * 5.0))
         }
-*/
+
 
         if (OI.highHat > 270 || OI.highHat < 90)  {
             Intake.runOuttake()
