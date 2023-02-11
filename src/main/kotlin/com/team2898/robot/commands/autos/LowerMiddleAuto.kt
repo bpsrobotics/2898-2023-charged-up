@@ -16,8 +16,10 @@ class LowerMiddleAuto : CommandBase() {
         autoCommandGroup = SequentialCommandGroup (
             ArmMove(MIDDLEBOXGOAL),
             ActivateIntake(RUNOUTTAKE),
-            PathFollowCommand("MidDropCube", true),
-            ActivateIntake(RUNINTAKE)
+            PathFollowCommand("MidDropCube.path", true),
+            ActivateIntake(RUNINTAKE),
+            PathFollowCommand("MidPickupCube.path", false),
+
         )
     }
 
