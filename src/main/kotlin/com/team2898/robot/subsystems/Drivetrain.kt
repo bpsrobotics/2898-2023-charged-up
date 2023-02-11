@@ -43,6 +43,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import java.io.File
 import kotlin.math.PI
+import kotlin.math.sign
 
 object Drivetrain : SubsystemBase() {
 
@@ -204,8 +205,15 @@ object Drivetrain : SubsystemBase() {
                 val l = leftPid.calculate(leftEncoder.rate)
                 val r = rightPid.calculate(rightEncoder.rate)
 
-                val lf = leftFF.calculate(leftPid.setpoint)
-                val rf = rightFF.calculate(rightPid.setpoint)
+//                val lf = leftFF.calculate(leftPid.setpoint)
+//                val rf = rightFF.calculate(rightPid.setpoint)
+//                val ks = 0.013
+                val ks = 0.010
+                val a = -0.00263477
+                val c = 0.00452099
+                val ff = (a * Odometry.NavxHolder.navx.pitch + c) * 0.9
+                val lf = (ff + l).let { it.sign * ks + it }
+                val rf = (ff + r).let { it.sign * ks + it }
 
                 rawDrive(/*l + */lf, /*r + */rf)
             }
