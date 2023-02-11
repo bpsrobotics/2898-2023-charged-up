@@ -1,7 +1,9 @@
 package com.team2898.robot.commands
 
 import com.bpsrobotics.engine.utils.`M/s`
+import com.bpsrobotics.engine.utils.MetersPerSecond
 import com.bpsrobotics.engine.utils.Sugar.clamp
+import com.bpsrobotics.engine.utils.Sugar.degreesToRadians
 import com.team2898.robot.subsystems.Drivetrain
 import com.team2898.robot.subsystems.Odometry
 import com.team2898.robot.subsystems.Odometry.NavxHolder.navx
@@ -11,6 +13,8 @@ import edu.wpi.first.math.kinematics.DifferentialDriveOdometry
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj2.command.CommandBase
 import kotlin.math.absoluteValue
+import kotlin.math.sin
+
 /** Robot automatically balances on the charge station
  * @author Ori, Max Leibowitz, Anthony
  * */
@@ -70,19 +74,22 @@ class AutoBalance : CommandBase() {
                     in min..max -> IN_ZONE
                     else -> (min - pose.x) * APPROACHING_KP + IN_ZONE
                 }
-                Drivetrain.stupidDrive(`M/s`(speed),`M/s`(speed))
+//                Drivetrain.stupidDrive(`M/s`(speed),`M/s`(speed))
+                drive(speed, speed)
             }
             DrivingState.DRIVINGBACKWARDS -> {
                 val speed = when (pose.x) {
                     in min..max -> -IN_ZONE
                     else -> (max - pose.x) * -APPROACHING_KP - IN_ZONE
                 }
-                Drivetrain.stupidDrive(`M/s`(speed),`M/s`(speed))
+//                Drivetrain.stupidDrive(`M/s`(speed),`M/s`(speed))
+                drive(speed, speed)
             }
             DrivingState.DRIVINGTOMIDDLE -> {
                 //TODO: Adjust the multiplied amount
                 val middlePower = (Odometry.pose.x - averagePos) * 0.1
-                Drivetrain.stupidDrive(`M/s`(-middlePower),`M/s`(-middlePower))
+//                Drivetrain.stupidDrive(`M/s`(-middlePower),`M/s`(-middlePower))
+                drive(-middlePower, -middlePower)
             }
             DrivingState.BALANCING -> {
                 val rollPower = pid.calculate(roll).clamp(-0.05, 0.05) + dController.calculate(roll) + roll * m
@@ -93,7 +100,8 @@ class AutoBalance : CommandBase() {
                     min -= difference
                     max += difference
                 }
-                Drivetrain.stupidDrive(`M/s`(rollPower), `M/s`(rollPower))
+//                Drivetrain.stupidDrive(`M/s`(rollPower), `M/s`(rollPower))
+                drive(rollPower, rollPower)
 
             }
 
@@ -101,6 +109,14 @@ class AutoBalance : CommandBase() {
         }
 
     }
+
+    fun drive(left: Double, right: Double){
+        val kSin = 0.0
+        var ff = sin(navx.pitch.toDouble().degreesToRadians()) * kSin
+        Drivetrain.stupidDrive(MetersPerSecond(left + ff), MetersPerSecond(left + ff))
+
+    }
+
     enum class DrivingState {
         /** Robot drives forwards to find maximum */
         DRIVINGFORWARDS,
