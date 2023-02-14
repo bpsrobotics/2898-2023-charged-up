@@ -43,7 +43,7 @@ class TeleOp : CommandBase() {
                 false
             )
 
-            OI.parallelButton -> return
+            OI.perpendicularButton -> return
 
             // Otherwise, drive and turn normally
             else -> curvatureDriveIK(OI.throttle, turn, true)
