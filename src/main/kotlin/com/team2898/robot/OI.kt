@@ -81,16 +81,16 @@ object OI : SubsystemBase() {
     val highHat get() = operatorController.pov
     val floorIntake get() = operatorController.getRawButton(2)
     val lowGoal get() = operatorController.getRawButton(12)
-    val midArmCube get() = operatorController.getRawButton(11)
-    val midArmCone get() = operatorController.getRawButton(10)
-    val highArmCube get() = operatorController.getRawButton(9)
+    val midArmCube get() = operatorController.getRawButton(10)
+    val midArmCone get() = operatorController.getRawButton(9)
+    val highArmCube get() = operatorController.getRawButton(8)
 
     /** We might not do High Arm Cube and Cone - Abhi */
-    val highArmCone get() = operatorController.getRawButton(8)
+    //val highArmCone get() = operatorController.getRawButton(9)
 
 
     /** Button the make the robot auto align with the charging station */
-    val parallelButton get() = driverController.getRawButton(0)
+    val perpendicularButton get() = driverController.getRawButton(0)
 
     val operatorTrigger = Trigger { operatorController.trigger }
 

@@ -43,6 +43,4 @@ object Intake: SubsystemBase() {
     fun intakeIsOpen() : Boolean {
         return intakeState
     }
-
-    //TODO: Set up box inake and cone intake seperately
 }
