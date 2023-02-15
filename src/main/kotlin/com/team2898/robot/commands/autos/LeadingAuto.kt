@@ -25,7 +25,7 @@ class LeadingAuto : CommandBase() {
             ActivateIntake(RUNINTAKE),
             PathFollowCommand("UpperPickupCube.path", false),
             ChangeIntakeState(CLOSEINTAKE),
-            PathFollowCommand("UpperCubeToCharge.path", false),
+            PathFollowCommand("UpperRunToCharge.path", false),
             AutoPerpendicular(),
             AutoBalance()
         )
