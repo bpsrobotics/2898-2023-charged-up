@@ -11,6 +11,7 @@ import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry
 import edu.wpi.first.wpilibj.Timer
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.CommandBase
 import kotlin.math.absoluteValue
 import kotlin.math.sin
@@ -21,22 +22,35 @@ import kotlin.math.sin
 class AutoBalance : CommandBase() {
     private val pid = PIDController(0.026, 0.0, 0.0)
     private val dController = PIDController(0.0, 0.0, 0.005)
-    private var roll = navx.roll.toDouble()
+    private val encoder = Odometry.NavxHolder.navx
+    private var pitch = navx.pitch.toDouble()
     private val timer = Timer()
 
-    private var rollRate = 0.0
- 
+    private var pitchRate = 0.0
+    private var isCentered = true
+
     // estimated CG position
-    private var min = 0.0
-    private var max = 5.0
+    private var min = -300.0
+    private var max = -200.0
 
     private var state = findState()
 
     //private val odometry = DifferentialDriveOdometry(Rotation2d.fromRotations(0.0), Drivetrain.leftEncoder.distance, Drivetrain.rightEncoder.distance)
     private val odometry = Odometry
-    private val IN_ZONE = 0.0
-    private val APPROACHING_KP = 0.0
+    private var IN_ZONE = 0.0
+    private var APPROACHING_KP = 0.0
+    override fun initialize() {
+        SmartDashboard.putNumber("IN ZONE SPEED",0.0)
+        SmartDashboard.putNumber("APPROACHING KP",0.0)
+    }
     override fun execute() {
+        IN_ZONE = SmartDashboard.getNumber("IN ZONE SPEED",0.0)
+        APPROACHING_KP = SmartDashboard.getNumber("APPROACHING KP",0.0)
+
+        SmartDashboard.putString("Current State", state.name)
+        SmartDashboard.putNumber("Current Min", min)
+        SmartDashboard.putNumber("Current Max", max)
+        SmartDashboard.putNumber("Pitchrate", pitchRate)
         //val pose = odometry.update(Rotation2d.fromRotations(0.0), Drivetrain.leftEncoder.distance, Drivetrain.rightEncoder.distance)
         val pose = odometry.pose
         val m = -0.0176546 * 0.99999
@@ -46,19 +60,19 @@ class AutoBalance : CommandBase() {
         timer.reset()
         timer.start()
 
-        // Gathers the change in roll since last execute
-        rollRate = (navx.roll - roll) / elapsedTime
+        // Gathers the change in pitch since last execute
+        pitchRate = (navx.pitch - pitch) / elapsedTime
 
-        // Gets the current pitch and roll of the robot
-        roll = navx.roll.toDouble()
+        // Gets the current pitch and pitch of the robot
+        pitch = navx.pitch.toDouble()
 
 
         //TODO: Fine tune these values to improve the balance
-        if (rollRate > 3 && state == DrivingState.DRIVINGFORWARDS) {
+        if (pitchRate > 50 && state == DrivingState.DRIVINGFORWARDS) {
             min = pose.x
             state = DrivingState.DRIVINGBACKWARDS
         }
-        else if (rollRate < -3 && state == DrivingState.DRIVINGBACKWARDS) {
+        else if (pitchRate < -50 && state == DrivingState.DRIVINGBACKWARDS) {
             max = pose.x
             state = DrivingState.DRIVINGBACKWARDS
         }
@@ -91,16 +105,16 @@ class AutoBalance : CommandBase() {
                 drive(-middlePower, -middlePower)
             }
             DrivingState.BALANCING -> {
-                val rollPower = pid.calculate(roll).clamp(-0.05, 0.05) + dController.calculate(roll) + roll * m
-                if (rollRate.absoluteValue > 3) {
+                val pitchPower = pid.calculate(pitch).clamp(-0.05, 0.05) + dController.calculate(pitch) + pitch * m
+                if (pitchRate.absoluteValue > 3) {
                     // TODO: Widen estimate range?
                     state = findState()
                     val difference = (max-min) * 0.2
                     min -= difference
                     max += difference
                 }
-//                Drivetrain.stupidDrive(`M/s`(rollPower), `M/s`(rollPower))
-                drive(rollPower, rollPower)
+//                Drivetrain.stupidDrive(`M/s`(pitchPower), `M/s`(pitchPower))
+                drive(pitchPower, pitchPower)
 
             }
 
@@ -111,7 +125,8 @@ class AutoBalance : CommandBase() {
 
     fun drive(left: Double, right: Double){
         val kSin = 0.0
-        var ff = sin(navx.pitch.toDouble().degreesToRadians()) * kSin
+//        var ff = sin(navx.pitch.toDouble().degreesToRadians()) * kSin
+        val ff = 0.0
         Drivetrain.stupidDrive(MetersPerSecond(left + ff), MetersPerSecond(left + ff))
 
     }
@@ -134,22 +149,22 @@ class AutoBalance : CommandBase() {
             max - min < 0.2 -> {
                 DrivingState.DRIVINGTOMIDDLE
             }
-            rollRate > 3 || roll > 0 -> {
+            pitchRate > 20 || pitch > 5 -> {
                 DrivingState.DRIVINGFORWARDS
             }
-            rollRate < -3 || roll < 0 -> {
+            pitchRate < -20 || pitch < -5 -> {
                 DrivingState.DRIVINGBACKWARDS
             }
-            (Odometry.pose.x) in (min..max) -> {
+            (Odometry.pose.x) in (min..max) && isCentered -> {
                 DrivingState.BALANCING
             }
-            else -> state
+            else -> state ?: DrivingState.DRIVINGFORWARDS
         }
     }
     /** Finishes if both rotations are close to zero and haven't changed quickly */
     override fun isFinished(): Boolean {
         //TODO: Test and adjust these values to be more accurate
-//        return (pitch > -2.5 || pitch < 2.5) && (roll > -2.5 || roll < 2.5) && (pitchRate < 0.3 && rollRate < 0.3)
-        return false
+//        return (pitch > -2.5 || pitch < 2.5) && (pitch > -2.5 || pitch < 2.5) && (pitchRate < 0.3 && pitchRate < 0.3)
+        return encoder.rate > 1.0
     }
 }
