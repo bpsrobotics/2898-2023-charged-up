@@ -8,10 +8,17 @@
 package com.team2898.robot
 
 import com.team2898.robot.commands.AutoBalance
-import com.team2898.robot.commands.BangBangBalance
+import com.team2898.robot.commands.BalanceTesting
+
+import com.team2898.robot.commands.autos.BottomAuto
+import com.team2898.robot.commands.autos.LeadingAuto
+import com.team2898.robot.commands.autos.LowerMiddleAuto
+import com.team2898.robot.commands.autos.UpperMiddleAuto
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
+import edu.wpi.first.wpilibj2.command.InstantCommand
+import edu.wpi.first.wpilibj2.command.PerpetualCommand
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -20,7 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 class RobotContainer {
-    private val noopAutoCommand: Command = AutoBalance()
+    private val noopAutoCommand: Command = InstantCommand({})
 
     // A chooser for which command to use for auto, i.e. one for right, middle, left, red, blue, etc
     private var autoCommandChooser: SendableChooser<Command> = SendableChooser()
@@ -28,11 +35,16 @@ class RobotContainer {
     init {
         autoCommandChooser.setDefaultOption("Do Nothing Auto", noopAutoCommand)
         // Send the auto chooser
+        autoCommandChooser.addOption("Leading Auto", LeadingAuto())
+        autoCommandChooser.addOption("Bottom Auto", BottomAuto())
+        autoCommandChooser.addOption("Lower Middle Auto", LowerMiddleAuto())
+        autoCommandChooser.addOption("Upper Middle Auto", UpperMiddleAuto())
         SmartDashboard.putData("Auto mode", autoCommandChooser)
+
     }
 
     fun getAutonomousCommand(): Command {
         // Return the selected command
-        return AutoBalance()
+        TODO()
     }
 }
