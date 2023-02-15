@@ -18,17 +18,18 @@ class LeadingAuto : CommandBase() {
 
     override fun initialize() {
         autoCommandGroup = SequentialCommandGroup (
-            ArmMove(MIDDLEBOXGOAL),
-            ActivateIntake(RUNOUTTAKE),
-            PathFollowCommand("UpperDropCube.path", true),
-            ArmMove(PICKUP),
-            ActivateIntake(RUNINTAKE),
-            PathFollowCommand("UpperPickupCube.path", false),
-            ChangeIntakeState(CLOSEINTAKE),
-            PathFollowCommand("UpperRunToCharge.path", false),
+            //ArmMove(MIDDLEBOXGOAL),
+           // ActivateIntake(RUNOUTTAKE),
+            PathFollowCommand("UpperDropCube", true),
+            //ArmMove(PICKUP),
+            //ActivateIntake(RUNINTAKE),
+            PathFollowCommand("UpperPickupCube", false),
+            //ChangeIntakeState(CLOSEINTAKE),
+            PathFollowCommand("UpperRunToCharge", false),
             AutoPerpendicular(),
             AutoBalance()
         )
+        autoCommandGroup.schedule()
     }
 
     override fun isFinished(): Boolean {

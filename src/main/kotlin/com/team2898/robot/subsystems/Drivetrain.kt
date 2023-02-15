@@ -190,6 +190,7 @@ object Drivetrain : SubsystemBase() {
             Mode.CLOSED_LOOP -> {
                 val traj = trajectory
                 if (traj == null) {
+                    rawDrive(0.0, 0.0)
                     mode = Mode.OPEN_LOOP
                     return
                 }

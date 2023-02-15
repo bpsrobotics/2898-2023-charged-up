@@ -19,6 +19,7 @@ class UpperMiddleAuto : CommandBase() {
             AutoPerpendicular(),
             AutoBalance(),
             )
+        autoCommandGroup.schedule()
     }
 
     override fun isFinished(): Boolean {

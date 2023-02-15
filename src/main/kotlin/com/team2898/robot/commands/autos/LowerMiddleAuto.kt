@@ -21,6 +21,7 @@ class LowerMiddleAuto : CommandBase() {
             PathFollowCommand("MidPickupCube.path", false),
 
         )
+        autoCommandGroup.schedule()
     }
 
     override fun isFinished(): Boolean {

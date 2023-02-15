@@ -17,11 +17,11 @@ object Constants {
     const val DRIVETRAIN_PEAK_CURRENT_LIMIT_DURATION = 50
 
     // Can't be const because it's an expression
-    val DRIVETRAIN_MAX_VELOCITY = `M/s`(2.0)
-    val DRIVETRAIN_MAX_ACCELERATION = MetersPerSecondSquared(1.5)  // placeholder
+    val DRIVETRAIN_MAX_VELOCITY = `M/s`(0.5)
+    val DRIVETRAIN_MAX_ACCELERATION = MetersPerSecondSquared(1.0)  // placeholder
 
     // Horizontal distance between the centers of the wheels on each side of the drivetrain
-    val DRIVETRAIN_TRACK_WIDTH = In(26.5).toMeters()
+    val DRIVETRAIN_TRACK_WIDTH = In(9.5).toMeters()
 
     // Drivetrain characterization parameters, see [https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-characterization/index.html]
     // These do not carry from robot to robot, even if they're the same design! Characterize each drivetrain.

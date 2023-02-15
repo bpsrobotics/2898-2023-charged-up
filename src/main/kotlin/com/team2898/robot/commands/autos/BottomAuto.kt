@@ -17,6 +17,7 @@ class BottomAuto : CommandBase() {
             ActivateIntake(RUNOUTTAKE),
             PathFollowCommand("LowerRun.path", true)
             )
+        autoCommandGroup.schedule()
     }
 
     override fun isFinished(): Boolean {
