@@ -39,8 +39,15 @@ object Odometry : SubsystemBase(), PoseProvider by DifferentialDrivePoseProvider
 
     override fun initSendable(builder: SendableBuilder) {
         builder.addFloatProperty("pitch", NavxHolder.navx::getPitch) {}
-        builder.addFloatProperty("rawGyroX", NavxHolder.navx::getRawGyroX) {}
-        builder.addFloatProperty("rawGyroY", NavxHolder.navx::getRawGyroY) {}
-        builder.addFloatProperty("rawGyroZ", NavxHolder.navx::getRawGyroZ) {}
+//        builder.addDoubleProperty("x", NavxHolder.navx::getRawGyroX) {}
+//        builder.addDoubleProperty("y", NavxHolder.navx::getRawGyroY) {}
+//        builder.addDoubleProperty("rot", pose.rotation.degrees) {}
+    }
+
+    override fun periodic() {
+        val p = pose
+        SmartDashboard.putNumber("x", p.x)
+        SmartDashboard.putNumber("y", p.y)
+        SmartDashboard.putNumber("rotation", p.rotation.degrees)
     }
 }

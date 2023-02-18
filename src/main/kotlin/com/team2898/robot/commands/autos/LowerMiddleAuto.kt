@@ -14,10 +14,10 @@ class LowerMiddleAuto : CommandBase() {
 
     override fun initialize() {
         autoCommandGroup = SequentialCommandGroup (
-            ArmMove(MIDDLEBOXGOAL),
-            ActivateIntake(RUNOUTTAKE),
+//            ArmMove(MIDDLEBOXGOAL),
+//            ActivateIntake(RUNOUTTAKE),
             PathFollowCommand("MidDropCube.path", true),
-            ActivateIntake(RUNINTAKE),
+//            ActivateIntake(RUNINTAKE),
             PathFollowCommand("MidPickupCube.path", false),
 
         )

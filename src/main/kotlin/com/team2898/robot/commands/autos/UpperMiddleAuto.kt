@@ -15,7 +15,7 @@ class UpperMiddleAuto : CommandBase() {
         autoCommandGroup = SequentialCommandGroup (
             ArmMove(MIDDLEBOXGOAL),
             ActivateIntake(RUNOUTTAKE),
-            PathFollowCommand("UpperCharging.path", true),
+            PathFollowCommand("BackwardCharging.path", true),
             AutoPerpendicular(),
             AutoBalance(),
             )

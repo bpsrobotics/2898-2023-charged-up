@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.PowerDistribution
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType
 import edu.wpi.first.wpilibj.RobotBase
 import edu.wpi.first.wpilibj.TimedRobot
+import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.livewindow.LiveWindow
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
@@ -78,13 +79,23 @@ object Robot : TimedRobot() {
         Odometry.update()
     }
 
+    private val brakeTimer = Timer()
+
     /**
      * This function is called once each time the robot enters Disabled mode.
      */
     override fun disabledInit() {
+        brakeTimer.reset()
+        brakeTimer.start()
     }
 
-    override fun disabledPeriodic() {}
+    override fun disabledPeriodic() {
+        if (brakeTimer.hasElapsed(1.0)) {
+            Drivetrain.coastMode()
+        } else {
+            Drivetrain.brakeMode()
+        }
+    }
 
     /**
      * This autonomous runs the autonomous command selected by your {@link RobotContainer} class.
@@ -94,6 +105,7 @@ object Robot : TimedRobot() {
 
         // schedule the autonomous command (example)
         autoCommand.let { autoCommand.schedule() }
+        Drivetrain.brakeMode()
     }
 
     /**
