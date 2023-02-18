@@ -17,7 +17,7 @@ object Odometry : SubsystemBase(), PoseProvider by DifferentialDrivePoseProvider
     Drivetrain.rightEncoder) {
 
     object NavxHolder {
-        val navx = NAVX().apply { this.calibrate() }
+        val navx = NAVX()
     }
 
     val otherProvider = DifferentialDrivePoseProvider(

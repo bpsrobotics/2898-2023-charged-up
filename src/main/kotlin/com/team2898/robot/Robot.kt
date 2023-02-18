@@ -57,6 +57,7 @@ object Robot : TimedRobot() {
 
         SmartDashboard.putData(Drivetrain)
         SmartDashboard.putData(Odometry)
+        SmartDashboard.putData(Arm)
 
         Odometry.reset(0.m,0.m,0.deg)
     }

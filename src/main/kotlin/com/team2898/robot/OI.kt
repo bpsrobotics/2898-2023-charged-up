@@ -88,7 +88,7 @@ object OI : SubsystemBase() {
     /** We might not do High Arm Cube and Cone - Abhi */
     //val highArmCone get() = operatorController.getRawButton(9)
     /** Button the make the robot auto align with the charging station */
-    val perpendicularButton get() = driverController.getRawButton(0)
+    val perpendicularButton get() = false//driverController.getRawButton(0)
 
     val operatorTrigger = Trigger { operatorController.trigger }
 

@@ -5,6 +5,7 @@ import com.bpsrobotics.engine.utils.`M/s`
 import com.team2898.robot.Constants.ArmHeights.*
 import com.team2898.robot.Field
 import com.team2898.robot.OI
+import com.team2898.robot.subsystems.Arm
 import com.team2898.robot.subsystems.Drivetrain
 import com.team2898.robot.subsystems.Intake
 import com.team2898.robot.subsystems.Odometry
@@ -43,6 +44,8 @@ class TeleOp : CommandBase() {
                 false
             )
 
+            OI.perpendicularButton && false -> return
+
             // Otherwise, drive and turn normally
             else -> curvatureDriveIK(OI.throttle, turn, true)
         }
@@ -52,26 +55,26 @@ class TeleOp : CommandBase() {
         val ff = if (pitch.absoluteValue > 2.0) kP * pitch else 0.0
         Drivetrain.stupidDrive(`M/s`(speeds.left * 5.0 + ff), `M/s`(speeds.right * 5.0 + ff))
 
-      /** Make the alliance community zone a rectangle */
-        val pose = Odometry.pose
-        val distanceToCommunity = Field.map.gridWall.distance(pose) ?: 100.0
-        if (distanceToCommunity < 5.0) {
-            val maxAllowedSpeed = distanceToCommunity + 0.5
-
-            val cappedLeft = min(speeds.left, maxAllowedSpeed)
-            val cappedRight = min(speeds.right, maxAllowedSpeed)
-
-            Drivetrain.stupidDrive(`M/s`(cappedLeft * 5.0), `M/s`(cappedRight * 5.0))
-        } else {
-            Drivetrain.stupidDrive(`M/s`(speeds.left * 5.0), `M/s`(speeds.right * 5.0))
-        }
-
+//      /** Make the alliance community zone a rectangle */
+//        val pose = Odometry.pose
+//        val distanceToCommunity = Field.map.gridWall.distance(pose) ?: 100.0
+//        if (distanceToCommunity < 5.0) {
+//            val maxAllowedSpeed = distanceToCommunity + 0.5
+//
+//            val cappedLeft = min(speeds.left, maxAllowedSpeed)
+//            val cappedRight = min(speeds.right, maxAllowedSpeed)
+//
+//            Drivetrain.stupidDrive(`M/s`(cappedLeft * 5.0), `M/s`(cappedRight * 5.0))
+//        } else {
+//            Drivetrain.stupidDrive(`M/s`(speeds.left * 5.0), `M/s`(speeds.right * 5.0))
+//        }
 
         if (OI.highHat > 270 || OI.highHat < 90)  {
             Intake.runOuttake()
-        }
-        else if (OI.highHat in 91 until  270) {
+        } else if (OI.highHat in 91 until  270) {
             Intake.runIntake()
+        } else {
+            Intake.stopIntake()
         }
 
         val goalPosition = when {
@@ -83,9 +86,8 @@ class TeleOp : CommandBase() {
             else -> null
         }
         if (goalPosition != null) {
-            ArmMove(goalPosition)
+//            Arm.setGoal(goalPosition.position)
         }
-
     }
 
     // Called once the command ends or is interrupted.

@@ -41,9 +41,8 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorController
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
-import java.io.File
 import kotlin.math.PI
-import kotlin.math.sign
+import kotlin.math.absoluteValue
 
 object Drivetrain : SubsystemBase() {
 
@@ -60,13 +59,13 @@ object Drivetrain : SubsystemBase() {
 
     init {
         listOf(leftEncoder, rightEncoder).map {
-            it.distancePerPulse = (In(6.0).meterValue() * PI) / 2048
+            it.distancePerPulse = (In(6.0).meterValue() * PI) / 4096
         }
         leftEncoder.setReverseDirection(true)
 
         if (RobotBase.isReal()) {
-             val file = File("/home/lvuser/dt-data.csv").outputStream().bufferedWriter()
-             file.write("time,leftvel,rightvel,leftgoal,rightgoal,leftpid,rightpid,leftff,rightff\n")
+//             val file = File("/home/lvuser/dt-data.csv").outputStream().bufferedWriter()
+//             file.write("time,leftvel,rightvel,leftgoal,rightgoal,leftpid,rightpid,leftff,rightff\n")
         }
     }
 
@@ -86,6 +85,8 @@ object Drivetrain : SubsystemBase() {
                 "rightSet" to { rightPid.setpoint}
                 )
         }
+
+        SmartDashboard.putNumber("kff", 0.0)
     }
 
     private val ramsete: Ramsete = Ramsete(
@@ -130,8 +131,8 @@ object Drivetrain : SubsystemBase() {
            }
         }
 
-        leftMain.inverted = false
-        leftSecondary.inverted = false
+        leftMain.inverted = true
+        leftSecondary.inverted = true
         rightMain.inverted = false
         rightSecondary.inverted = false
     }
@@ -206,17 +207,25 @@ object Drivetrain : SubsystemBase() {
                 val l = leftPid.calculate(leftEncoder.rate)
                 val r = rightPid.calculate(rightEncoder.rate)
 
-//                val lf = leftFF.calculate(leftPid.setpoint)
-//                val rf = rightFF.calculate(rightPid.setpoint)
+                val lf = leftFF.calculate(leftPid.setpoint)
+                val rf = rightFF.calculate(rightPid.setpoint)
 //                val ks = 0.013
-                val ks = 0.010
+//                val ks = 0.010
                 val a = -0.00263477
-                val c = 0.00452098
-                val ff = (a * Odometry.NavxHolder.navx.pitch + c) * 0.9
-                val lf = (ff + l).let { it.sign * ks + it }
-                val rf = (ff + r).let { it.sign * ks + it }
+//                val c = 0.00452098
+//                val a = 0.0
+                val c = 0
+                val ks = 0.0
+                var pitch = Odometry.NavxHolder.navx.pitch - 16.530001
+                if (pitch.absoluteValue < 2.0) {
+                    pitch = 0.0
+                }
+                val ff = (a * pitch + c) * SmartDashboard.getNumber("kff", 0.0)
+//                val lf = (ff + l).let { it.sign * ks + it }
+//                val rf = (ff + r).let { it.sign * ks + it }
 
-                rawDrive(/*l + */lf, /*r + */rf)
+                rawDrive(/*l + */lf + ff, /*r + */rf + ff)
+//                rawDrive(0.0, 0.0)
             }
         }
         DriverDashboard.number("left encoder", Odometry.leftVel.value)

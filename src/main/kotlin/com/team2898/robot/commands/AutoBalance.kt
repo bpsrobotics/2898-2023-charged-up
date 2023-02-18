@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.CommandBase
 import kotlin.math.absoluteValue
-import kotlin.math.sin
 
 /** Robot automatically balances on the charge station
  * @author Ori, Max Leibowitz, Anthony
@@ -23,7 +22,7 @@ class AutoBalance : CommandBase() {
     private val pid = PIDController(0.026, 0.0, 0.0)
     private val dController = PIDController(0.0, 0.0, 0.005)
     private val encoder = Odometry.NavxHolder.navx
-    private var pitch = navx.pitch.toDouble()
+    private var pitch = navx.pitch.toDouble() - 16.5
     private val timer = Timer()
 
     private var pitchRate = 0.0
@@ -31,7 +30,7 @@ class AutoBalance : CommandBase() {
 
     // estimated CG position
     private var min = -300.0
-    private var max = -200.0
+    private var max = 300.0
 
     private var state = findState()
 
@@ -40,12 +39,13 @@ class AutoBalance : CommandBase() {
     private var IN_ZONE = 0.0
     private var APPROACHING_KP = 0.0
     override fun initialize() {
-        SmartDashboard.putNumber("IN ZONE SPEED",0.0)
-        SmartDashboard.putNumber("APPROACHING KP",0.0)
+        SmartDashboard.putNumber("IN ZONE SPEED", 0.3)
+        SmartDashboard.putNumber("APPROACHING KP", 0.0)
     }
     override fun execute() {
         IN_ZONE = SmartDashboard.getNumber("IN ZONE SPEED",0.0)
         APPROACHING_KP = SmartDashboard.getNumber("APPROACHING KP",0.0)
+//        IN_ZONE = 0.3
 
         if (IN_ZONE > 1.0) IN_ZONE = 0.1
         if (APPROACHING_KP > 1.0) APPROACHING_KP = 0.1
@@ -64,10 +64,10 @@ class AutoBalance : CommandBase() {
         timer.start()
 
         // Gathers the change in pitch since last execute
-        pitchRate = (navx.pitch - pitch) / elapsedTime
+        pitchRate = ((navx.pitch - 16.5) - pitch) / elapsedTime
 
         // Gets the current pitch and pitch of the robot
-        pitch = navx.pitch.toDouble()
+        pitch = navx.pitch.toDouble() - 16.5
 
 
         //TODO: Fine tune these values to improve the balance
