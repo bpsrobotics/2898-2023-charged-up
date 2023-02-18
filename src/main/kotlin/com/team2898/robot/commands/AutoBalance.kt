@@ -47,6 +47,9 @@ class AutoBalance : CommandBase() {
         IN_ZONE = SmartDashboard.getNumber("IN ZONE SPEED",0.0)
         APPROACHING_KP = SmartDashboard.getNumber("APPROACHING KP",0.0)
 
+        if (IN_ZONE > 1.0) IN_ZONE = 0.1
+        if (APPROACHING_KP > 1.0) APPROACHING_KP = 0.1
+
         SmartDashboard.putString("Current State", state.name)
         SmartDashboard.putNumber("Current Min", min)
         SmartDashboard.putNumber("Current Max", max)
@@ -149,10 +152,10 @@ class AutoBalance : CommandBase() {
             max - min < 0.2 -> {
                 DrivingState.DRIVINGTOMIDDLE
             }
-            pitchRate > 20 || pitch > 5 -> {
+            pitchRate > 20 && pitch > 5 -> {
                 DrivingState.DRIVINGFORWARDS
             }
-            pitchRate < -20 || pitch < -5 -> {
+            pitchRate < -20 && pitch < -5 -> {
                 DrivingState.DRIVINGBACKWARDS
             }
             (Odometry.pose.x) in (min..max) && isCentered -> {

@@ -43,8 +43,6 @@ class TeleOp : CommandBase() {
                 false
             )
 
-            OI.perpendicularButton -> return
-
             // Otherwise, drive and turn normally
             else -> curvatureDriveIK(OI.throttle, turn, true)
         }
@@ -87,6 +85,7 @@ class TeleOp : CommandBase() {
         if (goalPosition != null) {
             ArmMove(goalPosition)
         }
+
     }
 
     // Called once the command ends or is interrupted.

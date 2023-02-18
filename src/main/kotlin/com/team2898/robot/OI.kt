@@ -87,8 +87,6 @@ object OI : SubsystemBase() {
 
     /** We might not do High Arm Cube and Cone - Abhi */
     //val highArmCone get() = operatorController.getRawButton(9)
-
-
     /** Button the make the robot auto align with the charging station */
     val perpendicularButton get() = driverController.getRawButton(0)
 
@@ -99,6 +97,7 @@ object OI : SubsystemBase() {
             Commands.startEnd(
                 Intake::intakeOpen,
                 Intake::intakeClose))
+
 
         Trigger { operatorController.pov != 0 }.toggleOnTrue(
             Commands.startEnd(
