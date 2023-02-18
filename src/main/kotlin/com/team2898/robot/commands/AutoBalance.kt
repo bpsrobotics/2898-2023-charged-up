@@ -21,7 +21,6 @@ import kotlin.math.absoluteValue
 class AutoBalance : CommandBase() {
     private val pid = PIDController(0.026, 0.0, 0.0)
     private val dController = PIDController(0.0, 0.0, 0.005)
-    private val encoder = Odometry.NavxHolder.navx
     private var pitch = navx.pitch.toDouble() - 16.5
     private val timer = Timer()
 
@@ -168,6 +167,6 @@ class AutoBalance : CommandBase() {
     override fun isFinished(): Boolean {
         //TODO: Test and adjust these values to be more accurate
 //        return (pitch > -2.5 || pitch < 2.5) && (pitch > -2.5 || pitch < 2.5) && (pitchRate < 0.3 && pitchRate < 0.3)
-        return encoder.rate > 1.0
+        return false
     }
 }
