@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.PowerDistribution
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType.kRev
 import java.io.File
+import java.time.Instant
 
 class BatteryLogger(val pdp: PowerDistribution) {
     private val baseDir = File("/home/lvuser/power-logs").apply { mkdir() }
@@ -23,10 +24,11 @@ class BatteryLogger(val pdp: PowerDistribution) {
         val noncompDir = baseDir.resolve("noncomp")
         noncompDir.mkdir()
 
-        val existingLogs = noncompDir.listFiles()!!
-        val highestNumber = existingLogs.maxOfOrNull { fi -> fi.nameWithoutExtension.toInt() }
-            ?: 0
-        val newFilename = "${highestNumber + 1}.txt"
+//        val existingLogs = noncompDir.listFiles()!!
+//        val highestNumber = existingLogs.maxOfOrNull { fi -> fi.nameWithoutExtension.toInt() }
+//            ?: 0
+//        val newFilename = "${highestNumber + 1}.txt"
+        val newFilename = "${Instant.now()}.txt"
         val file = noncompDir.resolve(newFilename)
         file.createNewFile()
 

@@ -1,11 +1,13 @@
 package com.team2898.robot
 
+import com.team2898.robot.subsystems.Arm
 import com.team2898.robot.subsystems.Drivetrain
 import com.team2898.robot.subsystems.Intake
 import edu.wpi.first.math.MathUtil
 import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.XboxController
 import edu.wpi.first.wpilibj2.command.Commands
+import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import kotlin.math.pow
@@ -92,6 +94,9 @@ object OI : SubsystemBase() {
 
     val operatorTrigger = Trigger { operatorController.trigger }
 
+    val armUp = Trigger { operatorController.getRawButton(6) }
+    val armDown = Trigger { operatorController.getRawButton(4) }
+
     init {
         operatorTrigger.toggleOnTrue(
             Commands.startEnd(
@@ -105,5 +110,12 @@ object OI : SubsystemBase() {
                 Drivetrain::coastMode
             )
         )
+
+        armUp.debounce(0.05).onTrue(InstantCommand({
+            Arm.setGoal(Arm.setpoint + 0.2)
+        }))
+        armDown.debounce(0.05).onTrue(InstantCommand({
+            Arm.setGoal(Arm.setpoint - 0.2)
+        }))
     }
 }

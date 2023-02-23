@@ -21,7 +21,7 @@ object Constants {
     val DRIVETRAIN_MAX_ACCELERATION = MetersPerSecondSquared(1.5)  // placeholder
 
     // Horizontal distance between the centers of the wheels on each side of the drivetrain
-    val DRIVETRAIN_TRACK_WIDTH = In(11.0).toMeters()
+    val DRIVETRAIN_TRACK_WIDTH = In(20.5).toMeters()
 
     // Drivetrain characterization parameters, see [https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-characterization/index.html]
     // These do not carry from robot to robot, even if they're the same design! Characterize each drivetrain.
@@ -55,10 +55,10 @@ object Constants {
     //TODO: Set up the proper positions for the arm
     enum class ArmHeights(val position: Double) {
         STOWED(0.0),
-        PICKUP(0.0),
-        LOWGOAL(0.0),
-        MIDDLECONEGOAL(0.0),
-        MIDDLEBOXGOAL(0.0),
-        HIGHCUBELAUNCH(0.0)
+        PICKUP(0.5),
+        LOWGOAL(0.6),
+        MIDDLECONEGOAL(1.1),
+        MIDDLEBOXGOAL(1.1),
+        HIGHCUBELAUNCH(1.5)
     }
 }

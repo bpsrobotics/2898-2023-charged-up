@@ -69,12 +69,20 @@ class TeleOp : CommandBase() {
 //            Drivetrain.stupidDrive(`M/s`(speeds.left * 5.0), `M/s`(speeds.right * 5.0))
 //        }
 
-        if (OI.highHat > 270 || OI.highHat < 90)  {
-            Intake.runOuttake()
-        } else if (OI.highHat in 91 until  270) {
-            Intake.runIntake()
-        } else {
-            Intake.stopIntake()
+//        println(OI.highHat)
+        when (OI.highHat) {
+            in intArrayOf(315, 0, 45) -> {
+//                println("out")
+                Intake.runOuttake()
+            }
+            in intArrayOf(135, 180, 225) -> {
+//                println("in")
+                Intake.runIntake()
+            }
+            else -> {
+//                println("stop")
+                Intake.stopIntake()
+            }
         }
 
         val goalPosition = when {
@@ -86,7 +94,7 @@ class TeleOp : CommandBase() {
             else -> null
         }
         if (goalPosition != null) {
-//            Arm.setGoal(goalPosition.position)
+            Arm.setGoal(goalPosition.position)
         }
     }
 

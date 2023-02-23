@@ -8,10 +8,13 @@
 package com.team2898.robot
 
 import com.team2898.robot.commands.AutoBalance
+import com.team2898.robot.commands.SimpleBalance
+import com.team2898.robot.commands.autos.SuperSimpleAuto
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.InstantCommand
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -33,6 +36,6 @@ class RobotContainer {
 
     fun getAutonomousCommand(): Command {
         // Return the selected command
-        return AutoBalance()
+        return SequentialCommandGroup(SuperSimpleAuto(), SimpleBalance())
     }
 }

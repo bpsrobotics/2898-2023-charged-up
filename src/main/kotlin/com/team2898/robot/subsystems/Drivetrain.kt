@@ -216,9 +216,9 @@ object Drivetrain : SubsystemBase() {
 //                val a = 0.0
                 val c = 0
                 val ks = 0.0
-                var pitch = Odometry.NavxHolder.navx.pitch - 16.530001
-                if (pitch.absoluteValue < 2.0) {
-                    pitch = 0.0
+                var pitch = Odometry.NavxHolder.navx.pitch// - 16.530001
+                if (pitch.absoluteValue < 4.0) {
+                    pitch = 0.0f
                 }
                 val ff = (a * pitch + c) * SmartDashboard.getNumber("kff", 0.0)
 //                val lf = (ff + l).let { it.sign * ks + it }

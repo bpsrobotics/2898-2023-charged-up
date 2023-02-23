@@ -10,6 +10,7 @@ package com.team2898.robot
 import com.bpsrobotics.engine.async.BatteryLogger
 import com.bpsrobotics.engine.utils.deg
 import com.bpsrobotics.engine.utils.m
+import com.team2898.robot.commands.ArmTest
 import com.team2898.robot.commands.TeleOp
 import com.team2898.robot.subsystems.*
 import edu.wpi.first.cameraserver.CameraServer
@@ -32,7 +33,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler
 object Robot : TimedRobot() {
 
     // Note: 'lateinit' means you can declare a non-nullable variable and then first set it later
-    lateinit var autoCommand: Command
+     lateinit var autoCommand: Command
 
     lateinit var robotContainer: RobotContainer
 
@@ -47,12 +48,12 @@ object Robot : TimedRobot() {
         // Automatically grab auto command to ensure m_autonomousCommand is defined before teleopInit is run
         autoCommand = robotContainer.getAutonomousCommand()
 
-//        CameraServer.startAutomaticCapture()
+        CameraServer.startAutomaticCapture()
 
         // initialize battery logger
-        /*if (RobotBase.isReal()) {
+        if (RobotBase.isReal()) {
             BatteryLogger(PowerDistribution(60, ModuleType.kRev))
-        }*/
+        }
 
         Field.initialize()
 
@@ -101,7 +102,6 @@ object Robot : TimedRobot() {
      * This autonomous runs the autonomous command selected by your {@link RobotContainer} class.
      */
     override fun autonomousInit() {
-        autoCommand = robotContainer.getAutonomousCommand()
 
         // schedule the autonomous command (example)
         autoCommand.let { autoCommand.schedule() }
@@ -115,6 +115,7 @@ object Robot : TimedRobot() {
     }
 
     override fun teleopInit() {
+//        TODO()
         // This makes sure that the autonomous stops running when
         // teleop starts running. If you want the autonomous to
         // continue until interrupted by another command, remove

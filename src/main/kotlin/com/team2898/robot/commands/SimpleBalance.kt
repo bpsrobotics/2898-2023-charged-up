@@ -9,10 +9,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase
 
 class SimpleBalance : CommandBase() {
 
-    private var pitch = Odometry.NavxHolder.navx.pitch.toDouble() - 16.5
+    private var pitch = Odometry.NavxHolder.navx.pitch.toDouble()
     private var pitchRate = 0.0
     private val timer = Timer()
     private var balanced = false
+    private var overTicks = 0
 
     override fun execute() {
         // Gets the time since last execute, then resets the timer
@@ -21,12 +22,18 @@ class SimpleBalance : CommandBase() {
         timer.start()
 
         // Gathers the change in pitch since last execute
-        pitchRate = ((Odometry.NavxHolder.navx.pitch - 16.5) - pitch) / elapsedTime
+        pitchRate = (Odometry.NavxHolder.navx.pitch - pitch) / elapsedTime
 
         // Gets the current pitch and pitch of the robot
-        pitch = Odometry.NavxHolder.navx.pitch.toDouble() - 16.5
+        pitch = Odometry.NavxHolder.navx.pitch.toDouble()
 
-        if (pitchRate > 3.0) {
+        if (pitchRate > 10.0) {
+            overTicks += 1
+        } else {
+            overTicks = 0
+        }
+
+        if (overTicks > 10) {
             Drivetrain.stupidDrive(`M/s`(0.0), `M/s`(0.0))
             balanced = true
         } else if (!balanced) {
