@@ -85,16 +85,20 @@ class TeleOp : CommandBase() {
             }
         }
 
-        val goalPosition = when {
-            OI.floorIntake -> PICKUP
-            OI.lowGoal -> LOWGOAL
-            OI.midArmCube -> MIDDLEBOXGOAL
-            OI.midArmCone -> MIDDLECONEGOAL
-            OI.highArmCube -> HIGHCUBELAUNCH
-            else -> null
-        }
-        if (goalPosition != null) {
-            Arm.setGoal(goalPosition.position)
+        if (OI.brakeRelease) {
+            Arm.brakeRelease()
+        } else {
+            val goalPosition = when {
+                OI.floorIntake -> PICKUP
+                OI.lowGoal -> LOWGOAL
+                OI.midArmCube -> MIDDLEBOXGOAL
+                OI.midArmCone -> MIDDLECONEGOAL
+                OI.highArmCube -> HIGHCUBELAUNCH
+                else -> null
+            }
+            if (goalPosition != null) {
+                Arm.setGoal(goalPosition.position)
+            }
         }
     }
 

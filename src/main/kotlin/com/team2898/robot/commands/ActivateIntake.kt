@@ -19,6 +19,7 @@ class ActivateIntake(private val mode: RunningIntakes) : CommandBase() {
             Intake.runOuttake()
         }
         timer.start()
+        timer.reset()
     }
 
     override fun isFinished(): Boolean {

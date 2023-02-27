@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
+import edu.wpi.first.wpilibj2.command.InstantCommand
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -33,7 +34,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler
 object Robot : TimedRobot() {
 
     // Note: 'lateinit' means you can declare a non-nullable variable and then first set it later
-     lateinit var autoCommand: Command
+    var autoCommand: Command = InstantCommand({})
 
     lateinit var robotContainer: RobotContainer
 
@@ -46,7 +47,7 @@ object Robot : TimedRobot() {
         // autonomous chooser on the dashboard.
         robotContainer = RobotContainer()
         // Automatically grab auto command to ensure m_autonomousCommand is defined before teleopInit is run
-        autoCommand = robotContainer.getAutonomousCommand()
+//        autoCommand = robotContainer.getAutonomousCommand()
 
         CameraServer.startAutomaticCapture()
 
@@ -104,6 +105,7 @@ object Robot : TimedRobot() {
     override fun autonomousInit() {
 
         // schedule the autonomous command (example)
+        autoCommand = robotContainer.getAutonomousCommand()
         autoCommand.let { autoCommand.schedule() }
         Drivetrain.brakeMode()
     }

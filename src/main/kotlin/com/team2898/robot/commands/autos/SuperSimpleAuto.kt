@@ -13,11 +13,12 @@ class SuperSimpleAuto : CommandBase() {
     }
 
     override fun execute() {
-        Drivetrain.stupidDrive(`M/s`(0.75), `M/s`(0.75))
+        Drivetrain.stupidDrive(`M/s`(-1.0), `M/s`(-1.0))
     }
 
     override fun isFinished(): Boolean {
-        return timer.hasElapsed(1.3)
+        return timer.hasElapsed(1.7)
+//        return timer.hasElapsed(1.3)
     }
 
     override fun end(interrupted: Boolean) {

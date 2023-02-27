@@ -16,10 +16,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase
  * @param filename The filename of the path to load
  * @author Max Leibowitz
  */
-class PathFollowCommand(filename: String, private val resetOdometry: Boolean, maxVel: `M/s` = DRIVETRAIN_MAX_VELOCITY, maxAccel: MetersPerSecondSquared = DRIVETRAIN_MAX_ACCELERATION) : CommandBase() {
+class PathFollowCommand(val filename: String, private val resetOdometry: Boolean, maxVel: `M/s` = DRIVETRAIN_MAX_VELOCITY, maxAccel: MetersPerSecondSquared = DRIVETRAIN_MAX_ACCELERATION) : CommandBase() {
     private val path = PathPlanner.loadPath(filename, maxVel.value, maxAccel.value)!!
     private val time = Timer()
-    private val name = filename
 
     override fun initialize() {
         if (resetOdometry) {
@@ -29,15 +28,16 @@ class PathFollowCommand(filename: String, private val resetOdometry: Boolean, ma
         time.start()
     }
 
-    override fun execute() {
-        println("Following $name path --------------------------------------------------------------")
-    }
+//    override fun execute() {
+//        println("Following $filename path --------------------------------------------------------------")
+//    }
 
     override fun end(interrupted: Boolean) {
         Drivetrain.rawDrive(0.0, 0.0)
+        Drivetrain.mode = Drivetrain.Mode.OPEN_LOOP
     }
 
     override fun isFinished(): Boolean {
-        return Drivetrain.mode != Drivetrain.Mode.CLOSED_LOOP || time.hasElapsed(path.totalTimeSeconds * 1.25)
+        return Drivetrain.mode != Drivetrain.Mode.CLOSED_LOOP || time.hasElapsed(path.totalTimeSeconds * 1.1)
     }
 }

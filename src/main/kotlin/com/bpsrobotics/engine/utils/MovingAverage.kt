@@ -10,6 +10,7 @@ class MovingAverage(size: Int) {
 
     var average = 0.0
         private set
+    val median get() = buffer.sorted()[buffer.size / 2]
 
     fun add(v: Double) {
         buffer[i++ % buffer.size] = v

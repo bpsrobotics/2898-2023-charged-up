@@ -17,6 +17,6 @@ class ArmMove(private val goal: Double) : CommandBase() {
     }
 
     override fun isFinished(): Boolean {
-        return Arm.isMoving()
+        return !Arm.isMoving()
     }
 }

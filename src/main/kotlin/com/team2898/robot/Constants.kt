@@ -55,10 +55,10 @@ object Constants {
     //TODO: Set up the proper positions for the arm
     enum class ArmHeights(val position: Double) {
         STOWED(0.0),
-        PICKUP(0.5),
+        PICKUP(0.55),
         LOWGOAL(0.6),
-        MIDDLECONEGOAL(1.1),
-        MIDDLEBOXGOAL(1.1),
-        HIGHCUBELAUNCH(1.5)
+        MIDDLECONEGOAL(1.6),
+        MIDDLEBOXGOAL(1.4),
+        HIGHCUBELAUNCH(1.9)
     }
 }

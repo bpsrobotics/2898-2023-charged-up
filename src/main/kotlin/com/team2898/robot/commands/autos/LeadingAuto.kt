@@ -1,7 +1,6 @@
 package com.team2898.robot.commands.autos
 
-import com.team2898.robot.Constants.ArmHeights.MIDDLEBOXGOAL
-import com.team2898.robot.Constants.ArmHeights.PICKUP
+import com.team2898.robot.Constants.ArmHeights.*
 import com.team2898.robot.commands.*
 import com.team2898.robot.commands.ActivateIntake.RunningIntakes.RUNINTAKE
 import com.team2898.robot.commands.ActivateIntake.RunningIntakes.RUNOUTTAKE
@@ -18,16 +17,16 @@ class LeadingAuto : CommandBase() {
 
     override fun initialize() {
         autoCommandGroup = SequentialCommandGroup (
-            //ArmMove(MIDDLEBOXGOAL),
-           // ActivateIntake(RUNOUTTAKE),
+//            ArmMove(HIGHCUBELAUNCH),
+//            ActivateIntake(RUNOUTTAKE),
             PathFollowCommand("UpperDropCube", true),
-            //ArmMove(PICKUP),
-            //ActivateIntake(RUNINTAKE),
-            PathFollowCommand("UpperPickupCube", false),
-            //ChangeIntakeState(CLOSEINTAKE),
-            PathFollowCommand("UpperRunToCharge", false),
-            AutoPerpendicular(),
-            AutoBalance()
+//            ArmMove(PICKUP),
+//            ActivateIntake(RUNINTAKE),
+//            PathFollowCommand("UpperPickupCube", false),
+//            ChangeIntakeState(CLOSEINTAKE),
+//            PathFollowCommand("UpperRunToCharge", false),
+//            AutoPerpendicular(),
+//            AutoBalance()
         )
         autoCommandGroup.schedule()
     }

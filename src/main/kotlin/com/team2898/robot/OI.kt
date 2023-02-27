@@ -86,6 +86,7 @@ object OI : SubsystemBase() {
     val midArmCube get() = operatorController.getRawButton(10)
     val midArmCone get() = operatorController.getRawButton(9)
     val highArmCube get() = operatorController.getRawButton(8)
+    val brakeRelease get() = operatorController.getRawButton(11)
 
     /** We might not do High Arm Cube and Cone - Abhi */
     //val highArmCone get() = operatorController.getRawButton(9)

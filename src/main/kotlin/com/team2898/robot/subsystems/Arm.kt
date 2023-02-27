@@ -87,6 +87,15 @@ object Arm : SubsystemBase() {
     val timer = Timer()
 
     override fun periodic() {
+        if (!releaseTimer.hasElapsed(0.1)) {
+            breakSolenoid.set(DoubleSolenoid.Value.kReverse)
+            armMotor.set(0.0)
+            armMotor.idleMode = CANSparkMax.IdleMode.kCoast
+            return
+        } else {
+            armMotor.idleMode = CANSparkMax.IdleMode.kBrake
+        }
+
 //        val elapsedTime = timer.get()
         val currentTick = limitSwitch.get()
 //        val currentTick = limitSwitch.get()
@@ -158,7 +167,7 @@ object Arm : SubsystemBase() {
 //        val setpoint = SmartDashboard.getNumber("arm target pos", p)
 //        if (setpoint != prevGoal) {
 //        }
-        if (setpoint == 0.0 || setpoint !in LOWER_SOFT_STOP..UPPER_SOFT_STOP || ((p - setpoint).absoluteValue < 0.05 && rate.absoluteValue < 0.1)) {
+        if (setpoint == 0.0 || setpoint !in LOWER_SOFT_STOP..UPPER_SOFT_STOP || ((p - setpoint).absoluteValue < 0.05 && rate.absoluteValue < 0.1) || profileTimer.get() > (profile?.totalTime() ?: 0.0)) {
             profile = null
         }
 
@@ -234,5 +243,17 @@ object Arm : SubsystemBase() {
         builder.addDoubleProperty("rate", { movingAverage.average }) {}
         builder.addBooleanProperty("limit switch", { lastTick }) {}
         builder.addDoubleProperty("motor output", { armMotor.appliedOutput }) {}
+    }
+
+    private val releaseTimer = Timer()
+
+    init {
+        releaseTimer.start()
+    }
+
+    fun brakeRelease() {
+        stop()
+        releaseTimer.reset()
+        releaseTimer.start()
     }
 }
