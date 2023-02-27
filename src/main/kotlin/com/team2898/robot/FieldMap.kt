@@ -4,7 +4,6 @@ import com.bpsrobotics.engine.utils.geometry.*
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import com.bpsrobotics.engine.utils.ft
-import com.bpsrobotics.engine.utils.toMeters
 
 /**
  * Used to store Alliance-specific locations
@@ -18,6 +17,14 @@ class Map(val community : Polygon,
           val loadingBay : Polygon,
           val gridWall : Line
         ) {
+    fun get_location(position: Coordinate): String{
+        return when {
+            community.contains(position)    -> "community"
+            chargingDock.contains(position) -> "charging dock"
+            loadingBay.contains(position)   -> "loading bay"
+            else                            -> "other"
+        }
+    }
 }
 private val redLoadingBay = Polygon(
     Coordinate(0.0.ft, 18.0.ft),
@@ -64,16 +71,35 @@ val redTeam = Map(
 )
 /** Map of the feild based off of the Driverstation alliance
  * @author Ozy King
- * @property map Includes alliance-specific zones
+ * @property map Includes your alliances specific zones
+ * @property red_team Red alliance specific zones
+ * @property blue_team Blue alliance specific zones
+ * @author Ozy King
  * */
 object Field : SubsystemBase() {
     private var teamColor: DriverStation.Alliance = DriverStation.getAlliance()
     lateinit var map : Map
+    val red_team = redTeam
+    val blue_team = blueTeam
     fun initialize() {
         map = if (teamColor == DriverStation.Alliance.Blue) {
             blueTeam
         } else {
             redTeam
         }
+    }
+
+    /**
+     * Debugging tool
+     * @param position The robots position
+     * @return A string correlating to the robots position on the field
+     * @author Ozy King
+     */
+    fun get_area(position: Coordinate): String{
+        val red = red_team.get_location(position)
+        if (red != "other") return "Red " + red
+        val blue = blue_team.get_location(position)
+        if (blue != "other") return "Blue " + blue
+        return "Other"
     }
 }

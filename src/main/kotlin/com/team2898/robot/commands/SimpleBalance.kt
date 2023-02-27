@@ -7,6 +7,10 @@ import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj2.command.CommandBase
 
+/**
+ * Balances on the charging dock by simply moving forward or backward based on it's pitch
+ * @author Ori
+ */
 class SimpleBalance : CommandBase() {
 
     private var pitch = Odometry.NavxHolder.navx.pitch.toDouble()

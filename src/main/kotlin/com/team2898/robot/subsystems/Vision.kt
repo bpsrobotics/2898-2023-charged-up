@@ -1,8 +1,9 @@
 package com.team2898.robot.subsystems
 
 import com.bpsrobotics.engine.utils.Polynomial
-import edu.wpi.first.math.geometry.Pose3d
+import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 
 object Confidence {
     //TODO: Place in actual values and find degree of polynomial
@@ -32,5 +33,9 @@ object Confidence {
 
 
 object Vision : SubsystemBase() {
-    var currentRobotPose = Pose3d()
+    var currentRobotPose = Pose2d()
+    val x get() = SmartDashboard.getNumber("VisionZ",0.0)
+    val y get() = SmartDashboard.getNumber("VisionX",0.0)
+    val z get() = SmartDashboard.getNumber("VisionY",0.0)
+
 }
