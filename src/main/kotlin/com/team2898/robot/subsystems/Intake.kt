@@ -17,12 +17,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase
 object Intake: SubsystemBase() {
 
     private val intakePneumatic = DoubleSolenoid(PNUEMATICS_MODULE, PNEUMATICS_MODULE_TYPE, INTAKE_FORWARD, INTAKE_BACKWARD)
-    private val intakeMotor = CANSparkMax(INTAKE_MOTOR, kBrushless)
+//    private val intakeMotor = CANSparkMax(INTAKE_MOTOR, kBrushless)
     private var intakeState = true
 
     init {
-        intakeMotor.restoreFactoryDefaults()
-        intakeMotor.setSmartCurrentLimit(30)
+//        intakeMotor.restoreFactoryDefaults()
+//        intakeMotor.setSmartCurrentLimit(30)
     }
 
     fun intakeOpen() {
@@ -35,14 +35,14 @@ object Intake: SubsystemBase() {
     }
 
     fun runIntake() {
-        intakeMotor.set(0.75)
+//        intakeMotor.set(0.75)
     }
     fun runOuttake() {
-        intakeMotor.set(-1.0)
+//        intakeMotor.set(-1.0)
     }
 
     fun stopIntake() {
-        intakeMotor.set(0.0)
+//        intakeMotor.set(0.0)
     }
 
     fun intakeIsOpen(): Boolean {
@@ -52,7 +52,7 @@ object Intake: SubsystemBase() {
     override fun periodic() {
 //        intakeMotor.set(0.0)
 //        println("${intakeMotor.appliedOutput} ${intakeMotor.outputCurrent}")
-        SmartDashboard.putNumber("intake duty cycle", intakeMotor.appliedOutput)
-        SmartDashboard.putNumber("intake current", intakeMotor.outputCurrent)
+//        SmartDashboard.putNumber("intake duty cycle", intakeMotor.appliedOutput)
+//        SmartDashboard.putNumber("intake current", intakeMotor.outputCurrent)
     }
 }
