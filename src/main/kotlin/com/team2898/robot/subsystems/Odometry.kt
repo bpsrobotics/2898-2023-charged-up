@@ -14,39 +14,6 @@ object Odometry : SubsystemBase(), PoseProvider {
 
     object NavxHolder {
         val navx = NAVX()
-
-        init {
-            println("navx = $navx")
-            println("navx = $navx")
-            println("navx = $navx")
-            println("navx = $navx")
-            println("navx = $navx")
-            println("navx = $navx")
-            println("navx = $navx")
-            println("navx = $navx")
-            println("navx = $navx")
-            println("navx = $navx")
-            println("navx = $navx")
-            println("navx = $navx")
-            println("navx = $navx")
-            println("navx = $navx")
-            println("navx = $navx")
-            println("navx = $navx")
-            println("navx = $navx")
-            println("navx = $navx")
-            println("navx = $navx")
-            println("navx = $navx")
-            println("navx = $navx")
-            println("navx = $navx")
-            println("navx = $navx")
-            println("navx = $navx")
-            println("navx = $navx")
-            println("navx = $navx")
-            println("navx = $navx")
-            println("navx = $navx")
-            println("navx = $navx")
-            println("navx = $navx")
-        }
     }
 
     private val otherProvider = DifferentialDriveOdometry(NavxHolder.navx.rotation2d, 0.0, 0.0)
