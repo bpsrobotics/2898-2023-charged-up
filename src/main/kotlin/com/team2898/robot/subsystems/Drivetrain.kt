@@ -59,7 +59,7 @@ object Drivetrain : SubsystemBase() {
 
     init {
         listOf(leftEncoder, rightEncoder).map {
-            it.distancePerPulse = (In(6.0).meterValue() * PI) / 4096
+            it.distancePerPulse = (In(6.0).meterValue() * PI) / 2048
         }
         leftEncoder.setReverseDirection(true)
 
@@ -131,10 +131,10 @@ object Drivetrain : SubsystemBase() {
            }
         }
 
-        leftMain.inverted = true
-        leftSecondary.inverted = true
-        rightMain.inverted = false
-        rightSecondary.inverted = false
+        leftMain.inverted = false
+        leftSecondary.inverted = false
+        rightMain.inverted = true
+        rightSecondary.inverted = true
     }
 
     fun follow(path: Trajectory) {
@@ -195,6 +195,7 @@ object Drivetrain : SubsystemBase() {
                     mode = Mode.OPEN_LOOP
                     return
                 }
+                Odometry.field.getObject("trajectory").setTrajectory(traj)
 
                 rawDrive(
                     ramsete.voltages(

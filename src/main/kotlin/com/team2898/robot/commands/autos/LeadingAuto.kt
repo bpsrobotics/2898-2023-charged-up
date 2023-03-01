@@ -22,9 +22,9 @@ class LeadingAuto : CommandBase() {
             PathFollowCommand("UpperDropCube", true),
 //            ArmMove(PICKUP),
 //            ActivateIntake(RUNINTAKE),
-//            PathFollowCommand("UpperPickupCube", false),
+            PathFollowCommand("UpperPickupCube", false),
 //            ChangeIntakeState(CLOSEINTAKE),
-//            PathFollowCommand("UpperRunToCharge", false),
+            PathFollowCommand("UpperRunToCharge", false),
 //            AutoPerpendicular(),
 //            AutoBalance()
         )

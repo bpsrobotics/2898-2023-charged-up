@@ -33,8 +33,8 @@ class PathFollowCommand(val filename: String, private val resetOdometry: Boolean
 //    }
 
     override fun end(interrupted: Boolean) {
-        Drivetrain.rawDrive(0.0, 0.0)
         Drivetrain.mode = Drivetrain.Mode.OPEN_LOOP
+        Drivetrain.rawDrive(0.0, 0.0)
     }
 
     override fun isFinished(): Boolean {

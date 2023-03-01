@@ -8,6 +8,8 @@ import edu.wpi.first.math.kinematics.DifferentialDriveOdometry
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds
 import edu.wpi.first.util.sendable.SendableBuilder
 import edu.wpi.first.util.sendable.SendableRegistry
+import edu.wpi.first.wpilibj.smartdashboard.Field2d
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 
 object Odometry : SubsystemBase(), PoseProvider {
@@ -25,6 +27,8 @@ object Odometry : SubsystemBase(), PoseProvider {
     override var pose: Pose2d = Pose2d(0.0, 0.0, Rotation2d(0.0))
         private set
 
+    val field = Field2d()
+
     override fun periodic() {
         update()
     }
@@ -36,6 +40,8 @@ object Odometry : SubsystemBase(), PoseProvider {
 
     override fun update() {
         pose = otherProvider.update(NavxHolder.navx.rotation2d, Drivetrain.leftEncoder.distance, Drivetrain.rightEncoder.distance)
+        field.robotPose = pose
+        SmartDashboard.putData(field)
     }
 
     override fun initSendable(builder: SendableBuilder) {
