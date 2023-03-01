@@ -44,8 +44,6 @@ class TeleOp : CommandBase() {
                 false
             )
 
-            OI.perpendicularButton && false -> return
-
             // Otherwise, drive and turn normally
             else -> curvatureDriveIK(OI.throttle, turn, true)
         }
@@ -69,16 +67,21 @@ class TeleOp : CommandBase() {
 //            Drivetrain.stupidDrive(`M/s`(speeds.left * 5.0), `M/s`(speeds.right * 5.0))
 //        }
 
+        if (OI.slowOuttake) {
+            Intake.runOuttake(-0.25)
+        }
 //        println(OI.highHat)
         when (OI.highHat) {
             in intArrayOf(315, 0, 45) -> {
 //                println("out")
-                Intake.runOuttake()
+                Intake.runOuttake(-0.75)
             }
+
             in intArrayOf(135, 180, 225) -> {
 //                println("in")
-                Intake.runIntake()
+                Intake.runIntake(0.75)
             }
+
             else -> {
 //                println("stop")
                 Intake.stopIntake()

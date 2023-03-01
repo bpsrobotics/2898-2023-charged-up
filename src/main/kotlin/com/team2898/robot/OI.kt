@@ -98,6 +98,8 @@ object OI : SubsystemBase() {
     val armUp = Trigger { operatorController.getRawButton(6) }
     val armDown = Trigger { operatorController.getRawButton(4) }
 
+    val slowOuttake = operatorController.getRawButton(2)
+
     init {
         operatorTrigger.toggleOnTrue(
             Commands.startEnd(
