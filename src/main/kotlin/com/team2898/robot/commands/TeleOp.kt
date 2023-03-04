@@ -111,6 +111,12 @@ class TeleOp : CommandBase() {
                 Arm.setGoal(goalPosition.position)
             }
         }
+
+        when (OI.alignButton) {
+            in intArrayOf(270) -> {}
+            in intArrayOf(0) -> {}
+            in intArrayOf(90) -> {}
+        }
     }
 
     // Called once the command ends or is interrupted.
