@@ -173,7 +173,7 @@ val redTeam = Map(
         gridWall = blueGridWall.reflectHorizontally(27.ft),
         scoring =  blueScoring.reflectHorizontally(27.ft)
 )
-/** Map of the feild based off of the Driverstation alliance
+/** Map of the field based off of the Driverstation alliance
  * @author Ozy King
  * @property map Includes your alliances specific zones
  * @property red_team Red alliance specific zones

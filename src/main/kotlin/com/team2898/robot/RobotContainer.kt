@@ -10,9 +10,7 @@ package com.team2898.robot
 import com.team2898.robot.commands.AutoBalance
 import com.team2898.robot.commands.PathFollowCommand
 import com.team2898.robot.commands.SimpleBalance
-import com.team2898.robot.commands.autos.LeadingAuto
-import com.team2898.robot.commands.autos.SuperSimpleAuto
-import com.team2898.robot.commands.autos.UpperMiddleAuto
+import com.team2898.robot.commands.autos.*
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
@@ -26,15 +24,19 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 class RobotContainer {
-    private val noopAutoCommand: Command = AutoBalance()
+    private val noopAutoCommand: Command = NoAuto()
 
 
     // A chooser for which command to use for auto, i.e. one for right, middle, left, red, blue, etc
     private var autoCommandChooser: SendableChooser<Command> = SendableChooser()
 
     init {
-        autoCommandChooser.setDefaultOption("Do Nothing Auto", noopAutoCommand)
+        autoCommandChooser.setDefaultOption("No Auto", noopAutoCommand)
         autoCommandChooser.addOption("Leading Auto", LeadingAuto())
+        autoCommandChooser.addOption("Top Middle Auto",TopMiddleAuto())
+        autoCommandChooser.addOption("Leave Auto",LeaveAuto())
+        autoCommandChooser.addOption("Balance Auto",BalanceAuto())
+        autoCommandChooser.addOption("Scoring Auto",ScoringAuto())
 
         // Send the auto chooser
         SmartDashboard.putData("Auto mode", autoCommandChooser)

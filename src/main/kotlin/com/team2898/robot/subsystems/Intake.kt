@@ -38,7 +38,7 @@ object Intake: SubsystemBase() {
         intakeMotor.set(speed)
     }
     fun runOuttake(speed: Double) {
-        intakeMotor.set(speed)
+        intakeMotor.set(-speed)
     }
 
     fun stopIntake() {

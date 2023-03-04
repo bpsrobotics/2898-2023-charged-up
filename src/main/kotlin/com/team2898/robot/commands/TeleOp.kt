@@ -76,13 +76,13 @@ class TeleOp : CommandBase() {
 //        }
 
         if (OI.slowOuttake) {
-            Intake.runOuttake(-0.25)
+            Intake.runOuttake(0.25)
         }
 //        println(OI.highHat)
         when (OI.highHat) {
             in intArrayOf(315, 0, 45) -> {
 //                println("out")
-                Intake.runOuttake(-0.75)
+                Intake.runOuttake(0.75)
             }
 
             in intArrayOf(135, 180, 225) -> {
