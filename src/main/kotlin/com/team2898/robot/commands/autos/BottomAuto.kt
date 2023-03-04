@@ -13,8 +13,10 @@ class BottomAuto : CommandBase() {
 
     override fun initialize() {
         autoCommandGroup = SequentialCommandGroup (
-//            ArmMove(MIDDLEBOXGOAL),
+//            ChangeIntakeState(CLOSEINTAKE),
+//            ArmMove(HIGHCUBELAUNCH),
 //            ActivateIntake(RUNOUTTAKE),
+//            ChangeIntakeState(OPENINTAKE),
             PathFollowCommand("LowerRun.path", true)
             )
         autoCommandGroup.schedule()

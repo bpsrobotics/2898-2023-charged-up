@@ -17,8 +17,10 @@ class UpperMiddleAuto : CommandBase() {
     override fun initialize() {
         Drivetrain.stupidDrive(`M/s`(0.0), `M/s`(0.0))
         autoCommandGroup = SequentialCommandGroup(
+            ChangeIntakeState(ChangeIntakeState.IntakeState.CLOSEINTAKE),
             ArmMove(HIGHCUBELAUNCH),
             ActivateIntake(RUNOUTTAKE),
+            ChangeIntakeState(ChangeIntakeState.IntakeState.OPENINTAKE),
 //            PathFollowCommand("BackwardCharging.path", true),
 //            AutoPerpendicular(),
             ParallelCommandGroup(
