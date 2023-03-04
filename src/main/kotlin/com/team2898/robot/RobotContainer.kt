@@ -28,11 +28,14 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup
 class RobotContainer {
     private val noopAutoCommand: Command = AutoBalance()
 
+
     // A chooser for which command to use for auto, i.e. one for right, middle, left, red, blue, etc
     private var autoCommandChooser: SendableChooser<Command> = SendableChooser()
 
     init {
         autoCommandChooser.setDefaultOption("Do Nothing Auto", noopAutoCommand)
+        autoCommandChooser.addOption("Leading Auto", LeadingAuto())
+
         // Send the auto chooser
         SmartDashboard.putData("Auto mode", autoCommandChooser)
     }
