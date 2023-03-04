@@ -56,6 +56,7 @@ object Arm : SubsystemBase() {
             p
         }) * 165.688247975 + 215.199342194).degreesToRadians()
     }
+
     val movingAverage = MovingAverage(15)
     val movingAverage2 = MovingAverage(25)
 
@@ -67,12 +68,15 @@ object Arm : SubsystemBase() {
     )
     val pid = PIDController(0.0, 0.0, 0.0)
     var profile: TrapezoidProfile? = null
+    private val integral = MovingAverage(50)
 
     init {
         armMotor.restoreFactoryDefaults()
         armMotor.setSmartCurrentLimit(20)
         armMotor.idleMode = CANSparkMax.IdleMode.kBrake
         armMotor.inverted = true
+
+        armMotor.encoder.velocityConversionFactor = PI * 2.0 / 525.0 / 42.0 / 3.33333333
 
         encoder.distancePerRotation = PI * 2.0
 
@@ -87,15 +91,6 @@ object Arm : SubsystemBase() {
     val timer = Timer()
 
     override fun periodic() {
-        if (!releaseTimer.hasElapsed(0.1)) {
-            breakSolenoid.set(DoubleSolenoid.Value.kReverse)
-            armMotor.set(0.0)
-            armMotor.idleMode = CANSparkMax.IdleMode.kCoast
-            return
-        } else {
-            armMotor.idleMode = CANSparkMax.IdleMode.kBrake
-        }
-
 //        val elapsedTime = timer.get()
         val currentTick = limitSwitch.get()
 //        val currentTick = limitSwitch.get()
@@ -152,9 +147,11 @@ object Arm : SubsystemBase() {
         val rate = movingAverage.average
         val averagedRate = movingAverage2.average
 
-        SmartDashboard.putNumber("arm pos", p)
-        SmartDashboard.putNumber("arm rate", rate)
-        SmartDashboard.putNumber("averaged arm rate", averagedRate)
+        integral.add((rate - armMotor.encoder.velocity).absoluteValue)
+
+//        SmartDashboard.putNumber("arm pos", p)
+        SmartDashboard.putNumber("arm encoder difference", integral.average * integral.size)
+//        SmartDashboard.putNumber("averaged arm rate", averagedRate)
 
         if (stopped) {
             println("STOPPED")
@@ -170,6 +167,16 @@ object Arm : SubsystemBase() {
         if (setpoint == 0.0 || setpoint !in LOWER_SOFT_STOP..UPPER_SOFT_STOP || ((p - setpoint).absoluteValue < 0.05 && rate.absoluteValue < 0.1) || profileTimer.get() > (profile?.totalTime() ?: 0.0)) {
             profile = null
         }
+
+        if (!releaseTimer.hasElapsed(0.1) || true) {
+            breakSolenoid.set(DoubleSolenoid.Value.kReverse)
+            armMotor.set(0.0)
+            armMotor.idleMode = CANSparkMax.IdleMode.kCoast
+            return
+        } else {
+            armMotor.idleMode = CANSparkMax.IdleMode.kBrake
+        }
+
 
         if (profile == null) {
             breakSolenoid.set(DoubleSolenoid.Value.kForward)
@@ -240,7 +247,9 @@ object Arm : SubsystemBase() {
 
     override fun initSendable(builder: SendableBuilder) {
         builder.addDoubleProperty("position", { pos() }) {}
+        builder.addDoubleProperty("arm motor rate", { armMotor.encoder.velocity }) {}
         builder.addDoubleProperty("rate", { movingAverage.average }) {}
+        builder.addDoubleProperty("rate2", { movingAverage2.average }) {}
         builder.addBooleanProperty("limit switch", { lastTick }) {}
         builder.addDoubleProperty("motor output", { armMotor.appliedOutput }) {}
     }

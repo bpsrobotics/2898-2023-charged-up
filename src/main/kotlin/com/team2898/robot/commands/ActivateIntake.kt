@@ -13,10 +13,10 @@ class ActivateIntake(private val mode: RunningIntakes) : CommandBase() {
 
     override fun initialize() {
         if (mode == RunningIntakes.RUNINTAKE) {
-            Intake.runIntake()
+            Intake.runIntake(0.75)
         }
         else if (mode == RunningIntakes.RUNOUTTAKE) {
-            Intake.runOuttake()
+            Intake.runOuttake(0.75)
         }
         timer.start()
         timer.reset()

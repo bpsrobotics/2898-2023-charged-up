@@ -4,7 +4,7 @@ import com.bpsrobotics.engine.async.AsyncLooper
 import kotlin.reflect.KProperty
 
 @Suppress("NOTHING_TO_INLINE")
-class MovingAverage(size: Int) {
+class MovingAverage(val size: Int) {
     private val buffer = DoubleArray(size)
     private var i = 0
 

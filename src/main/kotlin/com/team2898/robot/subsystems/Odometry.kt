@@ -1,7 +1,10 @@
 package com.team2898.robot.subsystems
 
 import com.bpsrobotics.engine.odometry.PoseProvider
-import com.bpsrobotics.engine.utils.*
+import com.bpsrobotics.engine.utils.Degrees
+import com.bpsrobotics.engine.utils.Meters
+import com.bpsrobotics.engine.utils.MetersPerSecond
+import com.bpsrobotics.engine.utils.NAVX
 import com.team2898.robot.Constants.DRIVETRAIN_TRACK_WIDTH
 import edu.wpi.first.math.Matrix
 import edu.wpi.first.math.Nat
@@ -9,16 +12,12 @@ import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics
-import edu.wpi.first.math.kinematics.DifferentialDriveOdometry
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds
 import edu.wpi.first.util.sendable.SendableBuilder
 import edu.wpi.first.util.sendable.SendableRegistry
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj.smartdashboard.Field2d
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
-import edu.wpi.first.wpilibj.util.WPILibVersion
 import edu.wpi.first.wpilibj2.command.SubsystemBase
-import kotlin.math.abs
 
 object Odometry : SubsystemBase(), PoseProvider {
 
@@ -36,6 +35,15 @@ object Odometry : SubsystemBase(), PoseProvider {
 
     val field = Field2d()
 
+    init {
+        val stdDevs = Matrix(Nat.N3(), Nat.N1())
+        Vision.listeners.add { visionPose, time ->
+            stdDevs.fill(Vision.stdev)
+            otherProvider.setVisionMeasurementStdDevs(stdDevs)
+            otherProvider.addVisionMeasurement(visionPose, time)
+        }
+    }
+
     override fun periodic() {
         update()
     }
@@ -47,10 +55,6 @@ object Odometry : SubsystemBase(), PoseProvider {
 
     override fun update() {
         pose = otherProvider.update(NavxHolder.navx.rotation2d, Drivetrain.leftEncoder.distance, Drivetrain.rightEncoder.distance)
-        otherProvider.setVisionMeasurementStdDevs(Vision.stdev)
-        otherProvider.addVisionMeasurement(
-                Vision.pose, Vision.lastUpdate //TODO: Get FPGA time of the measurement.
-        )
 
         field.robotPose = pose
         SmartDashboard.putData(field)

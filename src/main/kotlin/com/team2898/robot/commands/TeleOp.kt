@@ -9,6 +9,7 @@ import com.team2898.robot.subsystems.Arm
 import com.team2898.robot.subsystems.Drivetrain
 import com.team2898.robot.subsystems.Intake
 import com.team2898.robot.subsystems.Odometry
+import edu.wpi.first.math.filter.SlewRateLimiter
 import edu.wpi.first.wpilibj.PneumaticHub
 import edu.wpi.first.wpilibj.drive.DifferentialDrive
 import edu.wpi.first.wpilibj.drive.DifferentialDrive.curvatureDriveIK
@@ -28,6 +29,9 @@ class TeleOp : CommandBase() {
         Intake
         PneumaticHub(42).enableCompressorDigital()
     }
+
+    private val leftLimiter = SlewRateLimiter(10.0)
+    private val rightLimiter = SlewRateLimiter(10.0)
 
     // Called every time the scheduler runs while the command is scheduled.
     override fun execute() {
@@ -51,7 +55,9 @@ class TeleOp : CommandBase() {
         val pitch = Odometry.NavxHolder.navx.pitch
         val kP = 0.003
         val ff = if (pitch.absoluteValue > 2.0) kP * pitch else 0.0
-        Drivetrain.stupidDrive(`M/s`(speeds.left * 5.0 + ff), `M/s`(speeds.right * 5.0 + ff))
+        val left = leftLimiter.calculate(speeds.left * 5.0)
+        val right = rightLimiter.calculate(speeds.right * 5.0)
+        Drivetrain.stupidDrive(`M/s`(left + ff), `M/s`(right + ff))
 
 //      /** Make the alliance community zone a rectangle */
 //        val pose = Odometry.pose
