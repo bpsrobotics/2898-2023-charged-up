@@ -10,6 +10,8 @@ import com.team2898.robot.subsystems.Drivetrain
 import com.team2898.robot.subsystems.Intake
 import com.team2898.robot.subsystems.Odometry
 import edu.wpi.first.math.filter.SlewRateLimiter
+import edu.wpi.first.math.geometry.Pose2d
+import edu.wpi.first.math.trajectory.Trajectory
 import edu.wpi.first.wpilibj.PneumaticHub
 import edu.wpi.first.wpilibj.drive.DifferentialDrive
 import edu.wpi.first.wpilibj.drive.DifferentialDrive.curvatureDriveIK
@@ -121,5 +123,10 @@ class TeleOp : CommandBase() {
         return false
     }
 
-
+    fun generatePath(dst: Pose2d): Trajectory {
+        return Drivetrain.trajectoryMaker.builder()
+            .start(Odometry.pose)
+            .end(dst)
+            .build()
+    }
 }
