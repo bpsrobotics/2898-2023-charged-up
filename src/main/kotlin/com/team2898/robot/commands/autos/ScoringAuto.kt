@@ -26,7 +26,11 @@ class ScoringAuto: CommandBase() {
             ActivateIntake(RUNINTAKE),
             PathFollowCommand("LowerGrab", false),
             ChangeIntakeState(CLOSEINTAKE),
-            PathFollowCommand("LowerRun", false)
+            PathFollowCommand("LowerRunBack", false),
+            ChangeIntakeState(CLOSEINTAKE),
+            ArmMove(HIGHCUBELAUNCH),
+            ActivateIntake(RUNOUTTAKE),
+
 
         )
         autoCommandGroup.schedule()
