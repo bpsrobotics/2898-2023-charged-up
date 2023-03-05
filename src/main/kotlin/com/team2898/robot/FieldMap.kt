@@ -36,6 +36,9 @@ class Grid(
     fun distance(pose: Pose2d): Double{
         return Cube.RobotPosition.ydistance(pose)
     }
+    fun distance(Coords: Coordinate): Double{
+        return Cube.RobotPosition.ydistance(Coords)
+    }
     fun getClosestSpot(pose: Pose2d): ScoreSpot{
         var closestSpot = Cone1
         scoringSpots.forEach {
@@ -59,13 +62,22 @@ class Grid(
 class ScoringLocations(
         val Grid1: Grid,
         val Grid2: Grid,
-        val Grid3: Grid
+        val Grid3: Grid,
+        val gridWall : Line,
 ){
     val grids = arrayOfNulls<Grid>(3)
     init {
         grids[0] = Grid1
         grids[1] = Grid2
         grids[2] = Grid3
+    }
+    fun getClosestGrid(Coords: Coordinate): Grid{
+        var closestGrid = Grid1
+        grids.forEach {
+            it ?: run { return@forEach }
+            if (it.distance(Coords) < closestGrid.distance(Coords)) { closestGrid = it }
+        }
+        return closestGrid
     }
     fun getClosestGrid(pose: Pose2d): Grid{
         var closestGrid = Grid1
@@ -75,6 +87,17 @@ class ScoringLocations(
         }
         return closestGrid
     }
+    /**
+     * @return Returns the grid object the robot is facing
+     */
+    fun getFacedGrid(pose: Pose2d, gridWallDirection: Double): Grid{
+        val gridWallIntersection = gridWall.intersection(pose)
+                ?: when(pose.rotation.degrees){
+                    in -gridWallDirection..gridWallDirection -> return Grid3
+                    else -> return Grid1
+                }
+        return getClosestGrid(gridWallIntersection)
+    }
     fun getClosestScoringSpot(pose: Pose2d): ScoreSpot {
         return getClosestGrid(pose).getClosestSpot(pose)
     }
@@ -82,27 +105,32 @@ class ScoringLocations(
         return ScoringLocations(
                 Grid1.reflectHorizontally(x),
                 Grid2.reflectHorizontally(x),
-                Grid3.reflectHorizontally(x)
+                Grid3.reflectHorizontally(x),
+                gridWall.reflectHorizontally(x)
         )
     }
 }
 val robot_length = 0.93
 val robot_scoring_pos = (4.5+ 1.526).ft
 val blueScoring = ScoringLocations(
-        Grid(
+        Grid1 = Grid(
                 ScoreSpot(Coordinate(robot_scoring_pos, 1.682.ft), ScoringType.Cone),
                 ScoreSpot(Coordinate(robot_scoring_pos, 3.518.ft), ScoringType.Cube),
                 ScoreSpot(Coordinate(robot_scoring_pos, 5.349.ft), ScoringType.Cone)
         ),
-        Grid(
+        Grid2 = Grid(
                 ScoreSpot(Coordinate(robot_scoring_pos, 7.182.ft), ScoringType.Cone),
                 ScoreSpot(Coordinate(robot_scoring_pos, 9.018.ft), ScoringType.Cube),
                 ScoreSpot(Coordinate(robot_scoring_pos, 10.849.ft), ScoringType.Cone)
         ),
-        Grid(
+        Grid3 = Grid(
                 ScoreSpot(Coordinate(robot_scoring_pos, 12.682.ft), ScoringType.Cone),
                 ScoreSpot(Coordinate(robot_scoring_pos, 14.518.ft), ScoringType.Cube),
                 ScoreSpot(Coordinate(robot_scoring_pos, 16.349.ft), ScoringType.Cone)
+        ),
+        gridWall = Line(
+                Coordinate(4.5.ft,0.0.ft),
+                Coordinate(4.5.ft,18.0.ft),
         )
 )
 /**
@@ -112,10 +140,11 @@ val blueScoring = ScoringLocations(
  * @property loadingBay The alliance's loading bay, stored as a Polygon
  * @property gridWall The line separating the scoring grid from the community zone.
  * */
-class Map(val community : Polygon,
+class Map(
+        val rotation: Double,
+        val community : Polygon,
           val chargingDock : Rectangle,
           val loadingBay : Polygon,
-          val gridWall : Line,
         val scoring: ScoringLocations
         ) {
     fun get_location(position: Coordinate): String{
@@ -148,29 +177,26 @@ private val blueChargeStation = Rectangle(
     Coordinate(9.56.ft,13.05.ft),
     Coordinate(15.9.ft,4.95.ft)
 )
-private val blueGridWall = Line(
-    Coordinate(4.5.ft,0.0.ft),
-    Coordinate(4.5.ft,18.0.ft),
-    )
+
 
 /** Map of the blue alliance side
  * @see Field
  * */
 val blueTeam = Map(
+        rotation = -90.0,
         community = blueLoadingBay,
         chargingDock = blueChargeStation,
         loadingBay = redLoadingBay.reflectHorizontally(27.ft),
-        gridWall = blueGridWall,
         scoring = blueScoring
 )
 /** Map of the red alliance side
  * @see Field
  * */
 val redTeam = Map(
+        rotation = 90.0,
         community = blueLoadingBay.reflectHorizontally(27.ft),
         chargingDock = blueChargeStation.reflectHorizontally(27.ft),
         loadingBay = redLoadingBay,
-        gridWall = blueGridWall.reflectHorizontally(27.ft),
         scoring =  blueScoring.reflectHorizontally(27.ft)
 )
 /** Map of the field based off of the Driverstation alliance
@@ -181,7 +207,7 @@ val redTeam = Map(
  * @author Ozy King
  * */
 object Field : SubsystemBase() {
-    private var teamColor: DriverStation.Alliance = DriverStation.getAlliance()
+    var teamColor: DriverStation.Alliance = DriverStation.getAlliance()
     lateinit var map : Map
     val red_team = redTeam
     val blue_team = blueTeam
