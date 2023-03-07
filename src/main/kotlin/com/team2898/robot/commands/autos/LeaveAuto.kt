@@ -19,7 +19,7 @@ class LeaveAuto : CommandBase() {
             ActivateIntake(RUNOUTTAKE),
             ChangeIntakeState(OPENINTAKE),
             PathFollowCommand("LowerRun.path", true)
-            )
+        )
         autoCommandGroup.schedule()
     }
 

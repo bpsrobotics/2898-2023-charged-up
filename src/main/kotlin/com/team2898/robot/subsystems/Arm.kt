@@ -36,7 +36,7 @@ object Arm : SubsystemBase() {
 
     var setpoint = pos()
 
-    private val UPPER_SOFT_STOP = 120.561807948.degreesToRadians()
+    private val UPPER_SOFT_STOP = 1.9
     private val LOWER_SOFT_STOP = 9.429947216.degreesToRadians()
     private var stopped = false
     val ksin = 0.0192407
@@ -45,7 +45,7 @@ object Arm : SubsystemBase() {
 
     fun pos(): Double {
         val p = encoder.absolutePosition
-        return (-(if (p < 0.5) {
+        return (-(if (p < 0.505) {
             p + 1.0
         } else {
             p
@@ -174,6 +174,7 @@ object Arm : SubsystemBase() {
 
     override fun initSendable(builder: SendableBuilder) {
         builder.addDoubleProperty("position", { pos() }) {}
+        builder.addDoubleProperty("raw position", { encoder.absolutePosition }) {}
         builder.addDoubleProperty("arm motor rate", { armMotor.encoder.velocity }) {}
         builder.addDoubleProperty("rate", { movingAverage.average }) {}
         builder.addDoubleProperty("rate2", { movingAverage2.average }) {}

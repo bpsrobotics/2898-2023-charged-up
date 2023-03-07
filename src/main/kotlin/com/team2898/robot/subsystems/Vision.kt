@@ -38,6 +38,7 @@ object Vision : SubsystemBase() {
             r = arr[3]
             currentRobotPose = Pose2d(x, y, Rotation2d.fromDegrees(r))
             listeners.forEach { it(currentRobotPose, lastFixTime) }
+            Odometry.field.getObject("vision pose").pose = currentRobotPose
         }
     }
 }

@@ -58,6 +58,8 @@ object Robot : TimedRobot() {
 
         Field.initialize()
 
+        Intake
+
         SmartDashboard.putData(Drivetrain)
         SmartDashboard.putData(Odometry)
         SmartDashboard.putData(Arm)

@@ -77,7 +77,7 @@ object OI : SubsystemBase() {
     val throttle
         get() = process(-driverController.leftY, deadzone = true, square = true)
     val turn
-        get() = process(driverController.rightX, deadzone = true, square = true)
+        get() = -process(driverController.rightX, deadzone = true, square = true)
     val highHat get() = operatorController.pov
     val floorIntake get() = operatorController.getRawButton(2)
     val lowGoal get() = operatorController.getRawButton(12)
@@ -132,10 +132,10 @@ object OI : SubsystemBase() {
         )
 
         armUp.debounce(0.05).onTrue(InstantCommand({
-            Arm.setGoal(Arm.setpoint + 0.2)
+            Arm.setGoal(Arm.setpoint + 0.1)
         }))
         armDown.debounce(0.05).onTrue(InstantCommand({
-            Arm.setGoal(Arm.setpoint - 0.2)
+            Arm.setGoal(Arm.setpoint - 0.1)
         }))
     }
 }

@@ -35,11 +35,11 @@ object Intake: SubsystemBase() {
     }
 
     fun intakeOpen() {
-        intakePneumatic.set(kForward)
+        intakePneumatic.set(kReverse)
         intakeState = true
     }
     fun intakeClose() {
-        intakePneumatic.set(kReverse)
+        intakePneumatic.set(kForward)
         intakeState = false
     }
 
@@ -62,7 +62,11 @@ object Intake: SubsystemBase() {
     }
 
     override fun periodic() {
-        hinge.set(kForward)
+        if (Arm.pos() < 0.550777) {
+            hinge.set(kReverse)
+        } else {
+            hinge.set(kForward)
+        }
 //        intakeMotor.set(0.0)
 //        println("${intakeMotor.appliedOutput} ${intakeMotor.outputCurrent}")
 //        SmartDashboard.putNumber("intake duty cycle", intakeMotor.appliedOutput)

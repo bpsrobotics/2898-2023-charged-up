@@ -17,7 +17,7 @@ class SuperSimpleAuto : CommandBase() {
     }
 
     override fun isFinished(): Boolean {
-        return timer.hasElapsed(1.7)
+        return timer.hasElapsed(1.9)
 //        return timer.hasElapsed(1.3)
     }
 

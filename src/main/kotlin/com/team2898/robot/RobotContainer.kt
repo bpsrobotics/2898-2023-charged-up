@@ -46,6 +46,6 @@ class RobotContainer {
     fun getAutonomousCommand(): Command {
         // Return the selected command
 //        return SequentialCommandGroup(SuperSimpleAuto(), SimpleBalance())
-        return LeadingAuto()
+        return BalanceAuto()
     }
 }

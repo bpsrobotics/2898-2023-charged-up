@@ -20,7 +20,7 @@ class SimpleBalance : CommandBase() {
     private val timer = Timer()
     private var balanced = false
     private var overTicks = 0
-    private val averageRate = MovingAverage(25)
+    private val averageRate = MovingAverage(15)
     private val stopTimer = Timer()
     init {
         stopTimer.stop()
@@ -55,24 +55,23 @@ class SimpleBalance : CommandBase() {
         SmartDashboard.putNumber("median rate", averageRate.median)
         SmartDashboard.putNumber("over", overTicks.toDouble())
 
-        if (stopTimer.hasElapsed(0.5)) {
+        if (stopTimer.hasElapsed(0.9)) {
             Drivetrain.brakeMode()
 //            Drivetrain.stupidDrive(`M/s`(0.0), `M/s`(0.0))
             Drivetrain.rawDrive(0.0, 0.0)
             Drivetrain.mode = Drivetrain.Mode.OPEN_LOOP
-            println("STOPPING")
             return
         }
 
         if (overTicks > 15 || balanced) {
-            Drivetrain.stupidDrive(`M/s`(0.3), `M/s`(0.3))
+            Drivetrain.stupidDrive(`M/s`(1.8), `M/s`(1.8))
             if (!balanced) {
                 stopTimer.reset()
                 stopTimer.start()
             }
             balanced = true
         } else {
-            Drivetrain.stupidDrive(`M/s`(-0.2), `M/s`(-0.2))
+            Drivetrain.stupidDrive(`M/s`(-0.4), `M/s`(-0.4))
         }
     }
 
