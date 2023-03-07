@@ -78,8 +78,6 @@ object OI : SubsystemBase() {
         get() = process(-driverController.leftY, deadzone = true, square = true)
     val turn
         get() = process(driverController.rightX, deadzone = true, square = true)
-
-
     val highHat get() = operatorController.pov
     val floorIntake get() = operatorController.getRawButton(2)
     val lowGoal get() = operatorController.getRawButton(12)
@@ -87,6 +85,25 @@ object OI : SubsystemBase() {
     val midArmCone get() = operatorController.getRawButton(9)
     val highArmCube get() = operatorController.getRawButton(8)
     val brakeRelease get() = operatorController.getRawButton(11)
+
+    enum class  Direction() {LEFT, RIGHT, UP, DOWN, INACTIVE;
+    companion object{
+        fun mirrored(direction: Direction): Direction {
+            return when(direction) {
+                Direction.LEFT  -> return RIGHT
+                Direction.RIGHT -> return LEFT
+                else            -> return direction
+            }
+        }
+    }
+    }
+    val alignmentPad get() = when(driverController.pov) {
+        in intArrayOf(0)  -> Direction.UP
+        in intArrayOf(90) -> Direction.RIGHT
+        in intArrayOf(180) -> Direction.DOWN
+        in intArrayOf(270) -> Direction.LEFT
+        else               -> Direction.INACTIVE
+    }
 
     /** We might not do High Arm Cube and Cone - Abhi */
     //val highArmCone get() = operatorController.getRawButton(9)

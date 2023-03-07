@@ -1,6 +1,7 @@
 package com.bpsrobotics.engine.utils.geometry
 
 import com.bpsrobotics.engine.utils.DistanceUnit
+import edu.wpi.first.math.geometry.Pose2d
 import kotlin.math.PI
 
 /**
@@ -25,7 +26,6 @@ class Polygon(vararg val coordinates : Coordinate){
     fun contains(coordinate: Coordinate) : Boolean {
         var intersections = 0
         for (i in lines){
-            //println(i.intersects(coordinate, 0.0))
             if (i.intersects(coordinate, PI)) intersections++
             if (intersections > 1) return false
         }
@@ -40,6 +40,15 @@ class Polygon(vararg val coordinates : Coordinate){
      */
     fun contains(x: Double, y: Double) : Boolean{
         return contains(Coordinate(x,y))
+    }
+    /**
+     * Returns true if the pose is within the bounds of the polygon
+     * @param pose The Pose2d value of the point to check
+     * @return If point is in polygon
+     * @author Ozy King
+     */
+    fun contains(pose: Pose2d): Boolean{
+        return contains(Coordinate(pose))
     }
     /**
      * Returns a polygon reflected over the x value given

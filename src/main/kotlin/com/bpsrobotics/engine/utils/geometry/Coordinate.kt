@@ -5,6 +5,7 @@ import com.bpsrobotics.engine.utils.Feet
 import com.bpsrobotics.engine.utils.Inches
 import com.bpsrobotics.engine.utils.Meters
 import edu.wpi.first.math.geometry.Pose2d
+import edu.wpi.first.math.geometry.Rotation2d
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -54,5 +55,14 @@ class Coordinate(val x: Double, val y: Double) {
      */
     fun reflectHorizontally(x: DistanceUnit) : Coordinate{
         return Coordinate(x.meterValue() + (x.meterValue() - this.x),y)
+    }
+
+    /**
+     * Creates a new Pose2d from the coordinate object and rotation
+     * @param rotation The rotation of the pose, in degrees
+     * @return A new Pose2d contructed from the coordinate and the rotation
+     */
+    fun toPose2d(rotation: Double): Pose2d{
+        return Pose2d(x,y, Rotation2d.fromDegrees(rotation))
     }
 }
