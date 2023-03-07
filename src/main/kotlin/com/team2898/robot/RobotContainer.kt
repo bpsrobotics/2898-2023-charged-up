@@ -7,6 +7,7 @@
 
 package com.team2898.robot
 
+import com.team2898.robot.commands.ArmTest
 import com.team2898.robot.commands.AutoBalance
 import com.team2898.robot.commands.PathFollowCommand
 import com.team2898.robot.commands.SimpleBalance

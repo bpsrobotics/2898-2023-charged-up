@@ -6,9 +6,6 @@ import com.revrobotics.CANSparkMax
 import com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless
 import com.team2898.robot.Constants.ARM_MAXACCEL
 import com.team2898.robot.Constants.ARM_MAXSPEED
-import com.team2898.robot.Constants.ARM_RAISED_KD
-import com.team2898.robot.Constants.ARM_RAISED_KI
-import com.team2898.robot.Constants.ARM_RAISED_KP
 import com.team2898.robot.RobotMap.ARM_ENCODER_PORT
 import com.team2898.robot.RobotMap.ARM_LIMIT_SWITCH
 import com.team2898.robot.RobotMap.ARM_MAIN
@@ -16,9 +13,7 @@ import com.team2898.robot.RobotMap.DISK_BRAKE_BACKWARD
 import com.team2898.robot.RobotMap.DISK_BRAKE_FORWARD
 import com.team2898.robot.RobotMap.PNEUMATICS_MODULE_TYPE
 import com.team2898.robot.RobotMap.PNUEMATICS_MODULE
-import edu.wpi.first.math.controller.ArmFeedforward
 import edu.wpi.first.math.controller.PIDController
-import edu.wpi.first.math.controller.ProfiledPIDController
 import edu.wpi.first.math.trajectory.TrapezoidProfile
 import edu.wpi.first.util.sendable.SendableBuilder
 import edu.wpi.first.wpilibj.AnalogEncoder
@@ -34,7 +29,7 @@ import kotlin.math.sin
 object Arm : SubsystemBase() {
 
     private val armMotor = CANSparkMax(ARM_MAIN, kBrushless)
-    private val breakSolenoid = DoubleSolenoid(PNUEMATICS_MODULE, PNEUMATICS_MODULE_TYPE, DISK_BRAKE_FORWARD, DISK_BRAKE_BACKWARD)
+    private val brakeSolenoid = DoubleSolenoid(PNUEMATICS_MODULE, PNEUMATICS_MODULE_TYPE, DISK_BRAKE_FORWARD, DISK_BRAKE_BACKWARD)
     private val encoder = AnalogEncoder(ARM_ENCODER_PORT)
     private val limitSwitch = DigitalInput(ARM_LIMIT_SWITCH)
     private var lastTick = false
@@ -44,9 +39,9 @@ object Arm : SubsystemBase() {
     private val UPPER_SOFT_STOP = 120.561807948.degreesToRadians()
     private val LOWER_SOFT_STOP = 9.429947216.degreesToRadians()
     private var stopped = false
-    val ksin = 0.00816702
-    val ks   = 0.00907915
-    val kv   = 1.87442
+    val ksin = 0.0192407
+    val ks   = 0.00729233
+    val kv   = 0.971118
 
     fun pos(): Double {
         val p = encoder.absolutePosition
@@ -54,7 +49,7 @@ object Arm : SubsystemBase() {
             p + 1.0
         } else {
             p
-        }) * 165.688247975 + 215.199342194).degreesToRadians()
+        }) * 165.688247975 + 215.199342194).degreesToRadians() - (-0.568584 - 0.16458363)
     }
 
     val movingAverage = MovingAverage(15)
@@ -63,8 +58,8 @@ object Arm : SubsystemBase() {
     val profileTimer = Timer()
 
     val constraints = TrapezoidProfile.Constraints(
-        0.5,
-        0.75
+        ARM_MAXSPEED,
+        ARM_MAXACCEL
     )
     val pid = PIDController(0.0, 0.0, 0.0)
     var profile: TrapezoidProfile? = null
@@ -76,65 +71,16 @@ object Arm : SubsystemBase() {
         armMotor.idleMode = CANSparkMax.IdleMode.kBrake
         armMotor.inverted = true
 
-        armMotor.encoder.velocityConversionFactor = PI * 2.0 / 525.0 / 42.0 / 3.33333333
+//        armMotor.encoder.velocityConversionFactor = PI * 2.0 / 525.0 / 42.0 / 3.33333333
 
         encoder.distancePerRotation = PI * 2.0
-
-//        armMotor.restoreFactoryDefaults()
-//        armMotor.setSmartCurrentLimit(20)
-//        armMotor.idleMode = CANSparkMax.IdleMode.kCoast
-
-//        encoder.distancePerRotation = PI * 2.0
     }
 
     var last = pos()
     val timer = Timer()
 
     override fun periodic() {
-//        val elapsedTime = timer.get()
         val currentTick = limitSwitch.get()
-//        val currentTick = limitSwitch.get()
-//        timer.reset()
-//        timer.start()
-
-//        val currentEncoderReading = (-164.077 * encoder.absolutePosition + 34.073).degreesToRadians() - (0.185149 - 0.16458363)
-
-//        encoderRate = (currentEncoderReading - encoderPos) / elapsedTime
-//
-//        encoderPos = currentEncoderReading
-
-//        val profile = currentGoal
-//        if (profile == null) {
-//            // Engage brake, stop motors
-////            armMotor.stopMotor()
-//            breakSolenoid.set(DoubleSolenoid.Value.kReverse)
-////            var output = feedforward.calculate(encoder.distance, encoderRate)
-////            if (encoderPos > UPPER_SOFT_STOP) {
-////                output = output.coerceAtMost(0.0)
-////            } else if (encoderPos < LOWER_SOFT_STOP || currentTick) {
-////                output = output.coerceAtLeast(0.0)
-////            }
-////
-////            armMotor.set(output)
-//        } else {
-//            // Controller moves the arm
-////            val pidOut = controller.calculate(encoder.distance, profile)
-////            val feedForwardOut = feedforward.calculate(encoder.distance, encoderRate)
-//            var output = 0.0//pidOut + feedForwardOut
-//
-//            if (encoderPos > UPPER_SOFT_STOP) {
-//                output = output.coerceAtMost(0.0)
-//            } else if (encoderPos < LOWER_SOFT_STOP || currentTick) {
-//                output = output.coerceAtLeast(0.0)
-//            }
-//
-////            armMotor.set(output)
-//            breakSolenoid.set(DoubleSolenoid.Value.kForward)
-//        }
-
-//        if (profile != null && (armMotor.encoder.velocity.absoluteValue < 0.05) && ((encoder.distance - profile).absoluteValue < 0.5)) {
-//            currentGoal = null
-//        }
 
         val p = pos()
         val dp = p - last
@@ -149,9 +95,7 @@ object Arm : SubsystemBase() {
 
         integral.add((rate - armMotor.encoder.velocity).absoluteValue)
 
-//        SmartDashboard.putNumber("arm pos", p)
-        SmartDashboard.putNumber("arm encoder difference", integral.average * integral.size)
-//        SmartDashboard.putNumber("averaged arm rate", averagedRate)
+//        SmartDashboard.putNumber("arm encoder difference", integral.average * integral.size)
 
         if (stopped) {
             println("STOPPED")
@@ -161,15 +105,12 @@ object Arm : SubsystemBase() {
 
         pid.p = SmartDashboard.getNumber("arm kp", 0.0)
         pid.d = SmartDashboard.getNumber("arm kd", 0.0)
-//        val setpoint = SmartDashboard.getNumber("arm target pos", p)
-//        if (setpoint != prevGoal) {
-//        }
         if (setpoint == 0.0 || setpoint !in LOWER_SOFT_STOP..UPPER_SOFT_STOP || ((p - setpoint).absoluteValue < 0.05 && rate.absoluteValue < 0.1) || profileTimer.get() > (profile?.totalTime() ?: 0.0)) {
             profile = null
         }
 
-        if (!releaseTimer.hasElapsed(0.1) || true) {
-            breakSolenoid.set(DoubleSolenoid.Value.kReverse)
+        if (!releaseTimer.hasElapsed(0.1)) {
+            brakeSolenoid.set(DoubleSolenoid.Value.kReverse)
             armMotor.set(0.0)
             armMotor.idleMode = CANSparkMax.IdleMode.kCoast
             return
@@ -177,33 +118,20 @@ object Arm : SubsystemBase() {
             armMotor.idleMode = CANSparkMax.IdleMode.kBrake
         }
 
-
         if (profile == null) {
-            breakSolenoid.set(DoubleSolenoid.Value.kForward)
+            brakeSolenoid.set(DoubleSolenoid.Value.kForward)
             armMotor.set(0.0)
             return
         } else {
-            breakSolenoid.set(DoubleSolenoid.Value.kReverse)
+            brakeSolenoid.set(DoubleSolenoid.Value.kReverse)
         }
-//        println("pos: $p goal: $setpoint")
 
-//        armMotor.set(0.0)
-
-//        var output = SmartDashboard.getNumber("arm output", 0.0)
         val targetSpeed = profile?.calculate(profileTimer.get())?.velocity ?: 0.0
         SmartDashboard.putNumber("arm target speed", targetSpeed)
 
         var output = pid.calculate(rate, targetSpeed)
         output += kv * targetSpeed
         output += ks + sin(p) * ksin
-//        if (output.absoluteValue > 0.3) {
-//            output = 0.0
-//            println("capping output")
-//        }
-//        if (p !in LOWER_SOFT_STOP..UPPER_SOFT_STOP || rate.absoluteValue in 0.8..20.0) {
-////            println("STOPPING p = $p rate = $rate")
-//            stopped = true
-//        }
 
         if (p > UPPER_SOFT_STOP) {
             output = output.coerceAtMost(0.0)
@@ -237,7 +165,6 @@ object Arm : SubsystemBase() {
     }
 
     fun stop() {
-//        currentGoal = null
         profile = null
     }
 

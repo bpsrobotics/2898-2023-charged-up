@@ -42,9 +42,9 @@ object Constants {
     const val AUTOBALANCE_KI = 0.0
     const val AUTOBALANCE_KD = 0.0
 
-    //Arm parameters
-    const val ARM_MAXSPEED = 5.0
-    const val ARM_MAXACCEL = 5.0
+    // Arm parameters
+    const val ARM_MAXSPEED = 0.5
+    const val ARM_MAXACCEL = 0.25
     const val ARM_RAISED_KP = 2.0
     const val ARM_RAISED_KI = 2.0
     const val ARM_RAISED_KD = 2.0
@@ -60,6 +60,6 @@ object Constants {
         LOWGOAL(0.6),
         MIDDLECONEGOAL(1.6),
         MIDDLEBOXGOAL(1.4),
-        HIGHCUBELAUNCH(1.9)
+        HIGHCUBELAUNCH(1.8)
     }
 }

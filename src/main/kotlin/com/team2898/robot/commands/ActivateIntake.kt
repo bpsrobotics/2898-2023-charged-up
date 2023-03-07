@@ -12,6 +12,7 @@ class ActivateIntake(private val mode: RunningIntakes) : CommandBase() {
     private val timer = Timer()
 
     override fun initialize() {
+        // FIXME
         if (mode == RunningIntakes.RUNINTAKE) {
             Intake.runIntake(0.75)
         }

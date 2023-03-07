@@ -9,7 +9,8 @@ object RobotMap {
     const val DRIVETRAIN_RIGHT_MAIN       = 1
     const val DRIVETRAIN_RIGHT_SECONDARY  = 3
     const val ARM_MAIN                    = 5
-    const val INTAKE_MOTOR                = 6
+    const val INTAKE_MAIN                 = 6
+    const val INTAKE_SECONDARY            = 7
 
 
     // DIO
@@ -33,4 +34,6 @@ object RobotMap {
     const val DISK_BRAKE_BACKWARD         = 13
     const val INTAKE_FORWARD              = 14
     const val INTAKE_BACKWARD             = 15
+    const val INTAKE_IN                   = 11
+    const val INTAKE_OUT                  = 10
 }

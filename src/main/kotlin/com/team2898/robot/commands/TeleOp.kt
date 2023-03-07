@@ -82,12 +82,12 @@ class TeleOp : CommandBase() {
         when (OI.highHat) {
             in intArrayOf(315, 0, 45) -> {
 //                println("out")
-                Intake.runOuttake(-0.75)
+                Intake.runOuttake(-0.5)
             }
 
             in intArrayOf(135, 180, 225) -> {
 //                println("in")
-                Intake.runIntake(0.75)
+                Intake.runIntake(0.25)
             }
 
             else -> {
