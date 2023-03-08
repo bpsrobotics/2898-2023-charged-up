@@ -34,10 +34,10 @@ class RobotContainer {
     init {
         autoCommandChooser.setDefaultOption("No Auto", noopAutoCommand)
         autoCommandChooser.addOption("Leading Auto", LeadingAuto())
-        autoCommandChooser.addOption("Top Middle Auto",TopMiddleAuto())
-        autoCommandChooser.addOption("Leave Auto",LeaveAuto())
-        autoCommandChooser.addOption("Balance Auto",BalanceAuto())
-        autoCommandChooser.addOption("Scoring Auto",ScoringAuto())
+        autoCommandChooser.addOption("Top Middle Auto", TopMiddleAuto())
+        autoCommandChooser.addOption("Leave Auto", LeaveAuto())
+        autoCommandChooser.addOption("Balance Auto", BalanceAuto())
+        autoCommandChooser.addOption("Scoring Auto", ScoringAuto())
 
         // Send the auto chooser
         SmartDashboard.putData("Auto mode", autoCommandChooser)
@@ -46,6 +46,6 @@ class RobotContainer {
     fun getAutonomousCommand(): Command {
         // Return the selected command
 //        return SequentialCommandGroup(SuperSimpleAuto(), SimpleBalance())
-        return BalanceAuto()
+        return autoCommandChooser.selected
     }
 }

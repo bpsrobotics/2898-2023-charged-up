@@ -86,23 +86,22 @@ object OI : SubsystemBase() {
     val highArmCube get() = operatorController.getRawButton(8)
     val brakeRelease get() = operatorController.getRawButton(11)
 
-    enum class  Direction() {LEFT, RIGHT, UP, DOWN, INACTIVE;
-    companion object{
-        fun mirrored(direction: Direction): Direction {
-            return when(direction) {
-                Direction.LEFT  -> return RIGHT
-                Direction.RIGHT -> return LEFT
-                else            -> return direction
-            }
+    enum class Direction {
+        LEFT, RIGHT, UP, DOWN, INACTIVE;
+
+        fun mirrored() = when (this) {
+            LEFT  -> RIGHT
+            RIGHT -> LEFT
+            else  -> this
         }
     }
-    }
+
     val alignmentPad get() = when(driverController.pov) {
-        in intArrayOf(0)  -> Direction.UP
-        in intArrayOf(90) -> Direction.RIGHT
-        in intArrayOf(180) -> Direction.DOWN
-        in intArrayOf(270) -> Direction.LEFT
-        else               -> Direction.INACTIVE
+        0    -> Direction.UP
+        90   -> Direction.RIGHT
+        180  -> Direction.DOWN
+        270  -> Direction.LEFT
+        else -> Direction.INACTIVE
     }
 
     /** We might not do High Arm Cube and Cone - Abhi */

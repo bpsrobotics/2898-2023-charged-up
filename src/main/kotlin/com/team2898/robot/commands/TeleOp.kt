@@ -35,16 +35,13 @@ class TeleOp : CommandBase() {
 
     // Called every time the scheduler runs while the command is scheduled.
     override fun execute() {
-
-
-
-        if(Drivetrain.mode == Drivetrain.Mode.CLOSED_LOOP){
-            if(OI.alignmentPad == OI.Direction.INACTIVE) {
+        if (Drivetrain.mode == Drivetrain.Mode.CLOSED_LOOP) {
+            if (OI.alignmentPad == OI.Direction.INACTIVE) {
                 Drivetrain.mode = Drivetrain.Mode.OPEN_LOOP
                 Drivetrain.rawDrive(0.0, 0.0)
             }
-        } else if(OI.alignmentPad != OI.Direction.INACTIVE){
-            if(Field.map.community.contains(Odometry.pose)){  AlignGrid() }
+        } else if (OI.alignmentPad != OI.Direction.INACTIVE) {
+            if (Field.map.community.contains(Odometry.pose)) { alignGrid() }
         } else {
             val turn = OI.turn * 0.5
             val speeds = when {
@@ -61,12 +58,9 @@ class TeleOp : CommandBase() {
                 // Otherwise, drive and turn normally
                 else -> curvatureDriveIK(OI.throttle, turn, true)
             }
-            val pitch = Odometry.NavxHolder.navx.pitch
-            val kP = 0.003
-            val ff = if (pitch.absoluteValue > 2.0) kP * pitch else 0.0
             val left = leftLimiter.calculate(speeds.left * 5.0)
             val right = rightLimiter.calculate(speeds.right * 5.0)
-            Drivetrain.stupidDrive(`M/s`(left + ff), `M/s`(right + ff))
+            Drivetrain.stupidDrive(`M/s`(left), `M/s`(right))
         }
 
 //      /** Make the alliance community zone a rectangle */
@@ -128,7 +122,7 @@ class TeleOp : CommandBase() {
                 .end(dst)
                 .build()
     }
-    fun AlignGrid() {
+    fun alignGrid() {
         val grid = Field.map.scoring.getFacedGrid(Odometry.pose, Field.map.rotation)
         var dir = OI.alignmentPad
         if(Field.teamColor != DriverStation.Alliance.Blue) dir = OI.Direction.mirrored(dir)
