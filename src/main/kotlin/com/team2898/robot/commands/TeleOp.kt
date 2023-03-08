@@ -125,7 +125,7 @@ class TeleOp : CommandBase() {
     fun alignGrid() {
         val grid = Field.map.scoring.getFacedGrid(Odometry.pose, Field.map.rotation)
         var dir = OI.alignmentPad
-        if(Field.teamColor != DriverStation.Alliance.Blue) dir = OI.Direction.mirrored(dir)
+        if (Field.teamColor != DriverStation.Alliance.Blue) dir = dir.mirrored()
         val scoreSpot = when(dir){
             OI.Direction.RIGHT -> grid.Cone1
             OI.Direction.LEFT  -> grid.Cone2

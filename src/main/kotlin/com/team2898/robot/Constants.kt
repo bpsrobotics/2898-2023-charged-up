@@ -57,7 +57,7 @@ object Constants {
     enum class ArmHeights(val position: Double) {
         STOWED(0.0),
         PICKUP(0.7),
-        LOWGOAL(0.7),
+        LOWGOAL(0.75),
         MIDDLECONEGOAL(1.75),
         MIDDLEBOXGOAL(1.4),
         HIGHCUBELAUNCH(1.85)
