@@ -118,11 +118,9 @@ object OI : SubsystemBase() {
     val slowIntake get() = operatorController.getRawButton(3)
 
     init {
-        operatorTrigger.toggleOnTrue(
-            Commands.startEnd(
-                Intake::intakeOpen,
-                Intake::intakeClose))
-
+        operatorTrigger.whileTrue(
+            Commands.startEnd(Intake::intakeClose,
+                Intake::intakeOpen))
 
         Trigger { operatorController.pov != 0 }.toggleOnTrue(
             Commands.startEnd(
