@@ -94,7 +94,7 @@ object Robot : TimedRobot() {
     }
 
     override fun disabledPeriodic() {
-        if (brakeTimer.hasElapsed(1.0)) {
+        if (brakeTimer.hasElapsed(5.0)) {
             Drivetrain.coastMode()
         } else {
             Drivetrain.brakeMode()
@@ -106,6 +106,7 @@ object Robot : TimedRobot() {
      */
     override fun autonomousInit() {
 
+        // schedule the aut
         // schedule the autonomous command (example)
         autoCommand = robotContainer.getAutonomousCommand()
         autoCommand.let { autoCommand.schedule() }

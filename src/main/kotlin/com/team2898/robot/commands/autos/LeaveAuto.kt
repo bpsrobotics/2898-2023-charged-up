@@ -1,29 +1,27 @@
 package com.team2898.robot.commands.autos
 
-import com.team2898.robot.Constants.ArmHeights.HIGHCUBELAUNCH
-import com.team2898.robot.commands.*
-import com.team2898.robot.commands.ActivateIntake.RunningIntakes.RUNOUTTAKE
-import com.team2898.robot.commands.ChangeIntakeState.IntakeState.CLOSEINTAKE
-import com.team2898.robot.commands.ChangeIntakeState.IntakeState.OPENINTAKE
-import edu.wpi.first.wpilibj2.command.Command
+import com.bpsrobotics.engine.utils.`M/s`
+import com.team2898.robot.subsystems.Drivetrain
+import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj2.command.CommandBase
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup
 
 class LeaveAuto : CommandBase() {
-    private lateinit var autoCommandGroup: Command
+    val timer = Timer()
 
     override fun initialize() {
-        autoCommandGroup = SequentialCommandGroup (
-            ChangeIntakeState(CLOSEINTAKE),
-            ArmMove(HIGHCUBELAUNCH),
-            ActivateIntake(RUNOUTTAKE),
-            ChangeIntakeState(OPENINTAKE),
-            PathFollowCommand("LowerRun.path", true)
-        )
-        autoCommandGroup.schedule()
+        timer.start()
+    }
+
+    override fun execute() {
+        Drivetrain.stupidDrive(`M/s`(-1.0), `M/s`(-1.0))
     }
 
     override fun isFinished(): Boolean {
-        return false
+        return timer.hasElapsed(1.9)
+//        return timer.hasElapsed(1.3)
+    }
+
+    override fun end(interrupted: Boolean) {
+        Drivetrain.stupidDrive(`M/s`(0.0), `M/s`(0.0))
     }
 }

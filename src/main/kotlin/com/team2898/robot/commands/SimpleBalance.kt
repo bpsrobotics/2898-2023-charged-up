@@ -55,7 +55,7 @@ class SimpleBalance : CommandBase() {
         SmartDashboard.putNumber("median rate", averageRate.median)
         SmartDashboard.putNumber("over", overTicks.toDouble())
 
-        if (stopTimer.hasElapsed(0.9)) {
+        if (stopTimer.hasElapsed(1.25)) {
             Drivetrain.brakeMode()
 //            Drivetrain.stupidDrive(`M/s`(0.0), `M/s`(0.0))
             Drivetrain.rawDrive(0.0, 0.0)
@@ -64,14 +64,16 @@ class SimpleBalance : CommandBase() {
         }
 
         if (overTicks > 15 || balanced) {
-            Drivetrain.stupidDrive(`M/s`(1.8), `M/s`(1.8))
+            val s = 0.6
+            Drivetrain.stupidDrive(`M/s`(s), `M/s`(s))
             if (!balanced) {
                 stopTimer.reset()
                 stopTimer.start()
             }
             balanced = true
         } else {
-            Drivetrain.stupidDrive(`M/s`(-0.4), `M/s`(-0.4))
+            val s = -0.5
+            Drivetrain.stupidDrive(`M/s`(s), `M/s`(s))
         }
     }
 

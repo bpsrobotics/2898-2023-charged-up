@@ -10,11 +10,19 @@ import edu.wpi.first.wpilibj2.command.CommandBase
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup
 
-class BalanceAuto : CommandBase() {
+class PreloadBalanceAuto : CommandBase() {
     private lateinit var autoCommandGroup: Command
 
     override fun initialize() {
-        autoCommandGroup = SequentialCommandGroup(SuperSimpleAuto(), SimpleBalance())
+        autoCommandGroup = SequentialCommandGroup(
+            ChangeIntakeState(CLOSEINTAKE),
+            ArmMove(HIGHCUBELAUNCH),
+            ActivateIntake(RUNOUTTAKE),
+            ParallelCommandGroup(
+                ArmMove(PICKUP),
+                SequentialCommandGroup(SuperSimpleAuto(), SimpleBalance())
+            )
+        )
         autoCommandGroup.schedule()
     }
 
