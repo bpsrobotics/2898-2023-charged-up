@@ -17,7 +17,7 @@ object Constants {
     const val DRIVETRAIN_PEAK_CURRENT_LIMIT_DURATION = 50
 
     // Can't be const because it's an expression
-    val DRIVETRAIN_MAX_VELOCITY = `M/s`(1.0)
+    val DRIVETRAIN_MAX_VELOCITY = `M/s`(0.5)
     val DRIVETRAIN_MAX_ACCELERATION = MetersPerSecondSquared(0.5)  // placeholder
 
     // Horizontal distance between the centers of the wheels on each side of the drivetrain
@@ -56,10 +56,11 @@ object Constants {
     //TODO: Set up the proper positions for the arm
     enum class ArmHeights(val position: Double) {
         STOWED(0.0),
-        PICKUP(0.7),
+        PICKUP(0.75),
         LOWGOAL(0.75),
         MIDDLECONEGOAL(1.75),
         MIDDLEBOXGOAL(1.4),
-        HIGHCUBELAUNCH(1.85)
+        HIGHCUBELAUNCH(1.9),
+        MOVING(1.1)
     }
 }

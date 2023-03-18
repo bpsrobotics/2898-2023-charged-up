@@ -32,6 +32,7 @@ class RobotContainer {
 //        autoCommandChooser.addOption("Leave Auto", LeaveAuto())
         autoCommandChooser.addOption("Preload + Balance Auto", PreloadBalanceAuto())
         autoCommandChooser.addOption("Preload Auto", PreloadAuto())
+        autoCommandChooser.addOption("Preload + Mobility Auto", PreloadMobilityAuto())
         autoCommandChooser.addOption("Balance Auto", BalanceAuto())
         autoCommandChooser.addOption("Leave Auto", LeaveAuto())
 //        autoCommandChooser.addOption("Scoring Auto", ScoringAuto())

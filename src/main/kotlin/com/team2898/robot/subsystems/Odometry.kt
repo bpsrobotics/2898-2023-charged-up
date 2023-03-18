@@ -29,6 +29,7 @@ object Odometry : SubsystemBase(), PoseProvider {
     val leftVel get() =  MetersPerSecond(Drivetrain.leftEncoder.rate)
     val rightVel get() = MetersPerSecond(Drivetrain.rightEncoder.rate)
     val vels get() = DifferentialDriveWheelSpeeds(leftVel.metersPerSecondValue(), rightVel.metersPerSecondValue())
+    private val thirdProvider = DifferentialDrivePoseEstimator(DifferentialDriveKinematics(DRIVETRAIN_TRACK_WIDTH.meterValue()), NavxHolder.navx.rotation2d, 0.0, 0.0, Pose2d())
 
     override var pose: Pose2d = Pose2d(0.0, 0.0, Rotation2d(0.0))
         private set
@@ -37,11 +38,22 @@ object Odometry : SubsystemBase(), PoseProvider {
 
     init {
         val stdDevs = Matrix(Nat.N3(), Nat.N1())
-        Vision.listeners.add { visionPose, time ->
-            stdDevs.fill(Vision.stdev)
+        Vision.listeners.add { visionPose, stdDevArray, time ->
+            for (i in stdDevArray.indices) {
+                stdDevArray[i] *= 1.5
+            }
+            stdDevArray.copyInto(stdDevs.data, 0, 0, 3)
             otherProvider.setVisionMeasurementStdDevs(stdDevs)
-            otherProvider.addVisionMeasurement(visionPose, time)
+            otherProvider.addVisionMeasurement(Pose2d(visionPose.translation, thirdProvider.estimatedPosition.rotation), time)
         }
+        val initial = Pose2d(2.0, 1.6, Rotation2d.fromDegrees(180.0))
+        reset(initial)
+    }
+
+    fun zero() {
+//        val initial = Pose2d(0.0, 0.0, Rotation2d.fromDegrees(180.0))
+        val initial = Pose2d(2.0, 1.6, Rotation2d.fromDegrees(180.0))
+        reset(initial)
     }
 
     override fun periodic() {
@@ -51,12 +63,15 @@ object Odometry : SubsystemBase(), PoseProvider {
     override fun reset(x: Meters, y: Meters, theta: Degrees) {
         val p = Pose2d(x.value, y.value, Rotation2d.fromDegrees(theta.value))
         otherProvider.resetPosition(NavxHolder.navx.rotation2d, Drivetrain.leftEncoder.distance, Drivetrain.rightEncoder.distance, p)
+        thirdProvider.resetPosition(NavxHolder.navx.rotation2d, Drivetrain.leftEncoder.distance, Drivetrain.rightEncoder.distance, p)
     }
 
     override fun update() {
         pose = otherProvider.update(NavxHolder.navx.rotation2d, Drivetrain.leftEncoder.distance, Drivetrain.rightEncoder.distance)
+        thirdProvider.update(NavxHolder.navx.rotation2d, Drivetrain.leftEncoder.distance, Drivetrain.rightEncoder.distance)
 
         field.robotPose = pose
+        field.getObject("pure odometry").pose = thirdProvider.estimatedPosition
         SmartDashboard.putData(field)
     }
 

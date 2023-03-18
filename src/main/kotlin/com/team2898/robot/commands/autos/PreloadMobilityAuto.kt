@@ -1,5 +1,6 @@
 package com.team2898.robot.commands.autos
 
+import com.team2898.robot.Constants
 import com.team2898.robot.Constants.ArmHeights.*
 import com.team2898.robot.commands.*
 import com.team2898.robot.commands.ActivateIntake.RunningIntakes.RUNOUTTAKE
@@ -9,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup
 
-class PreloadBalanceAuto : CommandBase() {
+class PreloadMobilityAuto : CommandBase() {
     private lateinit var autoCommandGroup: Command
 
     override fun initialize() {
@@ -20,7 +21,7 @@ class PreloadBalanceAuto : CommandBase() {
             ActivateIntake(RUNOUTTAKE),
             ParallelCommandGroup(
                 ArmMove(PICKUP),
-                SequentialCommandGroup(SuperSimpleAuto(), SimpleBalance())
+                SuperSimpleAuto()
             )
         )
         autoCommandGroup.schedule()

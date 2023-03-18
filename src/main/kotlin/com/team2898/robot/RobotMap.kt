@@ -20,7 +20,7 @@ object RobotMap {
     const val DRIVETRAIN_RIGHT_ENCODER_A  = 0
     const val DRIVETRAIN_RIGHT_ENCODER_B  = 1
 
-    const val ARM_LIMIT_SWITCH            = 4
+    const val ARM_LIMIT_SWITCH            = 5
 
 
     // Analog in

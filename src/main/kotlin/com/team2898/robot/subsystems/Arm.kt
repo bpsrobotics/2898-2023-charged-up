@@ -36,7 +36,7 @@ object Arm : SubsystemBase() {
 
     var setpoint = pos()
 
-    private val UPPER_SOFT_STOP = 1.9
+    private val UPPER_SOFT_STOP = 1.95
     private val LOWER_SOFT_STOP = 9.429947216.degreesToRadians()
     private var stopped = false
     val ksin = 0.0192407
@@ -49,7 +49,7 @@ object Arm : SubsystemBase() {
             p + 1.0
         } else {
             p
-        }) * 165.688247975 + 215.199342194).degreesToRadians() - (-0.568584 - 0.16458363)
+        }) * 165.688247975 + 215.199342194).degreesToRadians() - (-0.568584 - 0.16458363) - (0.65 - 0.17453293) + 0.05
     }
 
     val movingAverage = MovingAverage(15)
@@ -81,6 +81,7 @@ object Arm : SubsystemBase() {
 
     override fun periodic() {
         val currentTick = limitSwitch.get()
+        lastTick = limitSwitch.get()
 
         val p = pos()
         val dp = p - last
@@ -109,6 +110,12 @@ object Arm : SubsystemBase() {
             profile = null
         }
 
+//        // TODO
+//        brakeSolenoid.set(DoubleSolenoid.Value.kReverse)
+//        armMotor.set(0.0)
+//        armMotor.idleMode = CANSparkMax.IdleMode.kCoast
+//        return
+
         if (!releaseTimer.hasElapsed(0.1)) {
             brakeSolenoid.set(DoubleSolenoid.Value.kReverse)
             armMotor.set(0.0)
@@ -136,19 +143,18 @@ object Arm : SubsystemBase() {
         if (p > UPPER_SOFT_STOP) {
             output = output.coerceAtMost(0.0)
             println("UPPER SOFT STOP")
-        } else if (p < LOWER_SOFT_STOP/* || currentTick*/) {
+        } else if (p < LOWER_SOFT_STOP || currentTick) {
             output = output.coerceAtLeast(0.0)
             println("LOWER SOFT STOP")
         }
         armMotor.set(output)
 
 
+        // fixme move to top
         if (!lastTick && currentTick) {
 //            encoder.reset()
 //            currentGoal = null
         }
-
-        lastTick = limitSwitch.get()
     }
 
     fun setGoal(newPos: Double) {
@@ -192,5 +198,15 @@ object Arm : SubsystemBase() {
         stop()
         releaseTimer.reset()
         releaseTimer.start()
+    }
+
+    var forceWrist = false
+
+    fun forceWristUp() {
+        forceWrist = true
+    }
+
+    fun unForceWrist() {
+        forceWrist = false
     }
 }

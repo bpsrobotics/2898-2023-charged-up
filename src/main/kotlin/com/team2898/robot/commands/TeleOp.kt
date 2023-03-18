@@ -11,11 +11,13 @@ import com.team2898.robot.subsystems.Intake
 import com.team2898.robot.subsystems.Odometry
 import edu.wpi.first.math.filter.SlewRateLimiter
 import edu.wpi.first.math.geometry.Pose2d
+import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.trajectory.Trajectory
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.PneumaticHub
 import edu.wpi.first.wpilibj.drive.DifferentialDrive
 import edu.wpi.first.wpilibj.drive.DifferentialDrive.curvatureDriveIK
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.CommandBase
 import kotlin.math.absoluteValue
 
@@ -30,20 +32,24 @@ class TeleOp : CommandBase() {
         PneumaticHub(42).enableCompressorDigital()
     }
 
-    private val leftLimiter = SlewRateLimiter(10.0)
-    private val rightLimiter = SlewRateLimiter(10.0)
+    private val leftLimiter = SlewRateLimiter(100.0)
+    private val rightLimiter = SlewRateLimiter(100.0)
 
     // Called every time the scheduler runs while the command is scheduled.
     override fun execute() {
+//        Drivetrain.stupidDrive(`M/s`(1.0), `M/s`(1.0))
+//        return
+
         if (Drivetrain.mode == Drivetrain.Mode.CLOSED_LOOP) {
             if (OI.alignmentPad == OI.Direction.INACTIVE) {
                 Drivetrain.mode = Drivetrain.Mode.OPEN_LOOP
                 Drivetrain.rawDrive(0.0, 0.0)
             }
         } else if (OI.alignmentPad != OI.Direction.INACTIVE) {
-            if (Field.map.community.contains(Odometry.pose)) { alignGrid() }
+            if (Field.map.community.contains(Odometry.pose) || true) { alignGrid() }
         } else {
             val turn = OI.turn * 0.5
+            Drivetrain.coastMode()
             val speeds = when {
                 //lessen speed when facing the community and getting close to the community
 
@@ -58,8 +64,14 @@ class TeleOp : CommandBase() {
                 // Otherwise, drive and turn normally
                 else -> curvatureDriveIK(OI.throttle, turn, true)
             }
-            val left = leftLimiter.calculate(speeds.left * 5.0)
-            val right = rightLimiter.calculate(speeds.right * 5.0)
+//            val left = leftLimiter.calculate(speeds.left * 1.0)
+//            val right = rightLimiter.calculate(speeds.right * 1.0)
+            val left = speeds.left
+            val right = speeds.right
+            SmartDashboard.putNumber("l output", left)
+            SmartDashboard.putNumber("r output", right)
+            SmartDashboard.putNumber("turn", turn)
+            SmartDashboard.putNumber("throttle", OI.throttle)
             Drivetrain.stupidDrive(`M/s`(left), `M/s`(right))
         }
 
@@ -77,12 +89,12 @@ class TeleOp : CommandBase() {
 //            Drivetrain.stupidDrive(`M/s`(speeds.left * 5.0), `M/s`(speeds.right * 5.0))
 //        }
 
-        if (OI.slowOuttake) {
-            Intake.runOuttake(0.25)
-        }
-        if (OI.slowIntake) {
-            Intake.runIntake(0.25)
-        }
+//        if (OI.slowOuttake) {
+//            Intake.runOuttake(0.25)
+//        }
+//        if (OI.slowIntake) {
+//            Intake.runIntake(0.25)
+//        }
  //        println(OI.highHat)
         when (OI.highHat) {
             in intArrayOf(315, 0, 45) -> {
@@ -110,6 +122,7 @@ class TeleOp : CommandBase() {
                 OI.midArmCube -> MIDDLEBOXGOAL
                 OI.midArmCone -> MIDDLECONEGOAL
                 OI.highArmCube -> HIGHCUBELAUNCH
+                OI.moving -> MOVING
                 else -> null
             }
             if (goalPosition != null) {
@@ -134,7 +147,8 @@ class TeleOp : CommandBase() {
             OI.Direction.LEFT  -> grid.Cone2
             else               -> grid.Cube
         }
-        val targetPose = scoreSpot.RobotPosition.toPose2d(Field.map.rotation)
+//        val targetPose = scoreSpot.RobotPosition.toPose2d(Field.map.rotation)
+        val targetPose = Pose2d(2.0, 1.6, Rotation2d.fromDegrees(180.0))
         val path = generatePath(targetPose)
         Drivetrain.follow(path)
     }

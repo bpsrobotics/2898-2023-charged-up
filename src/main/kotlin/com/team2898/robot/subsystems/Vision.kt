@@ -13,8 +13,9 @@ object Vision : SubsystemBase() {
         private set
 
     private val instance = NetworkTableInstance.getDefault()
-    private val table = instance.getTable("vision")
+    private val table = instance.getTable("Vision")
     private val topic = table.getDoubleArrayTopic("VisionPos")
+    private val stdDevEntry = table.getDoubleArrayTopic("VisionStdDev").getEntry(doubleArrayOf())
 
     var x = 0.0
     var y = 0.0
@@ -26,18 +27,19 @@ object Vision : SubsystemBase() {
     var r = 0.0
     var stdev = 0.0  // TODO: Make into Matrix
 
-    val listeners = mutableListOf<(Pose2d, Double) -> Unit>()
+    val listeners = mutableListOf<(Pose2d, DoubleArray, Double) -> Unit>()
 
     init {
         instance.addListener(topic.subscribe(doubleArrayOf(0.0, 0.0, 0.0, 0.0)), EnumSet.of(NetworkTableEvent.Kind.kValueAll)) { v ->
-            lastFixTime = Timer.getFPGATimestamp()
+            val stdDev = stdDevEntry.get()
+            lastFixTime = Timer.getFPGATimestamp() - 0.2
             val arr = v.valueData.value.doubleArray
             x = arr[0]
             y = arr[1]
             z = arr[2]
-            r = arr[3]
+            r = arr[3] + 180.0
             currentRobotPose = Pose2d(x, y, Rotation2d.fromDegrees(r))
-            listeners.forEach { it(currentRobotPose, lastFixTime) }
+            listeners.forEach { it(currentRobotPose, stdDev, lastFixTime) }
             Odometry.field.getObject("vision pose").pose = currentRobotPose
         }
     }

@@ -13,48 +13,49 @@ import com.team2898.robot.RobotMap.PNUEMATICS_MODULE
 import edu.wpi.first.wpilibj.DoubleSolenoid
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value.kForward
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value.kReverse
+import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 
 object Intake: SubsystemBase() {
 
-    private val intakePneumatic = DoubleSolenoid(PNUEMATICS_MODULE, PNEUMATICS_MODULE_TYPE, INTAKE_FORWARD, INTAKE_BACKWARD)
-    private val hinge = DoubleSolenoid(PNUEMATICS_MODULE, PNEUMATICS_MODULE_TYPE, INTAKE_IN, INTAKE_OUT)
-    private val intakeMotor = CANSparkMax(INTAKE_MAIN, kBrushless)
-    private val secondary = CANSparkMax(INTAKE_SECONDARY, kBrushless)
+//    private val intakePneumatic = DoubleSolenoid(PNUEMATICS_MODULE, PNEUMATICS_MODULE_TYPE, INTAKE_FORWARD, INTAKE_BACKWARD)
+//    private val hinge = DoubleSolenoid(PNUEMATICS_MODULE, PNEUMATICS_MODULE_TYPE, INTAKE_IN, INTAKE_OUT)
+//    private val intakeMotor = CANSparkMax(INTAKE_MAIN, kBrushless)
+//    private val secondary = CANSparkMax(INTAKE_SECONDARY, kBrushless)
     private var intakeState = true
 
     init {
-        intakeMotor.restoreFactoryDefaults()
-        intakeMotor.setSmartCurrentLimit(30)
-        intakeMotor.inverted = false
-
-        secondary.restoreFactoryDefaults()
-        secondary.setSmartCurrentLimit(30)
-        secondary.inverted = true
+//        intakeMotor.restoreFactoryDefaults()
+//        intakeMotor.setSmartCurrentLimit(30)
+//        intakeMotor.inverted = false
+//
+//        secondary.restoreFactoryDefaults()
+//        secondary.setSmartCurrentLimit(30)
+//        secondary.inverted = true
 //        secondary.follow(intakeMotor)
     }
 
     fun intakeOpen() {
-        intakePneumatic.set(kReverse)
+//        intakePneumatic.set(kReverse)
         intakeState = true
     }
     fun intakeClose() {
-        intakePneumatic.set(kForward)
+//        intakePneumatic.set(kForward)
         intakeState = false
     }
 
     fun runIntake(speed: Double) {
-        intakeMotor.set(speed)
-        secondary.set(speed)
+//        intakeMotor.set(speed)
+//        secondary.set(speed)
     }
     fun runOuttake(speed: Double) {
-        intakeMotor.set(-speed)
-        secondary.set(-speed)
+//        intakeMotor.set(-speed)
+//        secondary.set(-speed)
     }
 
     fun stopIntake() {
-        intakeMotor.set(0.0)
-        secondary.set(0.0)
+//        intakeMotor.set(0.0)
+//        secondary.set(0.0)
     }
 
     fun intakeIsOpen(): Boolean {
@@ -62,11 +63,11 @@ object Intake: SubsystemBase() {
     }
 
     override fun periodic() {
-        if (Arm.pos() < 0.550777) {
-            hinge.set(kReverse)
-        } else {
-            hinge.set(kForward)
-        }
+//        if (Arm.pos() < 0.53 || Arm.forceWrist) {
+//            hinge.set(kReverse)
+//        } else {
+//            hinge.set(kForward)
+//        }
 //        intakeMotor.set(0.0)
 //        println("${intakeMotor.appliedOutput} ${intakeMotor.outputCurrent}")
 //        SmartDashboard.putNumber("intake duty cycle", intakeMotor.appliedOutput)

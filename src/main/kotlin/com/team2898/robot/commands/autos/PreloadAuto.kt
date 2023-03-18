@@ -1,7 +1,6 @@
 package com.team2898.robot.commands.autos
 
-import com.team2898.robot.Constants.ArmHeights.HIGHCUBELAUNCH
-import com.team2898.robot.Constants.ArmHeights.PICKUP
+import com.team2898.robot.Constants.ArmHeights.*
 import com.team2898.robot.commands.*
 import com.team2898.robot.commands.ActivateIntake.RunningIntakes.RUNOUTTAKE
 import com.team2898.robot.commands.ChangeIntakeState.IntakeState.CLOSEINTAKE
@@ -16,6 +15,7 @@ class PreloadAuto : CommandBase() {
     override fun initialize() {
         autoCommandGroup = SequentialCommandGroup(
             ChangeIntakeState(CLOSEINTAKE),
+            ArmMove(MIDDLEBOXGOAL),
             ArmMove(HIGHCUBELAUNCH),
             ActivateIntake(RUNOUTTAKE),
         )

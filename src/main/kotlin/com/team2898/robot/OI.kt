@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.XboxController
 import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.InstantCommand
+import edu.wpi.first.wpilibj2.command.StartEndCommand
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import kotlin.math.pow
@@ -85,6 +86,7 @@ object OI : SubsystemBase() {
     val midArmCone get() = operatorController.getRawButton(9)
     val highArmCube get() = operatorController.getRawButton(8)
     val brakeRelease get() = operatorController.getRawButton(11)
+    val moving get() = operatorController.getRawButton(7)
 
     enum class Direction {
         LEFT, RIGHT, UP, DOWN, INACTIVE;
@@ -114,20 +116,22 @@ object OI : SubsystemBase() {
     val armUp = Trigger { operatorController.getRawButton(6) }
     val armDown = Trigger { operatorController.getRawButton(4) }
 
-    val slowOuttake get() = operatorController.getRawButton(5)
-    val slowIntake get() = operatorController.getRawButton(3)
+//    val slowOuttake get() = operatorController.getRawButton(5)
+//    val slowIntake get() = operatorController.getRawButton(3)
+
+    val wristPiston = Trigger { operatorController.getRawButton(5) || operatorController.getRawButton(3) }
 
     init {
         operatorTrigger.whileTrue(
             Commands.startEnd(Intake::intakeClose,
                 Intake::intakeOpen))
 
-        Trigger { operatorController.pov != 0 }.toggleOnTrue(
-            Commands.startEnd(
-                Drivetrain::brakeMode,
-                Drivetrain::coastMode
-            )
-        )
+//        Trigger { operatorController.pov != 0 }.toggleOnTrue(
+//            Commands.startEnd(
+//                Drivetrain::brakeMode,
+//                Drivetrain::coastMode
+//            )
+//        )
 
         armUp.debounce(0.05).onTrue(InstantCommand({
             Arm.setGoal(Arm.setpoint + 0.1)
@@ -135,5 +139,9 @@ object OI : SubsystemBase() {
         armDown.debounce(0.05).onTrue(InstantCommand({
             Arm.setGoal(Arm.setpoint - 0.1)
         }))
+
+        wristPiston.toggleOnTrue(StartEndCommand(
+            Arm::forceWristUp, Arm::unForceWrist
+        ))
     }
 }

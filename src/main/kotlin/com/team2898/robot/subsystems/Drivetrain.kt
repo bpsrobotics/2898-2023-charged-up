@@ -59,7 +59,7 @@ object Drivetrain : SubsystemBase() {
 
     init {
         listOf(leftEncoder, rightEncoder).map {
-            it.distancePerPulse = (In(6.0).meterValue() * PI) / 2048
+            it.distancePerPulse = Meters(0.5).value / 2048
         }
         leftEncoder.setReverseDirection(true)
 
