@@ -58,50 +58,74 @@ class Grid(
 
 /**
  * Used to store the locations the robot needs to be in to score game pieces
+ * @property Grid1 Bottom grid object
+ * @property Grid2 Middle grid object
+ * @property Grid3 Top grid object
+ * @property gridWall Line along which the grid starts.
  */
 class ScoringLocations(
         val Grid1: Grid,
         val Grid2: Grid,
         val Grid3: Grid,
         val gridWall : Line,
-){
+) {
     val grids = arrayOfNulls<Grid>(3)
+
     init {
         grids[0] = Grid1
         grids[1] = Grid2
         grids[2] = Grid3
     }
-    fun getClosestGrid(Coords: Coordinate): Grid{
-        var closestGrid = Grid1
-        grids.forEach {
-            it ?: run { return@forEach }
-            if (it.distance(Coords) < closestGrid.distance(Coords)) { closestGrid = it }
-        }
-        return closestGrid
-    }
-    fun getClosestGrid(pose: Pose2d): Grid{
-        var closestGrid = Grid1
-        grids.forEach {
-            it ?: run { return@forEach }
-            if (it.distance(pose) < closestGrid.distance(pose)) { closestGrid = it }
-        }
-        return closestGrid
-    }
     /**
-     * @return Returns the grid object the robot is facing
+     * @param coords Coordinates to use to find closest grid
+     * @return Grid object coordinate is closest to
      */
-    fun getFacedGrid(pose: Pose2d, gridWallDirection: Double): Grid{
+    fun getClosestGrid(coords: Coordinate): Grid {
+        var closestGrid = Grid1
+        grids.forEach {
+            it ?: run { return@forEach }
+            if (it.distance(coords) < closestGrid.distance(coords)) {
+                closestGrid = it
+            }
+        }
+        return closestGrid
+    }
+
+    /**
+     * @param pose Pose2d to use to find closest grid
+     * @return Grid object pose is closest to
+     */
+    fun getClosestGrid(pose: Pose2d): Grid {
+        return getClosestGrid(Coordinate(pose))
+    }
+
+    /**
+     * @return Returns the grid object the pose is facing
+     * @param pose Pose2d to use to find the grid
+     * @param gridWallDirection The rotation that would be perpendicular to the grid wall.
+     */
+    fun getFacedGrid(pose: Pose2d, gridWallDirection: Double): Grid {
         val gridWallIntersection = gridWall.intersection(pose)
-                ?: when(pose.rotation.degrees){
+                ?: when (pose.rotation.degrees) {
                     in -gridWallDirection..gridWallDirection -> return Grid3
                     else -> return Grid1
                 }
         return getClosestGrid(gridWallIntersection)
     }
+
+    /**
+     * @param pose Pose2d of the robot
+     * @return The closest ScoreSpot the robot
+     */
     fun getClosestScoringSpot(pose: Pose2d): ScoreSpot {
         return getClosestGrid(pose).getClosestSpot(pose)
     }
-    fun reflectHorizontally(x: DistanceUnit): ScoringLocations{
+
+    /**
+     * @param x Line to reflect over.
+     * @return ScoringLocations object with the x positions reflected over the given line
+     */
+    fun reflectHorizontally(x: DistanceUnit): ScoringLocations {
         return ScoringLocations(
                 Grid1.reflectHorizontally(x),
                 Grid2.reflectHorizontally(x),
@@ -110,7 +134,8 @@ class ScoringLocations(
         )
     }
 }
-val robot_length = 0.93
+
+//robot_length = 0.93
 val robot_scoring_pos = (4.5+ 1.526).ft
 val blueScoring = ScoringLocations(
         Grid1 = Grid(
@@ -138,7 +163,7 @@ val blueScoring = ScoringLocations(
  * @property community The community zone on the field, stored as a Polygon
  * @property chargingDock The alliance's charging dock, stored as a Rectangle
  * @property loadingBay The alliance's loading bay, stored as a Polygon
- * @property gridWall The line separating the scoring grid from the community zone.
+ * @property scoring The alliance's scoring area, containing information about the grids, and grid wall
  * */
 class Map(
         val rotation: Double,

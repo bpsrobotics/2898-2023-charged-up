@@ -251,6 +251,14 @@ object Drivetrain : SubsystemBase() {
         }
     }
 
+    /**
+     * Sets the motor power on wheels to zero.
+     */
+    fun fullStop(){
+        mode = Mode.OPEN_LOOP
+        rawDrive(0.0,0.0)
+    }
+
     override fun initSendable(builder: SendableBuilder) {
         builder.addDoubleProperty("leftEncoderPos", leftEncoder::getDistance) {}
         builder.addDoubleProperty("rightEncoderPos", rightEncoder::getDistance) {}

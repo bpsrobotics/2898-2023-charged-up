@@ -8,6 +8,7 @@
 package com.team2898.robot
 
 import com.team2898.robot.commands.autos.*
+import com.team2898.robot.commands.autos.simple.PreloadAuto
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
@@ -27,15 +28,15 @@ class RobotContainer {
 
     init {
         autoCommandChooser.setDefaultOption("No Auto", noopAutoCommand)
+        autoCommandChooser.addOption("Preload",                      SimpleAutos(preload = true,  balance = false, mobility = false))
+        autoCommandChooser.addOption("Balance",                      SimpleAutos(preload = false, balance = true,  mobility = false))
+        autoCommandChooser.addOption("Mobility",                     SimpleAutos(preload = false, balance = false, mobility = true))
+        autoCommandChooser.addOption("Preload + Balance",            SimpleAutos(preload = true,  balance = true,  mobility = false))
+        autoCommandChooser.addOption("Preload + Mobility",           SimpleAutos(preload = true,  balance = false, mobility = true))
+        autoCommandChooser.addOption("Balance + Mobility",           SimpleAutos(preload = false, balance = true,  mobility = true))
+        autoCommandChooser.addOption("Preload + Balance + Mobility", SimpleAutos(preload = true,  balance = true,  mobility = true))
+
 //        autoCommandChooser.addOption("Leading Auto", LeadingAuto())
-//        autoCommandChooser.addOption("Top Middle Auto", TopMiddleAuto())
-//        autoCommandChooser.addOption("Leave Auto", LeaveAuto())
-        autoCommandChooser.addOption("Preload + Balance Auto", PreloadBalanceAuto())
-        autoCommandChooser.addOption("Preload Auto", PreloadAuto())
-        autoCommandChooser.addOption("Preload + Mobility Auto", PreloadMobilityAuto())
-        autoCommandChooser.addOption("Balance Auto", BalanceAuto())
-        autoCommandChooser.addOption("Leave Auto", LeaveAuto())
-//        autoCommandChooser.addOption("Scoring Auto", ScoringAuto())
 
         // Send the auto chooser
         SmartDashboard.putData("Auto mode", autoCommandChooser)
