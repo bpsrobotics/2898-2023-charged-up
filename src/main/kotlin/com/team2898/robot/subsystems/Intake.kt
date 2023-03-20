@@ -10,6 +10,7 @@ import com.team2898.robot.RobotMap.INTAKE_OUT
 import com.team2898.robot.RobotMap.INTAKE_SECONDARY
 import com.team2898.robot.RobotMap.PNEUMATICS_MODULE_TYPE
 import com.team2898.robot.RobotMap.PNUEMATICS_MODULE
+import edu.wpi.first.util.sendable.SendableBuilder
 import edu.wpi.first.wpilibj.DoubleSolenoid
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value.kForward
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value.kReverse
@@ -27,12 +28,14 @@ object Intake: SubsystemBase() {
 
     init {
         intakeMotor.restoreFactoryDefaults()
-        intakeMotor.setSmartCurrentLimit(30)
+        intakeMotor.setSmartCurrentLimit(10)
         intakeMotor.inverted = false
+        intakeMotor.idleMode = CANSparkMax.IdleMode.kBrake
 
         secondary.restoreFactoryDefaults()
-        secondary.setSmartCurrentLimit(30)
+        secondary.setSmartCurrentLimit(10)
         secondary.inverted = true
+        secondary.idleMode = CANSparkMax.IdleMode.kBrake
 //        secondary.follow(intakeMotor)
     }
 
@@ -72,7 +75,15 @@ object Intake: SubsystemBase() {
 //        intakeMotor.set(0.0)
 //        println("${intakeMotor.appliedOutput} ${intakeMotor.outputCurrent}")
         // TODO: move to sendable
-        SmartDashboard.putNumber("intake duty cycle", intakeMotor.appliedOutput)
-        SmartDashboard.putNumber("intake current", intakeMotor.outputCurrent)
+    }
+
+    override fun initSendable(builder: SendableBuilder) {
+        builder.addDoubleProperty("1 duty cycle", { intakeMotor.appliedOutput }, {})
+        builder.addDoubleProperty("1 current", { intakeMotor.outputCurrent }, {})
+        builder.addDoubleProperty("1 temperature", { intakeMotor.motorTemperature }, {})
+
+        builder.addDoubleProperty("2 duty cycle", { secondary.appliedOutput }, {})
+        builder.addDoubleProperty("2 current", { secondary.outputCurrent }, {})
+        builder.addDoubleProperty("2 temperature", { secondary.motorTemperature }, {})
     }
 }

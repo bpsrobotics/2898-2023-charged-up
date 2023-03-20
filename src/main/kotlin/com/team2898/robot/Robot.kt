@@ -58,11 +58,10 @@ object Robot : TimedRobot() {
 
         Field.initialize()
 
-        Intake
-
         SmartDashboard.putData(Drivetrain)
         SmartDashboard.putData(Odometry)
         SmartDashboard.putData(Arm)
+        SmartDashboard.putData(Intake)
 
 //        Odometry.reset(0.m,0.m,0.deg)
         Odometry.zero()
