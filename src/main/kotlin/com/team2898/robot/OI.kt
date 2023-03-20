@@ -111,7 +111,7 @@ object OI : SubsystemBase() {
     /** Button the make the robot auto align with the charging station */
     val perpendicularButton get() = false//driverController.getRawButton(0)
 
-    val operatorTrigger = Trigger { operatorController.trigger }
+    val operatorTrigger get() = operatorController.trigger
 
     val armUp = Trigger { operatorController.getRawButton(6) }
     val armDown = Trigger { operatorController.getRawButton(4) }
@@ -122,10 +122,6 @@ object OI : SubsystemBase() {
     val wristPiston = Trigger { operatorController.getRawButton(5) || operatorController.getRawButton(3) }
 
     init {
-        operatorTrigger.whileTrue(
-            Commands.startEnd(Intake::intakeClose,
-                Intake::intakeOpen))
-
 //        Trigger { operatorController.pov != 0 }.toggleOnTrue(
 //            Commands.startEnd(
 //                Drivetrain::brakeMode,

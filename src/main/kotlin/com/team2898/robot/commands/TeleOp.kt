@@ -13,6 +13,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.trajectory.Trajectory
+import edu.wpi.first.util.sendable.SendableBuilder
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.PneumaticHub
 import edu.wpi.first.wpilibj.drive.DifferentialDrive
@@ -104,12 +105,14 @@ class TeleOp : CommandBase() {
 
             in intArrayOf(135, 180, 225) -> {
 //                println("in")
-                Intake.runIntake(0.25)
+                Intake.runIntake(0.75)
             }
-
             else -> {
-//                println("stop")
-                Intake.stopIntake()
+                if (OI.operatorTrigger) {
+                    Intake.runIntake(0.3)
+                } else {
+                    Intake.stopIntake()
+                }
             }
         }
 
