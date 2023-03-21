@@ -22,13 +22,13 @@ class LeadingAuto : CommandBase() {
             ActivateIntake(RUNOUTTAKE),
             ChangeIntakeState(ChangeIntakeState.IntakeState.OPENINTAKE),
             PathFollowCommand("UpperDropCube", true),
-//            ArmMove(PICKUP),
-//            ActivateIntake(RUNINTAKE),
+            ArmMove(PICKUP),
+            ActivateIntake(RUNINTAKE),
             PathFollowCommand("UpperPickupCube", false),
-//            ChangeIntakeState(CLOSEINTAKE),
+            ChangeIntakeState(CLOSEINTAKE),
             PathFollowCommand("UpperRunToCharge", false),
-//            AutoPerpendicular(),
-//            AutoBalance()
+            AutoPerpendicular(),
+            AutoBalance()
         )
         autoCommandGroup.schedule()
     }

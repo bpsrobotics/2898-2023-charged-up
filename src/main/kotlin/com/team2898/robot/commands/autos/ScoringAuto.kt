@@ -16,21 +16,22 @@ class ScoringAuto: CommandBase() {
 
     override fun initialize() {
         autoCommandGroup = SequentialCommandGroup (
-            ChangeIntakeState(CLOSEINTAKE),
             ArmMove(HIGHCUBELAUNCH),
             ActivateIntake(RUNOUTTAKE),
-            ChangeIntakeState(OPENINTAKE),
+            PathFollowCommand("LowerScore", true),
+            ArmMove(PICKUP),
+            ActivateIntake(RUNINTAKE),
+            PathFollowCommand("LowerGrab2", false),
+            PathFollowCommand("LowerRunBack", false),
+            ArmMove(MIDDLEBOXGOAL),
+            ActivateIntake(RUNOUTTAKE),
             PathFollowCommand("LowerScore", true),
             ArmMove(PICKUP),
             ActivateIntake(RUNINTAKE),
             PathFollowCommand("LowerGrab", false),
-            ChangeIntakeState(CLOSEINTAKE),
-            PathFollowCommand("",false),
-            ChangeIntakeState(CLOSEINTAKE),
-            ArmMove(MIDDLEBOXGOAL),
-            ActivateIntake(RUNOUTTAKE),
-            ChangeIntakeState(OPENINTAKE),
-            PathFollowCommand("LowerRun", false)
+            PathFollowCommand("LowerRunBack", false),
+            ArmMove(LOWGOAL),
+
 
         )
         autoCommandGroup.schedule()
