@@ -30,10 +30,10 @@ object Vision : SubsystemBase() {
     val listeners = mutableListOf<(Pose2d, DoubleArray, Double) -> Unit>()
 
     init {
-        instance.addListener(topic.subscribe(doubleArrayOf(0.0, 0.0, 0.0, 0.0)), EnumSet.of(NetworkTableEvent.Kind.kValueAll)) { v ->
+        instance.addListener(topic.subscribe(doubleArrayOf(0.0, 0.0, 0.0, 0.0, 0.0)), EnumSet.of(NetworkTableEvent.Kind.kValueAll)) { v ->
             val stdDev = stdDevEntry.get()
-            lastFixTime = Timer.getFPGATimestamp() - 0.2
             val arr = v.valueData.value.doubleArray
+            lastFixTime = Timer.getFPGATimestamp() - arr[4]
             x = arr[0]
             y = arr[1]
             z = arr[2]
