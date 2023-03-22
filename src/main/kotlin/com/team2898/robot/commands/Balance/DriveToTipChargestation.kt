@@ -6,33 +6,37 @@ import com.team2898.robot.subsystems.Drivetrain
 import com.team2898.robot.subsystems.Odometry
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj2.command.CommandBase
-
+/** Drives until the charge station starts to tip
+ * @property direction The direction in which to drive
+ * */
 class DriveToTipChargestation(private val direction : DriveDirection) : CommandBase() {
+    /** Robots pitch */
     private var pitch = Odometry.NavxHolder.navx.pitch.toDouble()
+    /** Change in pitch over time */
     private var pitchRate = 0.0
-    private val timer = Timer()
+    /** Stores the time since the last execute, for calculating pitchRate */
+    private val frameRateTimer = Timer()
+    /** Number of ticks average pitchRate has been greater than 10 */
     private var overTicks = 0
+    /** Stores the last 15 iterations of pitchRate*/
     private val averageRate = MovingAverage(15)
-    private val stopTimer = Timer()
-    init {
-        stopTimer.stop()
-    }
 
     override fun execute() {
         // Gets the time since last execute, then resets the timer
-        val elapsedTime = timer.get()
+        val elapsedTime = frameRateTimer.get()
         // Gathers the change in pitch since last execute
         pitchRate = (Odometry.NavxHolder.navx.pitch - pitch) / elapsedTime
         pitch = Odometry.NavxHolder.navx.pitch.toDouble()
-        timer.reset()
-        timer.start()
 
+        frameRateTimer.reset()
+        frameRateTimer.start()
+
+        // If there isn't a divide by zero error, add the averageRate
         if (pitchRate.isFinite()) {
             averageRate.add(pitchRate)
         }
 
-        // Gets the current pitch and pitch of the robot
-
+        // If the NavX still says robot is tipping, add to over ticks
         if (averageRate.average > 10.0) {
             overTicks += 1
         } else {
@@ -43,10 +47,12 @@ class DriveToTipChargestation(private val direction : DriveDirection) : CommandB
     }
 
     override fun end(interrupted: Boolean) {
+        //Stop robot
         Drivetrain.fullStop()
     }
 
     override fun isFinished(): Boolean {
+        // if NavX says robot is tipping for 15 ticks, stop.
         return overTicks > 15
     }
 }

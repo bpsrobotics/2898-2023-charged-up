@@ -20,12 +20,12 @@ object Vision : SubsystemBase() {
     var x = 0.0
     var y = 0.0
     var z = 0.0
+    var r = 0.0
+
 
     private var lastFixTime = 0.0
     val timeSinceLastFix get() = Timer.getFPGATimestamp() - lastFixTime
 
-    var r = 0.0
-    var stdev = 0.0  // TODO: Make into Matrix
 
     val listeners = mutableListOf<(Pose2d, DoubleArray, Double) -> Unit>()
 

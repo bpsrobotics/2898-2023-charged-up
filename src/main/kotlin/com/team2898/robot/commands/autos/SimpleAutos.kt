@@ -7,7 +7,13 @@ import com.team2898.robot.commands.autos.simple.PreloadAuto
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandBase
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup
-
+/**
+ * Auto that does a variety of things that include preloading, balancing, mobility
+ * @param preload Should the robot deposit it's prelaod during auto?
+ * @param balance Should the robot balance during auto?
+ * @param mobility Should the robot leave the community during auto?
+ * @author Ozy King
+ * */
 class SimpleAutos(preload: Boolean, balance: Boolean, mobility: Boolean) : CommandBase() {
     private val autoCommandGroup: Command
 

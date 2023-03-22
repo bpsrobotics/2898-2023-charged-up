@@ -38,16 +38,15 @@ class TeleOp : CommandBase() {
 
     // Called every time the scheduler runs while the command is scheduled.
     override fun execute() {
-//        Drivetrain.stupidDrive(`M/s`(1.0), `M/s`(1.0))
-//        return
 
         if (Drivetrain.mode == Drivetrain.Mode.CLOSED_LOOP) {
+            // Auto Allign is being pressed: if D-PAD inactive, stop following path
             if (OI.alignmentPad == OI.Direction.INACTIVE) {
                 Drivetrain.mode = Drivetrain.Mode.OPEN_LOOP
-                Drivetrain.rawDrive(0.0, 0.0)
+                Drivetrain.fullStop()
             }
-        } else if (OI.alignmentPad != OI.Direction.INACTIVE) {
-            if (Field.map.community.contains(Odometry.pose) || true) { alignGrid() }
+        } else if (OI.alignmentPad != OI.Direction.INACTIVE) { // D-PAD is being pressed
+            if (Field.map.facing_community(Odometry.pose)) alignGrid()  //If robot is facing community, align to the grid.
         } else {
             val turn = OI.turn * 0.5
             Drivetrain.coastMode()
@@ -65,8 +64,6 @@ class TeleOp : CommandBase() {
                 // Otherwise, drive and turn normally
                 else -> curvatureDriveIK(OI.throttle, turn, true)
             }
-//            val left = leftLimiter.calculate(speeds.left * 1.0)
-//            val right = rightLimiter.calculate(speeds.right * 1.0)
             val left = speeds.left
             val right = speeds.right
             SmartDashboard.putNumber("l output", left)
@@ -76,44 +73,11 @@ class TeleOp : CommandBase() {
             Drivetrain.stupidDrive(`M/s`(left), `M/s`(right))
         }
 
-//      /** Make the alliance community zone a rectangle */
-//        val pose = Odometry.pose
-//        val distanceToCommunity = Field.map.gridWall.distance(pose) ?: 100.0
-//        if (distanceToCommunity < 5.0) {
-//            val maxAllowedSpeed = distanceToCommunity + 0.5
-//
-//            val cappedLeft = min(speeds.left, maxAllowedSpeed)
-//            val cappedRight = min(speeds.right, maxAllowedSpeed)
-//
-//            Drivetrain.stupidDrive(`M/s`(cappedLeft * 5.0), `M/s`(cappedRight * 5.0))
-//        } else {
-//            Drivetrain.stupidDrive(`M/s`(speeds.left * 5.0), `M/s`(speeds.right * 5.0))
-//        }
-
-//        if (OI.slowOuttake) {
-//            Intake.runOuttake(0.25)
-//        }
-//        if (OI.slowIntake) {
-//            Intake.runIntake(0.25)
-//        }
- //        println(OI.highHat)
         when (OI.highHat) {
-            in intArrayOf(315, 0, 45) -> {
-//                println("out")
-                Intake.runOuttake(0.5)
-            }
-
-            in intArrayOf(135, 180, 225) -> {
-//                println("in")
-                Intake.runIntake(0.75)
-            }
-            else -> {
-                if (OI.operatorTrigger) {
-                    Intake.runIntake(0.3)
-                } else {
-                    Intake.stopIntake()
-                }
-            }
+            in intArrayOf(315, 0, 45) -> Intake.runOuttake(0.5)
+            in intArrayOf(135, 180, 225) -> Intake.runIntake(0.75)
+            else -> if (OI.operatorTrigger) Intake.runIntake(0.3)
+                    else Intake.stopIntake()
         }
 
         if (OI.brakeRelease) {
@@ -150,8 +114,7 @@ class TeleOp : CommandBase() {
             OI.Direction.LEFT  -> grid.Cone2
             else               -> grid.Cube
         }
-//        val targetPose = scoreSpot.RobotPosition.toPose2d(Field.map.rotation)
-        val targetPose = Pose2d(2.0, 1.6, Rotation2d.fromDegrees(180.0))
+        val targetPose = scoreSpot.RobotPosition.toPose2d(Field.map.rotation)
         val path = generatePath(targetPose)
         Drivetrain.follow(path)
     }

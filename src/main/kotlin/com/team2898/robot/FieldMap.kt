@@ -7,38 +7,70 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase
 import com.bpsrobotics.engine.utils.ft
 import edu.wpi.first.math.geometry.Pose2d
 
+/**
+ * Type of scoring location
+ */
 enum class ScoringType {
-    Cone, Cube
+    CONE, CUBE
 }
+
+/**
+ * Stores the type and desired robot location for a scoring location
+ */
 class ScoreSpot(
         val RobotPosition: Coordinate,
         val type: ScoringType
         ){
+    /**
+     * @return Y distance to give pose
+     * @param pose Pose to find distance to
+     */
     fun distance(pose: Pose2d): Double{
         return RobotPosition.ydistance(pose)
     }
+    /**
+     * @return ScoreSpot object reflected over the give vertical line
+     * @param x Vertical line to reflect over
+     */
     fun reflectHorizontally(x: DistanceUnit): ScoreSpot{
         return ScoreSpot(RobotPosition.reflectHorizontally(x), type)
     }
 }
 
+/**
+ * Stores scoring locations for the robot to align to
+ * @property Cone1 The cone scoring location closest to 0, 0
+ * @property Cube The cube scoring location
+ * @property Cone2 The cone scoring location furthest from 0, 0
+ */
 class Grid(
         val Cone1: ScoreSpot,
         val Cube: ScoreSpot,
         val Cone2: ScoreSpot
 ){
-    val scoringSpots = arrayOfNulls<ScoreSpot>(3)
+    private val scoringSpots = arrayOfNulls<ScoreSpot>(3)
     init {
         scoringSpots[0] = Cone1
         scoringSpots[1] = Cube
         scoringSpots[2] = Cone2
     }
+    /**
+     * @param pose Pose to find distance from
+     * @return Y distance from the pose */
     fun distance(pose: Pose2d): Double{
         return Cube.RobotPosition.ydistance(pose)
     }
-    fun distance(Coords: Coordinate): Double{
-        return Cube.RobotPosition.ydistance(Coords)
+    /**
+     * @param coordinate Coordinate to find distance from
+     * @return Y distance from the pose */
+    fun distance(coordinate: Coordinate): Double{
+        return Cube.RobotPosition.ydistance(coordinate)
     }
+
+    /**
+     * @return Closest scoring spot to the Pose2d given
+     * @param pose Pose to compare scoring spot locations to
+     */
     fun getClosestSpot(pose: Pose2d): ScoreSpot{
         var closestSpot = Cone1
         scoringSpots.forEach {
@@ -47,6 +79,11 @@ class Grid(
         }
         return closestSpot
     }
+
+    /**
+     * @return Grid object reflected over the give vertical line
+     * @param x Vertical line to reflect over
+     */
     fun reflectHorizontally(x: DistanceUnit): Grid{
         return Grid(
                 Cone1.reflectHorizontally(x),
@@ -139,19 +176,19 @@ class ScoringLocations(
 val robot_scoring_pos = (4.5+ 1.526).ft
 val blueScoring = ScoringLocations(
         Grid1 = Grid(
-                ScoreSpot(Coordinate(robot_scoring_pos, 1.682.ft), ScoringType.Cone),
-                ScoreSpot(Coordinate(robot_scoring_pos, 3.518.ft), ScoringType.Cube),
-                ScoreSpot(Coordinate(robot_scoring_pos, 5.349.ft), ScoringType.Cone)
+                ScoreSpot(Coordinate(robot_scoring_pos, 1.682.ft), ScoringType.CONE),
+                ScoreSpot(Coordinate(robot_scoring_pos, 3.518.ft), ScoringType.CUBE),
+                ScoreSpot(Coordinate(robot_scoring_pos, 5.349.ft), ScoringType.CONE)
         ),
         Grid2 = Grid(
-                ScoreSpot(Coordinate(robot_scoring_pos, 7.182.ft), ScoringType.Cone),
-                ScoreSpot(Coordinate(robot_scoring_pos, 9.018.ft), ScoringType.Cube),
-                ScoreSpot(Coordinate(robot_scoring_pos, 10.849.ft), ScoringType.Cone)
+                ScoreSpot(Coordinate(robot_scoring_pos, 7.182.ft), ScoringType.CONE),
+                ScoreSpot(Coordinate(robot_scoring_pos, 9.018.ft), ScoringType.CUBE),
+                ScoreSpot(Coordinate(robot_scoring_pos, 10.849.ft), ScoringType.CONE)
         ),
         Grid3 = Grid(
-                ScoreSpot(Coordinate(robot_scoring_pos, 12.682.ft), ScoringType.Cone),
-                ScoreSpot(Coordinate(robot_scoring_pos, 14.518.ft), ScoringType.Cube),
-                ScoreSpot(Coordinate(robot_scoring_pos, 16.349.ft), ScoringType.Cone)
+                ScoreSpot(Coordinate(robot_scoring_pos, 12.682.ft), ScoringType.CONE),
+                ScoreSpot(Coordinate(robot_scoring_pos, 14.518.ft), ScoringType.CUBE),
+                ScoreSpot(Coordinate(robot_scoring_pos, 16.349.ft), ScoringType.CONE)
         ),
         gridWall = Line(
                 Coordinate(4.5.ft,0.0.ft),
@@ -172,6 +209,11 @@ class Map(
           val loadingBay : Polygon,
         val scoring: ScoringLocations
         ) {
+    /**
+     * @return A string correlating to the zone the robot is in (Community, charging dock, loading bay, other)
+     * @param position The robots position
+     * @author Ozy King
+     */
     fun get_location(position: Coordinate): String{
         return when {
             community.contains(position)    -> "community"
@@ -179,6 +221,9 @@ class Map(
             loadingBay.contains(position)   -> "loading bay"
             else                            -> "other"
         }
+    }
+    fun facing_community(pose: Pose2d): Boolean{
+        return (pose.rotation.degrees < rotation +90 && pose.rotation.degrees > rotation - 90)
     }
 }
 

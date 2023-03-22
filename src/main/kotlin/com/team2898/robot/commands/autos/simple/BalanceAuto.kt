@@ -14,6 +14,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup
 
+/**
+ * Balances on the charge station
+ */
 class BalanceAuto : CommandBase() {
     private lateinit var autoCommandGroup: Command
 
