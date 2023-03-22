@@ -31,6 +31,7 @@ class ScoringAuto: CommandBase() {
             PathFollowCommand("LowerGrab", false),
             PathFollowCommand("LowerRunBack2", false),
             ArmMove(LOWGOAL),
+            ActivateIntake(RUNOUTTAKE)
 
 
         )
