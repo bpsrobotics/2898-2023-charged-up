@@ -21,7 +21,7 @@ class BalanceAuto : CommandBase() {
     private lateinit var autoCommandGroup: Command
 
     override fun initialize() {
-        //SequentialCommandGroup(SuperSimpleAuto(), SimpleBalance())
+//        SequentialCommandGroup(SuperSimpleAuto(), SimpleBalance())
         autoCommandGroup = SequentialCommandGroup(
                 DriveOntoChargestation(DriveDirection.BACKWARDS),
                 DriveToTipChargestation(DriveDirection.BACKWARDS),

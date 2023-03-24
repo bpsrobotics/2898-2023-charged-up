@@ -4,6 +4,8 @@
 package com.team2898.robot
 
 import com.bpsrobotics.engine.utils.*
+import com.bpsrobotics.engine.utils.Sugar.degreesToRadians
+import com.team2898.robot.subsystems.Arm.LOWER_SOFT_STOP
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -55,12 +57,13 @@ object Constants {
 
     //TODO: Set up the proper positions for the arm
     enum class ArmHeights(val position: Double) {
-        STOWED(0.0),
-        PICKUP(0.75),
+        STOWED(LOWER_SOFT_STOP),
+        PICKUP(0.45),         // good
         LOWGOAL(0.75),
-        MIDDLECONEGOAL(1.75),
+        MIDDLECONEGOAL(1.75), // good?
         MIDDLEBOXGOAL(1.4),
-        HIGHCUBELAUNCH(1.9),
-        MOVING(1.1)
+        HIGHCUBELAUNCH(1.8),
+        MOVING(0.8),
+        SHELF(1.55)
     }
 }

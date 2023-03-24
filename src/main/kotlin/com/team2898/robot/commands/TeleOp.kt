@@ -11,16 +11,13 @@ import com.team2898.robot.subsystems.Intake
 import com.team2898.robot.subsystems.Odometry
 import edu.wpi.first.math.filter.SlewRateLimiter
 import edu.wpi.first.math.geometry.Pose2d
-import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.trajectory.Trajectory
-import edu.wpi.first.util.sendable.SendableBuilder
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.PneumaticHub
 import edu.wpi.first.wpilibj.drive.DifferentialDrive
 import edu.wpi.first.wpilibj.drive.DifferentialDrive.curvatureDriveIK
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.CommandBase
-import kotlin.math.absoluteValue
 
 class TeleOp : CommandBase() {
     init {
@@ -70,11 +67,11 @@ class TeleOp : CommandBase() {
             SmartDashboard.putNumber("r output", right)
             SmartDashboard.putNumber("turn", turn)
             SmartDashboard.putNumber("throttle", OI.throttle)
-            Drivetrain.stupidDrive(`M/s`(left), `M/s`(right))
+            Drivetrain.stupidDrive(`M/s`(left * 5.0), `M/s`(right * 5.0))
         }
 
         when (OI.highHat) {
-            in intArrayOf(315, 0, 45) -> Intake.runOuttake(0.5)
+            in intArrayOf(315, 0, 45) -> Intake.runOuttake(1.0)
             in intArrayOf(135, 180, 225) -> Intake.runIntake(0.75)
             else -> if (OI.operatorTrigger) Intake.runIntake(0.3)
                     else Intake.stopIntake()
@@ -84,7 +81,8 @@ class TeleOp : CommandBase() {
             Arm.brakeRelease()
         } else {
             val goalPosition = when {
-                OI.floorIntake -> PICKUP
+                OI.stowed -> STOWED
+                OI.shelf -> SHELF
                 OI.lowGoal -> LOWGOAL
                 OI.midArmCube -> MIDDLEBOXGOAL
                 OI.midArmCone -> MIDDLECONEGOAL
@@ -106,7 +104,7 @@ class TeleOp : CommandBase() {
                 .build()
     }
     fun alignGrid() {
-        val grid = Field.map.scoring.getFacedGrid(Odometry.pose, Field.map.rotation)
+        val grid = Field.map.scoring.getFacedGrid(Odometry.pose, Field.map.rotation + 90)
         var dir = OI.alignmentPad
         if (Field.teamColor != DriverStation.Alliance.Blue) dir = dir.mirrored()
         val scoreSpot = when(dir) {
@@ -114,7 +112,8 @@ class TeleOp : CommandBase() {
             OI.Direction.LEFT  -> grid.Cone2
             else               -> grid.Cube
         }
-        val targetPose = scoreSpot.RobotPosition.toPose2d(Field.map.rotation)
+//        println("dst: $scoreSpot")
+        val targetPose = scoreSpot.RobotPosition.toPose2d(Field.map.rotation - 90.0)
         val path = generatePath(targetPose)
         Drivetrain.follow(path)
     }

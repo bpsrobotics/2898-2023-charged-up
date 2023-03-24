@@ -5,6 +5,7 @@ import com.bpsrobotics.engine.utils.geometry.*
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import com.bpsrobotics.engine.utils.ft
+import com.bpsrobotics.engine.utils.m
 import edu.wpi.first.math.geometry.Pose2d
 
 /**
@@ -17,7 +18,7 @@ enum class ScoringType {
 /**
  * Stores the type and desired robot location for a scoring location
  */
-class ScoreSpot(
+data class ScoreSpot(
         val RobotPosition: Coordinate,
         val type: ScoringType
         ){
@@ -43,7 +44,7 @@ class ScoreSpot(
  * @property Cube The cube scoring location
  * @property Cone2 The cone scoring location furthest from 0, 0
  */
-class Grid(
+data class Grid(
         val Cone1: ScoreSpot,
         val Cube: ScoreSpot,
         val Cone2: ScoreSpot
@@ -100,7 +101,7 @@ class Grid(
  * @property Grid3 Top grid object
  * @property gridWall Line along which the grid starts.
  */
-class ScoringLocations(
+data class ScoringLocations(
         val Grid1: Grid,
         val Grid2: Grid,
         val Grid3: Grid,
@@ -173,7 +174,7 @@ class ScoringLocations(
 }
 
 //robot_length = 0.93
-val robot_scoring_pos = (4.5+ 1.526).ft
+val robot_scoring_pos = 1.7.m
 val blueScoring = ScoringLocations(
         Grid1 = Grid(
                 ScoreSpot(Coordinate(robot_scoring_pos, 1.682.ft), ScoringType.CONE),
@@ -202,7 +203,7 @@ val blueScoring = ScoringLocations(
  * @property loadingBay The alliance's loading bay, stored as a Polygon
  * @property scoring The alliance's scoring area, containing information about the grids, and grid wall
  * */
-class Map(
+data class Map(
         val rotation: Double,
         val community : Polygon,
           val chargingDock : Rectangle,
@@ -256,19 +257,19 @@ val blueTeam = Map(
         rotation = -90.0,
         community = blueLoadingBay,
         chargingDock = blueChargeStation,
-        loadingBay = redLoadingBay.reflectHorizontally(27.ft),
+        loadingBay = redLoadingBay.reflectHorizontally(8.2296.m),
         scoring = blueScoring
-)
+).apply { println("BLUE FIELD: $this") }
 /** Map of the red alliance side
  * @see Field
  * */
 val redTeam = Map(
         rotation = 90.0,
-        community = blueLoadingBay.reflectHorizontally(27.ft),
-        chargingDock = blueChargeStation.reflectHorizontally(27.ft),
+        community = blueLoadingBay.reflectHorizontally(8.2296.m),
+        chargingDock = blueChargeStation.reflectHorizontally(8.2296.m),
         loadingBay = redLoadingBay,
-        scoring =  blueScoring.reflectHorizontally(27.ft)
-)
+        scoring =  blueScoring.reflectHorizontally(8.2296.m)
+).apply { println("RED FIELD: $this") }
 /** Map of the field based off of the Driverstation alliance
  * @author Ozy King
  * @property map Includes your alliances specific zones

@@ -5,17 +5,17 @@ import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj2.command.CommandBase
 
 /**
- * Runs intake forwards or backwards to take a game peice or deposit it
+ * Runs intake forwards or backwards to take a gamepiece or deposit it
  * @author Ori
  */
-class ActivateIntake(private val mode: RunningIntakes) : CommandBase() {
+class ActivateIntake(private val mode: RunningIntakes, private val power: Double = 0.75) : CommandBase() {
     private val timer = Timer()
 
     override fun initialize() {
         if (mode == RunningIntakes.RUNINTAKE) {
-            Intake.runIntake(0.5)
+            Intake.runIntake(power)
         } else if (mode == RunningIntakes.RUNOUTTAKE) {
-            Intake.runOuttake(0.5)
+            Intake.runOuttake(power)
         }
         timer.start()
         timer.reset()

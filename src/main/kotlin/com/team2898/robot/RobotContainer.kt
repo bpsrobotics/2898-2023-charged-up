@@ -9,6 +9,8 @@ package com.team2898.robot
 
 import com.team2898.robot.commands.autos.*
 import com.team2898.robot.commands.autos.simple.PreloadAuto
+import com.team2898.robot.commands.oldautos.OldBalanceAuto
+import com.team2898.robot.commands.oldautos.PreloadBalanceAuto
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
@@ -31,10 +33,13 @@ class RobotContainer {
         autoCommandChooser.addOption("Preload",                      SimpleAutos(preload = true,  balance = false, mobility = false))
         autoCommandChooser.addOption("Balance",                      SimpleAutos(preload = false, balance = true,  mobility = false))
         autoCommandChooser.addOption("Mobility",                     SimpleAutos(preload = false, balance = false, mobility = true))
-        autoCommandChooser.addOption("Preload + Balance",            SimpleAutos(preload = true,  balance = true,  mobility = false))
+        autoCommandChooser.addOption("BROKEN Preload + Balance",            SimpleAutos(preload = true,  balance = true,  mobility = false))
         autoCommandChooser.addOption("Preload + Mobility",           SimpleAutos(preload = true,  balance = false, mobility = true))
-        autoCommandChooser.addOption("Balance + Mobility",           SimpleAutos(preload = false, balance = true,  mobility = true))
-        autoCommandChooser.addOption("Preload + Balance + Mobility", SimpleAutos(preload = true,  balance = true,  mobility = true))
+        autoCommandChooser.addOption("BROKEN Balance + Mobility",           SimpleAutos(preload = false, balance = true,  mobility = true))
+        autoCommandChooser.addOption("BROKEN Preload + Balance + Mobility", SimpleAutos(preload = true,  balance = true,  mobility = true))
+        autoCommandChooser.addOption("old balance+preload", PreloadBalanceAuto())
+        autoCommandChooser.addOption("old balance", OldBalanceAuto())
+        autoCommandChooser.addOption("simple mobility", MobilityAuto())
 
 //        autoCommandChooser.addOption("Leading Auto", LeadingAuto())
 

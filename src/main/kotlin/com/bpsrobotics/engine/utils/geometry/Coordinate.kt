@@ -63,6 +63,6 @@ class Coordinate(val x: Double, val y: Double) {
      * @return A new Pose2d contructed from the coordinate and the rotation
      */
     fun toPose2d(rotation: Double): Pose2d{
-        return Pose2d(x,y, Rotation2d.fromDegrees(rotation))
+        return Pose2d(x, y, Rotation2d.fromDegrees(rotation))
     }
 }

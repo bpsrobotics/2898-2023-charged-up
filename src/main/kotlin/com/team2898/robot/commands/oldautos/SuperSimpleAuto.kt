@@ -1,28 +1,23 @@
-package com.team2898.robot.commands.autos
+package com.team2898.robot.commands.oldautos
 
 import com.bpsrobotics.engine.utils.`M/s`
 import com.team2898.robot.subsystems.Drivetrain
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj2.command.CommandBase
 
-/**
- * Moves backwards out of community
- */
-class MobilityAuto : CommandBase() {
+class SuperSimpleAuto : CommandBase() {
     val timer = Timer()
 
     override fun initialize() {
         timer.start()
-        timer.reset()
     }
 
     override fun execute() {
-        println("MOBILITY-ING")
-        Drivetrain.stupidDrive(`M/s`(-1.0), `M/s`(-1.0))
+        Drivetrain.stupidDrive(`M/s`(-2.0), `M/s`(-2.0))
     }
 
     override fun isFinished(): Boolean {
-        return timer.hasElapsed(1.9)
+        return timer.hasElapsed(1.7)
 //        return timer.hasElapsed(1.3)
     }
 

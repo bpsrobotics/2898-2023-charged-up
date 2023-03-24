@@ -28,12 +28,12 @@ object Intake: SubsystemBase() {
 
     init {
         intakeMotor.restoreFactoryDefaults()
-        intakeMotor.setSmartCurrentLimit(10)
+        intakeMotor.setSmartCurrentLimit(15)
         intakeMotor.inverted = false
         intakeMotor.idleMode = CANSparkMax.IdleMode.kBrake
 
         secondary.restoreFactoryDefaults()
-        secondary.setSmartCurrentLimit(10)
+        secondary.setSmartCurrentLimit(15)
         secondary.inverted = true
         secondary.idleMode = CANSparkMax.IdleMode.kBrake
 //        secondary.follow(intakeMotor)
@@ -67,7 +67,7 @@ object Intake: SubsystemBase() {
     }
 
     override fun periodic() {
-        if (Arm.pos() < 0.53 || Arm.forceWrist) {
+        if (Arm.pos() < 0.4 || Arm.forceWrist) {
             hinge.set(kReverse)
         } else {
             hinge.set(kForward)

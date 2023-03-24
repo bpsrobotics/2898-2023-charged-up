@@ -1,19 +1,15 @@
 package com.team2898.robot
 
 import com.team2898.robot.subsystems.Arm
-import com.team2898.robot.subsystems.Drivetrain
-import com.team2898.robot.subsystems.Intake
 import edu.wpi.first.math.MathUtil
 import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.XboxController
-import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.StartEndCommand
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import kotlin.math.pow
 import kotlin.math.sign
-import kotlin.reflect.KProperty
 
 /**
  * The Operating Interface object.
@@ -80,13 +76,14 @@ object OI : SubsystemBase() {
     val turn
         get() = -process(driverController.rightX, deadzone = true, square = true)
     val highHat get() = operatorController.pov
-    val floorIntake get() = operatorController.getRawButton(2)
+    val shelf get() = operatorController.getRawButton(2)
     val lowGoal get() = operatorController.getRawButton(12)
     val midArmCube get() = operatorController.getRawButton(10)
     val midArmCone get() = operatorController.getRawButton(9)
     val highArmCube get() = operatorController.getRawButton(8)
-    val brakeRelease get() = operatorController.getRawButton(11)
+    val brakeRelease get() = driverController.aButton //operatorController.getRawButton(11)
     val moving get() = operatorController.getRawButton(7)
+    val stowed get() = operatorController.getRawButton(11)
 
     enum class Direction {
         LEFT, RIGHT, UP, DOWN, INACTIVE;

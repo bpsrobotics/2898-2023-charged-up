@@ -36,8 +36,8 @@ object Arm : SubsystemBase() {
 
     var setpoint = pos()
 
-    private val UPPER_SOFT_STOP = 1.95
-    private val LOWER_SOFT_STOP = 9.429947216.degreesToRadians()
+    private const val UPPER_SOFT_STOP = 1.95
+    val LOWER_SOFT_STOP = 9.429947216.degreesToRadians()
     private var stopped = false
     val ksin = 0.0192407
     val ks   = 0.00729233
@@ -80,8 +80,9 @@ object Arm : SubsystemBase() {
     val timer = Timer()
 
     override fun periodic() {
-        val currentTick = limitSwitch.get()
-        lastTick = limitSwitch.get()
+//        val currentTick = limitSwitch.get()
+//        lastTick = limitSwitch.get()
+        val currentTick = false
 
         val p = pos()
         val dp = p - last

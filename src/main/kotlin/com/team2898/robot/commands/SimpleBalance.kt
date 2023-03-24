@@ -63,8 +63,8 @@ class SimpleBalance : CommandBase() {
             return
         }
 
-        if (overTicks > 15 || balanced) {
-            val s = 0.6
+        if (overTicks > 17 || balanced) {
+            val s = 0.5
             Drivetrain.stupidDrive(`M/s`(s), `M/s`(s))
             if (!balanced) {
                 stopTimer.reset()
