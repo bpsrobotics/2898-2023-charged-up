@@ -41,7 +41,7 @@ object Arm : SubsystemBase() {
     private var stopped = false
     val ksin = 0.0192407
     val ks   = 0.00729233
-    val kv   = 0.971118
+    val kv   = 0.5
 
     fun pos(): Double {
         val p = encoder.absolutePosition
