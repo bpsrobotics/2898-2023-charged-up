@@ -39,9 +39,9 @@ object Arm : SubsystemBase() {
     private const val UPPER_SOFT_STOP = 1.95
     val LOWER_SOFT_STOP = 9.429947216.degreesToRadians()
     private var stopped = false
-    val ksin = 0.0192407
-    val ks   = 0.00729233
-    val kv   = 0.5
+    var ksin = 0.0192407
+    var ks   = 0.00729233
+    var kv   = 0.5
 
     fun pos(): Double {
         val p = encoder.absolutePosition
@@ -49,7 +49,7 @@ object Arm : SubsystemBase() {
             p + 1.0
         } else {
             p
-        }) * 165.688247975 + 215.199342194).degreesToRadians() - (-0.568584 - 0.16458363) - (0.65 - 0.17453293) + 0.05 - 0.061268369999999
+        }) * 165.688247975 + 215.199342194).degreesToRadians() - (-0.568584 - 0.16458363) - (0.65 - 0.17453293) + 0.05 - 0.061268369999999 - 0.30541637 - -0.19769663 - (0.290913 - LOWER_SOFT_STOP)
     }
 
     val movingAverage = MovingAverage(15)
@@ -67,19 +67,32 @@ object Arm : SubsystemBase() {
 
     init {
         armMotor.restoreFactoryDefaults()
-        armMotor.setSmartCurrentLimit(20)
+        armMotor.setSmartCurrentLimit(40)
         armMotor.idleMode = CANSparkMax.IdleMode.kBrake
         armMotor.inverted = true
 
 //        armMotor.encoder.velocityConversionFactor = PI * 2.0 / 525.0 / 42.0 / 3.33333333
 
         encoder.distancePerRotation = PI * 2.0
+
+        SmartDashboard.putNumber("arm kp", 0.0)
+        SmartDashboard.putNumber("arm kd", 0.0)
+        SmartDashboard.putNumber("arm ks", ks)
+        SmartDashboard.putNumber("arm ksin", ksin)
+        SmartDashboard.putNumber("arm kv", kv)
     }
 
     var last = pos()
     val timer = Timer()
 
     override fun periodic() {
+        SmartDashboard.putNumber("quotient", armMotor.encoder.velocity / movingAverage.average)
+        SmartDashboard.putNumber("arm current", armMotor.outputCurrent)
+        SmartDashboard.putNumber("arm duty cycle", armMotor.appliedOutput)
+        ks = SmartDashboard.getNumber("arm ks", ks)
+        ksin = SmartDashboard.getNumber("arm ksin", ksin)
+        kv = SmartDashboard.getNumber("arm kv", kv)
+
 //        val currentTick = limitSwitch.get()
 //        lastTick = limitSwitch.get()
         val currentTick = false

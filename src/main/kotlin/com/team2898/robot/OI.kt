@@ -1,9 +1,11 @@
 package com.team2898.robot
 
 import com.team2898.robot.subsystems.Arm
+import com.team2898.robot.subsystems.Drivetrain
 import edu.wpi.first.math.MathUtil
 import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.XboxController
+import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.StartEndCommand
 import edu.wpi.first.wpilibj2.command.SubsystemBase
@@ -119,12 +121,12 @@ object OI : SubsystemBase() {
     val wristPiston = Trigger { operatorController.getRawButton(5) || operatorController.getRawButton(3) }
 
     init {
-//        Trigger { operatorController.pov != 0 }.toggleOnTrue(
-//            Commands.startEnd(
-//                Drivetrain::brakeMode,
-//                Drivetrain::coastMode
-//            )
-//        )
+        Trigger { driverController.yButton }.toggleOnTrue(
+            Commands.startEnd(
+                Drivetrain::brakeMode,
+                Drivetrain::coastMode
+            )
+        )
 
         armUp.debounce(0.05).onTrue(InstantCommand({
             Arm.setGoal(Arm.setpoint + 0.1)

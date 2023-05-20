@@ -22,7 +22,7 @@ class MobilityAuto : CommandBase() {
     }
 
     override fun isFinished(): Boolean {
-        return timer.hasElapsed(1.9)
+        return timer.hasElapsed(2.4)
 //        return timer.hasElapsed(1.3)
     }
 

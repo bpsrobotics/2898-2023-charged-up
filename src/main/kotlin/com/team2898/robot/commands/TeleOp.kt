@@ -46,7 +46,7 @@ class TeleOp : CommandBase() {
             if (Field.map.facing_community(Odometry.pose)) alignGrid()  //If robot is facing community, align to the grid.
         } else {
             val turn = OI.turn * 0.5
-            Drivetrain.coastMode()
+//            Drivetrain.coastMode()
             val speeds = when {
                 //lessen speed when facing the community and getting close to the community
 
@@ -54,7 +54,7 @@ class TeleOp : CommandBase() {
                 // Quickturn buttons means turn in place
                 OI.quickTurnRight - OI.quickTurnLeft != 0.0 -> DifferentialDrive.arcadeDriveIK(
                         0.0,
-                        OI.quickTurnRight - OI.quickTurnLeft,
+                        OI.quickTurnLeft - OI.quickTurnRight,
                         false
                 )
 

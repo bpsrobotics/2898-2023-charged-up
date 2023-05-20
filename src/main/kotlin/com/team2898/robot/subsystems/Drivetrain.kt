@@ -221,7 +221,7 @@ object Drivetrain : SubsystemBase() {
                 if (pitch.absoluteValue < 4.0) {
                     pitch = 0.0f
                 }
-                val ff = (a * pitch + c) * SmartDashboard.getNumber("kff", 0.0)
+                val ff = ((a * pitch + c) * SmartDashboard.getNumber("kff", 0.0)).run { if (this.absoluteValue < 0.1) 0.0 else this }
 //                val lf = (ff + l).let { it.sign * ks + it }
 //                val rf = (ff + r).let { it.sign * ks + it }
 

@@ -67,7 +67,7 @@ object Intake: SubsystemBase() {
     }
 
     override fun periodic() {
-        if (Arm.pos() < 0.4 || Arm.forceWrist) {
+        if (Arm.pos() < 0.47 || Arm.forceWrist || Arm.setpoint < 0.4) {
             hinge.set(kReverse)
         } else {
             hinge.set(kForward)

@@ -27,7 +27,7 @@ class PreloadAuto : CommandBase() {
                 ),
                 InstantCommand({ Intake.runIntake(0.5) })
             ),
-            ActivateIntake(RUNOUTTAKE),
+            ActivateIntake(RUNOUTTAKE, power = 1.0),
         )
 //        autoCommandGroup.schedule()
         autoCommandGroup.initialize()

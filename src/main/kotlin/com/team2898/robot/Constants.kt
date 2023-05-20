@@ -58,9 +58,9 @@ object Constants {
     //TODO: Set up the proper positions for the arm
     enum class ArmHeights(val position: Double) {
         STOWED(LOWER_SOFT_STOP),
-        PICKUP(0.45),         // good
+        PICKUP(0.55),
         LOWGOAL(0.75),
-        MIDDLECONEGOAL(1.75), // good?
+        MIDDLECONEGOAL(1.75),
         MIDDLEBOXGOAL(1.4),
         HIGHCUBELAUNCH(1.8),
         MOVING(0.8),
