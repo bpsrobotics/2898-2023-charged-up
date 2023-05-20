@@ -59,7 +59,7 @@ object Drivetrain : SubsystemBase() {
 
     init {
         listOf(leftEncoder, rightEncoder).map {
-            it.distancePerPulse = (In(6.0).meterValue() * PI) / 4096
+            it.distancePerPulse = Meters(0.5).value / 2048
         }
         leftEncoder.setReverseDirection(true)
 
@@ -131,10 +131,10 @@ object Drivetrain : SubsystemBase() {
            }
         }
 
-        leftMain.inverted = true
-        leftSecondary.inverted = true
-        rightMain.inverted = false
-        rightSecondary.inverted = false
+        leftMain.inverted = false
+        leftSecondary.inverted = false
+        rightMain.inverted = true
+        rightSecondary.inverted = true
     }
 
     fun follow(path: Trajectory) {
@@ -195,6 +195,7 @@ object Drivetrain : SubsystemBase() {
                     mode = Mode.OPEN_LOOP
                     return
                 }
+                Odometry.field.getObject("trajectory").setTrajectory(traj)
 
                 rawDrive(
                     ramsete.voltages(
@@ -216,11 +217,11 @@ object Drivetrain : SubsystemBase() {
 //                val a = 0.0
                 val c = 0
                 val ks = 0.0
-                var pitch = Odometry.NavxHolder.navx.pitch - 16.530001
-                if (pitch.absoluteValue < 2.0) {
-                    pitch = 0.0
+                var pitch = Odometry.NavxHolder.navx.pitch// - 16.530001
+                if (pitch.absoluteValue < 4.0) {
+                    pitch = 0.0f
                 }
-                val ff = (a * pitch + c) * SmartDashboard.getNumber("kff", 0.0)
+                val ff = ((a * pitch + c) * SmartDashboard.getNumber("kff", 0.0)).run { if (this.absoluteValue < 0.1) 0.0 else this }
 //                val lf = (ff + l).let { it.sign * ks + it }
 //                val rf = (ff + r).let { it.sign * ks + it }
 
@@ -248,6 +249,14 @@ object Drivetrain : SubsystemBase() {
                 is CANSparkMax -> { idleMode = CANSparkMax.IdleMode.kCoast }
             }
         }
+    }
+
+    /**
+     * Sets the motor power on wheels to zero.
+     */
+    fun fullStop(){
+        mode = Mode.OPEN_LOOP
+        rawDrive(0.0,0.0)
     }
 
     override fun initSendable(builder: SendableBuilder) {

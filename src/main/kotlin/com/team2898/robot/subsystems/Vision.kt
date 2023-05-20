@@ -1,36 +1,46 @@
 package com.team2898.robot.subsystems
 
-import com.bpsrobotics.engine.utils.Polynomial
-import edu.wpi.first.math.geometry.Pose3d
+import edu.wpi.first.math.geometry.Pose2d
+import edu.wpi.first.math.geometry.Rotation2d
+import edu.wpi.first.networktables.NetworkTableEvent
+import edu.wpi.first.networktables.NetworkTableInstance
+import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj2.command.SubsystemBase
-
-object Confidence {
-    //TODO: Place in actual values and find degree of polynomial
-    private const val a = 0.0
-    private const val b = 0.0
-    private const val c = 0.0
-    private const val d = 0.0
-
-    //TODO: Properly set up the appropriate coefficients for each polynomial
-    private val yDistPolynomial = Polynomial(a,b,c,d)
-    private val xDistPolynomial = Polynomial(a,b,c,d)
-    private val speedPolynomial = Polynomial(a,b,c,d)
-
-    operator fun get(x: Double) : Double {
-        return 0.0
-    }
-
-    /** Returns the standard deviation. The higher the value, the less confident we are*/
-    fun getConfindence(x_dist: Double, y_dist: Double, speed: Double = 0.0): Double {
-//        val xDistOutput = xDistPolynomial[x_dist]
-//        val yDistOutput = yDistPolynomial[y_dist]
-//        val speedOutput = speedPolynomial[speed]
-//        return xDistOutput + yDistOutput + speedOutput
-        TODO()
-    }
-}
-
+import java.util.*
 
 object Vision : SubsystemBase() {
-    var currentRobotPose = Pose3d()
+    var currentRobotPose = Pose2d()
+        private set
+
+    private val instance = NetworkTableInstance.getDefault()
+    private val table = instance.getTable("Vision")
+    private val topic = table.getDoubleArrayTopic("VisionPos")
+    private val stdDevEntry = table.getDoubleArrayTopic("VisionStdDev").getEntry(doubleArrayOf())
+
+    var x = 0.0
+    var y = 0.0
+    var z = 0.0
+    var r = 0.0
+
+
+    private var lastFixTime = 0.0
+    val timeSinceLastFix get() = Timer.getFPGATimestamp() - lastFixTime
+
+
+    val listeners = mutableListOf<(Pose2d, DoubleArray, Double) -> Unit>()
+
+    init {
+        instance.addListener(topic.subscribe(doubleArrayOf(0.0, 0.0, 0.0, 0.0, 0.0)), EnumSet.of(NetworkTableEvent.Kind.kValueAll)) { v ->
+            val stdDev = stdDevEntry.get()
+            val arr = v.valueData.value.doubleArray
+            lastFixTime = Timer.getFPGATimestamp() - arr[4]
+            x = arr[0]
+            y = arr[1]
+            z = arr[2]
+            r = arr[3] + 180.0
+            currentRobotPose = Pose2d(x, y, Rotation2d.fromDegrees(r))
+            listeners.forEach { it(currentRobotPose, stdDev, lastFixTime) }
+            Odometry.field.getObject("vision pose").pose = currentRobotPose
+        }
+    }
 }

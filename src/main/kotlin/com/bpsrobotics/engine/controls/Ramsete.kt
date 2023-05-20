@@ -40,10 +40,10 @@ class Ramsete(
     data class WheelVoltages(val left: Volts, val right: Volts)
 
     fun voltages(trajectory: Trajectory, time: Seconds, wheelVelocities: DifferentialDriveWheelSpeeds): WheelVoltages {
-//        val velocities = velocities(trajectory, time)
+        val p = pose.pose
 
         val goal = trajectory.sample(time.value)
-        val adjustedSpeeds = ramsete.calculate(pose.pose, goal)
+        val adjustedSpeeds = ramsete.calculate(p, goal)
         val velocities = kinematics.toWheelSpeeds(adjustedSpeeds)
 
         val leftFeedforward = leftFF.calculate(velocities.leftMetersPerSecond).volts

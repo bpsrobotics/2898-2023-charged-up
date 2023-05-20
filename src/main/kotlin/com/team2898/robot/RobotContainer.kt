@@ -7,11 +7,13 @@
 
 package com.team2898.robot
 
-import com.team2898.robot.commands.AutoBalance
+import com.team2898.robot.commands.autos.*
+import com.team2898.robot.commands.autos.simple.PreloadAuto
+import com.team2898.robot.commands.oldautos.OldBalanceAuto
+import com.team2898.robot.commands.oldautos.PreloadBalanceAuto
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
-import edu.wpi.first.wpilibj2.command.InstantCommand
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -20,19 +22,34 @@ import edu.wpi.first.wpilibj2.command.InstantCommand
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 class RobotContainer {
-    private val noopAutoCommand: Command = AutoBalance()
+    private val noopAutoCommand: Command = NoAuto()
+
 
     // A chooser for which command to use for auto, i.e. one for right, middle, left, red, blue, etc
     private var autoCommandChooser: SendableChooser<Command> = SendableChooser()
 
     init {
-        autoCommandChooser.setDefaultOption("Do Nothing Auto", noopAutoCommand)
+        autoCommandChooser.setDefaultOption("No Auto", noopAutoCommand)
+        autoCommandChooser.addOption("Preload",                      SimpleAutos(preload = true,  balance = false, mobility = false))
+        autoCommandChooser.addOption("Balance",                      SimpleAutos(preload = false, balance = true,  mobility = false))
+        autoCommandChooser.addOption("Mobility",                     SimpleAutos(preload = false, balance = false, mobility = true))
+        autoCommandChooser.addOption("BROKEN Preload + Balance",            SimpleAutos(preload = true,  balance = true,  mobility = false))
+        autoCommandChooser.addOption("Preload + Mobility",           SimpleAutos(preload = true,  balance = false, mobility = true))
+        autoCommandChooser.addOption("BROKEN Balance + Mobility",           SimpleAutos(preload = false, balance = true,  mobility = true))
+        autoCommandChooser.addOption("BROKEN Preload + Balance + Mobility", SimpleAutos(preload = true,  balance = true,  mobility = true))
+        autoCommandChooser.addOption("old balance+preload", PreloadBalanceAuto())
+        autoCommandChooser.addOption("old balance", OldBalanceAuto())
+        autoCommandChooser.addOption("simple mobility", MobilityAuto())
+
+//        autoCommandChooser.addOption("Leading Auto", LeadingAuto())
+
         // Send the auto chooser
         SmartDashboard.putData("Auto mode", autoCommandChooser)
     }
 
     fun getAutonomousCommand(): Command {
         // Return the selected command
-        return AutoBalance()
+//        return SequentialCommandGroup(SuperSimpleAuto(), SimpleBalance())
+        return autoCommandChooser.selected
     }
 }

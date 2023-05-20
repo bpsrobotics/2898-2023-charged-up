@@ -11,7 +11,7 @@ import kotlin.math.*
  * @property coordinate2 Bottom right corner of the rectangle
  * @author Anthony, Ozy
  */
-class Rectangle(val coordinate1: Coordinate, val coordinate2: Coordinate) {
+data class Rectangle(val coordinate1: Coordinate, val coordinate2: Coordinate) {
     constructor(x1: Double, y1: Double, x2: Double, y2: Double) : this(Coordinate(x1, y1), Coordinate(x2, y2))
 
     val x1 get() = coordinate1.x

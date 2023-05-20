@@ -10,6 +10,7 @@ package com.team2898.robot
 import com.bpsrobotics.engine.async.BatteryLogger
 import com.bpsrobotics.engine.utils.deg
 import com.bpsrobotics.engine.utils.m
+import com.team2898.robot.commands.ArmTest
 import com.team2898.robot.commands.TeleOp
 import com.team2898.robot.subsystems.*
 import edu.wpi.first.cameraserver.CameraServer
@@ -22,6 +23,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
+import edu.wpi.first.wpilibj2.command.InstantCommand
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -32,7 +34,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler
 object Robot : TimedRobot() {
 
     // Note: 'lateinit' means you can declare a non-nullable variable and then first set it later
-    lateinit var autoCommand: Command
+    var autoCommand: Command = InstantCommand({})
 
     lateinit var robotContainer: RobotContainer
 
@@ -45,22 +47,24 @@ object Robot : TimedRobot() {
         // autonomous chooser on the dashboard.
         robotContainer = RobotContainer()
         // Automatically grab auto command to ensure m_autonomousCommand is defined before teleopInit is run
-        autoCommand = robotContainer.getAutonomousCommand()
+//        autoCommand = robotContainer.getAutonomousCommand()
 
-//        CameraServer.startAutomaticCapture()
+        CameraServer.startAutomaticCapture()
 
         // initialize battery logger
-        /*if (RobotBase.isReal()) {
+        if (RobotBase.isReal()) {
             BatteryLogger(PowerDistribution(60, ModuleType.kRev))
-        }*/
+        }
 
         Field.initialize()
 
         SmartDashboard.putData(Drivetrain)
         SmartDashboard.putData(Odometry)
         SmartDashboard.putData(Arm)
+        SmartDashboard.putData(Intake)
 
-        Odometry.reset(0.m,0.m,0.deg)
+//        Odometry.reset(0.m,0.m,0.deg)
+        Odometry.zero()
     }
 
     /**
@@ -90,7 +94,7 @@ object Robot : TimedRobot() {
     }
 
     override fun disabledPeriodic() {
-        if (brakeTimer.hasElapsed(1.0)) {
+        if (brakeTimer.hasElapsed(5.0)) {
             Drivetrain.coastMode()
         } else {
             Drivetrain.brakeMode()
@@ -101,9 +105,10 @@ object Robot : TimedRobot() {
      * This autonomous runs the autonomous command selected by your {@link RobotContainer} class.
      */
     override fun autonomousInit() {
-        autoCommand = robotContainer.getAutonomousCommand()
 
+        // schedule the aut
         // schedule the autonomous command (example)
+        autoCommand = robotContainer.getAutonomousCommand()
         autoCommand.let { autoCommand.schedule() }
         Drivetrain.brakeMode()
     }
@@ -115,6 +120,7 @@ object Robot : TimedRobot() {
     }
 
     override fun teleopInit() {
+//        TODO()
         // This makes sure that the autonomous stops running when
         // teleop starts running. If you want the autonomous to
         // continue until interrupted by another command, remove
