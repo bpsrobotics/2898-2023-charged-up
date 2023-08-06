@@ -7,12 +7,14 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup
 class `YOUR AUTO HERE`: CommandBase() {
     override fun initialize() {
         val autoCommandGroup = SequentialCommandGroup(
-            //Move forward
-            //Bring arm up
-            //Outake
-            //Stop outake
-            //Bring arm down (MIDDLECONEGOAL)
-            //Backup
+            //EX: DriveForward(/* Seconds */ 1.0, /* Speed */ 1.0)
+            // Move forward
+            // Bring arm up (Constants.ArmHeights.MIDDLECONEGOAL)
+            // Outtake
+            // Wait
+            // Stop Outtake
+            // Bring arm down (MOVING)
+            // Backup
 
         )
         autoCommandGroup.schedule()

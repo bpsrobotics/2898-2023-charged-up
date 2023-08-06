@@ -5,7 +5,9 @@ import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj2.command.CommandBase
 
 /**
- * Moves backwards out of community
+ * Drives at speed for seconds
+ * @param speed Speed of both wheels in M/S. Make the speed negative to move backwards. Max 1 M/S
+ * @param seconds Seconds the robot should drive
  */
 class DriveForward(var seconds : Double, var speed: Double) : CommandBase() {
     val timer = Timer()
@@ -15,6 +17,9 @@ class DriveForward(var seconds : Double, var speed: Double) : CommandBase() {
         timer.reset()
         if(speed > 1){
             speed = 1.0
+        }
+        if(speed < -1){
+            speed = -1.0
         }
     }
 

@@ -3,9 +3,10 @@ package com.team2898.robot.commands
 import com.team2898.robot.subsystems.Intake
 import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj2.command.CommandBase
-
 /**
  * Runs intake forwards or backwards to take a gamepiece or deposit it
+ * @param mode Direction to run Intake
+ * @param power Power to run Intake at. (Workshoppers leave as is)
  * @author Ori
  */
 class ActivateIntake(private val mode: RunningIntakes, private val power: Double = 0.75) : CommandBase() {

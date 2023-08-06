@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase
 
 /**
  * Moves arm to given height
- * @property goal Height to set arm to
+ * @property goal Height to set arm to. Use Constants.
  * @author Ori
  */
 class ArmMove(private val goal: Double) : CommandBase() {
