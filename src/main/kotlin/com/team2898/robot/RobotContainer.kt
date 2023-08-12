@@ -7,7 +7,7 @@
 
 package com.team2898.robot
 
-import com.team2898.robot.commands.`YOUR AUTO HER`
+import com.team2898.robot.commands.`YOUR AUTO HERE`
 import edu.wpi.first.wpilibj2.command.Command
 
 /**
@@ -20,6 +20,6 @@ class RobotContainer {
     fun getAutonomousCommand(): Command {
         // Return the selected command
 //        return SequentialCommandGroup(SuperSimpleAuto(), SimpleBalance())
-        return `YOUR AUTO HER`
+        return `YOUR AUTO HERE`
     }
 }
