@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup
 object `YOUR AUTO HERE`: CommandBase() {
     override fun initialize() {
         val autoCommandGroup = SequentialCommandGroup(
+                //TODO Finish this auto
             //EX: DriveForward(/* Seconds */ 1.0, /* Speed */ 1.0)
             // Move forward
             // Bring arm up (Constants.ArmHeights.MIDDLECONEGOAL)
