@@ -28,6 +28,10 @@ class TeleOp : CommandBase() {
         Drivetrain.mode = Drivetrain.Mode.OPEN_LOOP
         Intake
         PneumaticHub(42).enableCompressorDigital()
+
+        if (!SmartDashboard.containsKey("kid mode")) {
+            SmartDashboard.putBoolean("kid mode", false)
+        }
     }
 
     private val leftLimiter = SlewRateLimiter(100.0)
@@ -35,6 +39,7 @@ class TeleOp : CommandBase() {
 
     // Called every time the scheduler runs while the command is scheduled.
     override fun execute() {
+        val kidMode = SmartDashboard.getBoolean("kid mode", false)
 
         if (Drivetrain.mode == Drivetrain.Mode.CLOSED_LOOP) {
             // Auto Allign is being pressed: if D-PAD inactive, stop following path
@@ -48,9 +53,6 @@ class TeleOp : CommandBase() {
             val turn = OI.turn * 0.5
 //            Drivetrain.coastMode()
             val speeds = when {
-                //lessen speed when facing the community and getting close to the community
-
-
                 // Quickturn buttons means turn in place
                 OI.quickTurnRight - OI.quickTurnLeft != 0.0 -> DifferentialDrive.arcadeDriveIK(
                         0.0,
@@ -67,7 +69,8 @@ class TeleOp : CommandBase() {
             SmartDashboard.putNumber("r output", right)
             SmartDashboard.putNumber("turn", turn)
             SmartDashboard.putNumber("throttle", OI.throttle)
-            Drivetrain.stupidDrive(`M/s`(left * 5.0), `M/s`(right * 5.0))
+            val maxSpeed = if (kidMode) 1.0 else 5.0
+            Drivetrain.stupidDrive(`M/s`(left * maxSpeed), `M/s`(right * maxSpeed))
         }
 
         when (OI.highHat) {
@@ -77,7 +80,7 @@ class TeleOp : CommandBase() {
                     else Intake.stopIntake()
         }
 
-        if (OI.brakeRelease) {
+        if (OI.brakeRelease && !kidMode) {
             Arm.brakeRelease()
         } else {
             val goalPosition = when {
