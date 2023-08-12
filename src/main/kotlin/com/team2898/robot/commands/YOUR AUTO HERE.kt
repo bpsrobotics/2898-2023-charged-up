@@ -18,4 +18,8 @@ object `YOUR AUTO HERE`: CommandBase() {
         )
         autoCommandGroup.schedule()
     }
+
+    override fun isFinished(): Boolean {
+        return false
+    }
 }
